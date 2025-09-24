@@ -40,7 +40,7 @@ SGG_MAP = {
 SGG_CODES = list(SGG_MAP.keys())
 
 # 2024년 전체
-MONTHS = [f"2016{str(m).zfill(2)}" for m in range(1, 13)]
+MONTHS = [f"2025{str(m).zfill(2)}" for m in range(1, 13)]
 
 def request_json(params):
     """HTTP 우선 → 실패 시 HTTPS 폴백"""
@@ -125,7 +125,7 @@ def main():
             time.sleep(0.5)      # 구 사이 간격
         time.sleep(1.0)          # 월 단위 간격
 
-    out = "seoul_real_estate_2016.csv"
+    out = "seoul_real_estate_2025.csv"
     with open(out, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.writer(f)
         w.writerow([
