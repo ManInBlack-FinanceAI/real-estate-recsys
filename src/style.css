@@ -1,0 +1,371 @@
+/* style.css */
+
+/* 기본 설정 */
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif; /* Google Font 적용 */
+    background-color: #f0f2f5; /* 전반적인 배경색 */
+    color: #333;
+    line-height: 1.6;
+    overflow-x: hidden; /* 가로 스크롤 방지 */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333; /* 어두운 상단 바 */
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.navbar-left, .navbar-center, .navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-left .logo {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 20px;
+}
+
+.navbar-left .edit-mode i {
+    margin: 0 8px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.navbar-left .edit-mode i:hover {
+    opacity: 1;
+    color: #007bff;
+}
+
+.navbar-center p {
+    margin: 0;
+    margin-right: 15px;
+    opacity: 0.9;
+}
+
+.navbar-center .learn-more,
+.navbar-right .back-to-main {
+    color: #007bff; /* 링크 색상 */
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.navbar-center .learn-more:hover,
+.navbar-right .back-to-main:hover {
+    color: #0056b3;
+}
+
+.navbar-right .start-now,
+.navbar-right .back-to-main {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-right .start-now:hover,
+.navbar-right .back-to-main:hover {
+    background-color: #0056b3;
+}
+
+.navbar-right i.fa-times {
+    cursor: pointer;
+    opacity: 0.7;
+    font-size: 1.2em;
+    transition: opacity 0.3s ease;
+}
+
+.navbar-right i.fa-times:hover {
+    opacity: 1;
+}
+
+/* Main Container Layout */
+.main-container {
+    display: flex;
+    min-height: calc(100vh - 50px); /* Adjust based on navbar height */
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.08);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: #fff;
+    padding: 30px 0 20px 25px;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.03);
+}
+
+.sidebar .profile-name {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #222;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sidebar .social-icons a {
+    display: block;
+    margin-bottom: 18px;
+    color: #555;
+    font-size: 1.4em;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.sidebar .social-icons a:hover {
+    color: #007bff;
+    transform: translateX(5px);
+}
+
+/* Main Content Area */
+.content {
+    flex-grow: 1;
+    padding: 30px 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Main Navigation (inside content) */
+.main-nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 60px;
+    padding-right: 20px;
+}
+
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.main-nav ul li {
+    margin-left: 35px;
+}
+
+.main-nav ul li a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: color 0.3s ease;
+}
+
+.main-nav ul li a:hover {
+    color: #007bff;
+}
+
+.main-nav .book-session {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-left: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.main-nav .book-session:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.main-nav .login {
+    display: flex;
+    align-items: center;
+    margin-left: 35px;
+    color: #555;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: color 0.3s ease;
+}
+
+.main-nav .login:hover {
+    color: #007bff;
+}
+
+.main-nav .login i {
+    font-size: 1.4em;
+    margin-right: 8px;
+    color: #777;
+}
+
+/* Hero Section */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 550px;
+    position: relative;
+    padding-bottom: 50px;
+    gap: 40px;
+}
+
+.hero-text {
+    max-width: 50%;
+    z-index: 2;
+    padding-left: 20px;
+}
+
+.hero-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.8em;
+    line-height: 1.2;
+    color: #222;
+    margin-bottom: 25px;
+    letter-spacing: -1px;
+}
+
+.hero-text p {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 40px;
+    line-height: 1.8;
+}
+
+.start-survey-button {
+    background-color: #007bff;
+    color: white;
+    padding: 18px 35px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.start-survey-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+}
+
+.hero-image-container {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.hero-building-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Service Introduction Section */
+.service-introduction-section {
+    padding: 80px 0;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-top: 1px solid #eee;
+    margin-top: 50px;
+}
+
+.service-introduction-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5em;
+    color: #222;
+    margin-bottom: 60px;
+    position: relative;
+}
+
+.service-introduction-section h2::after {
+    content: '';
+    display: block;
+    width: 70px;
+    height: 4px;
+    background-color: #007bff;
+    margin: 20px auto 0;
+    border-radius: 2px;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.step-item {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.step-item i {
+    font-size: 3em;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.step-item h3 {
+    font-size: 1.4em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.step-item p {
+    font-size: 1em;
+    color: #777;
+    line-height: 1.7;
+}
+
+/* 추가: 배경 도형들은 메인 페이지 HTML에서 제거했으므로 관련 CSS는 삭제 */
+
+/* 모든 페이지의 footer 또는 공통 하단 영역이 있다면 여기에 추가 */

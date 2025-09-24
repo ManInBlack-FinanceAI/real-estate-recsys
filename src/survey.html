@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 부동산 찾기 - 설문</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="survey.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            <div class="logo">FIND MY HOME</div>
+        </div>
+        <div class="navbar-center">
+            <p>나에게 꼭 맞는 집을 찾아보세요.</p>
+        </div>
+        <div class="navbar-right">
+            <a href="index.html" class="back-to-main">메인으로</a>
+        </div>
+    </header>
+
+    <div class="survey-container">
+        <h1>나에게 꼭 맞는 집 찾기 설문</h1>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <form id="property-recommendation-survey">
+            <div class="question-slide active" data-question-id="purpose">
+                <label>1. 부동산을 찾는 주된 목적은 무엇인가요?</label>
+                <div class="option-buttons">
+                    <button type="button" class="survey-option-btn" data-value="주거용">
+                        <i class="fas fa-home"></i> 실거주 목적 (주거용)
+                    </button>
+                    <button type="button" class="survey-option-btn" data-value="투자용">
+                        <i class="fas fa-chart-line"></i> 시세차익 및 임대수익 목적 (투자용)
+                    </button>
+                </div>
+                <input type="hidden" name="purpose" id="purpose-input">
+            </div>
+
+            <div class="question-group" id="residential-questions" style="display:none;">
+                <div class="question-slide" data-question-id="budget_res">
+                    <label>2. 예상하시는 총 예산(매매가 또는 전세금)은 얼마인가요?</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="~1억">~1억</button>
+                        <button type="button" class="survey-option-btn" data-value="1억~3억">1억~3억</button>
+                        <button type="button" class="survey-option-btn" data-value="3억~5억">3억~5억</button>
+                        <button type="button" class="survey-option-btn" data-value="5억~10억">5억~10억</button>
+                        <button type="button" class="survey-option-btn" data-value="10억~">10억 이상</button>
+                    </div>
+                    <input type="hidden" name="budget_res" id="budget_res-input">
+                </div>
+
+                <div class="question-slide" data-question-id="loan_res">
+                    <label>3. 자금 조달 방식은 어떻게 되시나요? (주택담보대출 활용 여부 및 비율)</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="전액 현금">전액 현금</button>
+                        <button type="button" class="survey-option-btn" data-value="대출 30% 미만">대출 30% 미만</button>
+                        <button type="button" class="survey-option-btn" data-value="대출 30~50%">대출 30~50%</button>
+                        <button type="button" class="survey-option-btn" data-value="대출 50% 이상">대출 50% 이상</button>
+                    </div>
+                    <input type="hidden" name="loan_res" id="loan_res-input">
+                </div>
+
+                <div class="question-slide" data-question-id="region_res">
+                    <label>4. 희망하는 지역은 어디인가요? (시/군/구 단위, 복수 선택 가능)</label>
+                    <input type="text" name="region_res" placeholder="예: 강남구, 분당구 (쉼표로 구분)">
+                    <p class="guide-text">※ 여러 지역을 입력할 경우 쉼표(,)로 구분해주세요.</p>
+                </div>
+
+                <div class="question-slide" data-question-id="move_in_date">
+                    <label>5. 입주 희망 시기는 언제인가요?</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="즉시">즉시</button>
+                        <button type="button" class="survey-option-btn" data-value="3개월 이내">3개월 이내</button>
+                        <button type="button" class="survey-option-btn" data-value="6개월 이내">6개월 이내</button>
+                        <button type="button" class="survey-option-btn" data-value="1년 이내">1년 이내</button>
+                        <button type="button" class="survey-option-btn" data-value="1년 이후">1년 이후</button>
+                    </div>
+                    <input type="hidden" name="move_in_date" id="move_in_date-input">
+                </div>
+
+                <div class="question-slide" data-question-id="family_members">
+                    <label>6. 함께 거주할 가족 구성원은 어떻게 되나요?</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="1인 가구">1인 가구</button>
+                        <button type="button" class="survey-option-btn" data-value="신혼부부">신혼부부</button>
+                        <button type="button" class="survey-option-btn" data-value="3인 자녀가구">3인 자녀가구</button>
+                        <button type="button" class="survey-option-btn" data-value="4인 이상 가족">4인 이상 가족</button>
+                    </div>
+                    <input type="hidden" name="family_members" id="family_members-input">
+                </div>
+
+                <div class="question-slide" data-question-id="transport_time">
+                    <label>7. 주로 이용하는 교통수단은 무엇이며, 출퇴근(통학) 소요 시간은 어느 정도를 원하시나요?</label>
+                    <input type="text" name="transport_time" placeholder="예: 자차 30분, 지하철 1시간">
+                </div>
+
+                <div class="question-slide" data-question-id="housing_type_res">
+                    <label>8. 선호하는 주거 형태는 무엇인가요?</label>
+                    <div class="option-buttons multi-select">
+                        <button type="button" class="survey-option-btn" data-value="아파트">
+                            <i class="fas fa-building"></i> 아파트
+                        </button>
+                        <button type="button" class="survey-option-btn" data-value="오피스텔">
+                            <i class="fas fa-city"></i> 오피스텔
+                        </button>
+                        <button type="button" class="survey-option-btn" data-value="빌라">
+                            <i class="fas fa-house-user"></i> 빌라/다세대
+                        </button>
+                        <button type="button" class="survey-option-btn" data-value="단독주택">
+                            <i class="fas fa-home"></i> 단독주택
+                        </button>
+                    </div>
+                    <input type="hidden" name="housing_type_res" id="housing_type_res-input">
+                </div>
+
+                <div class="question-slide" data-question-id="important_conditions_res">
+                    <label>9. 집을 선택할 때 가장 중요하게 생각하는 조건 3가지를 선택해주세요.</label>
+                    <div class="option-buttons multi-select">
+                        <button type="button" class="survey-option-btn" data-value="교통 편의성">교통 편의성</button>
+                        <button type="button" class="survey-option-btn" data-value="자녀 교육 환경">자녀 교육 환경</button>
+                        <button type="button" class="survey-option-btn" data-value="자연 친화적 환경">자연 친화적 환경</button>
+                        <button type="button" class="survey-option-btn" data-value="편의시설">편의시설 (마트, 병원 등)</button>
+                        <button type="button" class="survey-option-btn" data-value="신축/깔끔한 인테리어">신축/깔끔한 인테리어</button>
+                        <button type="button" class="survey-option-btn" data-value="조용한 환경">조용한 환경</button>
+                        <button type="button" class="survey-option-btn" data-value="주차 공간">주차 공간</button>
+                    </div>
+                    <input type="hidden" name="important_conditions_res" id="important_conditions_res-input">
+                </div>
+            </div>
+
+            <div class="question-group" id="investment-questions" style="display:none;">
+                <div class="question-slide" data-question-id="budget_inv">
+                    <label>2. 투입 가능한 총 투자 예산은 얼마인가요?</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="~1억">~1억</button>
+                        <button type="button" class="survey-option-btn" data-value="1억~3억">1억~3억</button>
+                        <button type="button" class="survey-option-btn" data-value="3억~5억">3억~5억</button>
+                        <button type="button" class="survey-option-btn" data-value="5억~10억">5억~10억</button>
+                        <button type="button" class="survey-option-btn" data-value="10억~">10억 이상</button>
+                    </div>
+                    <input type="hidden" name="budget_inv" id="budget_inv-input">
+                </div>
+
+                <div class="question-slide" data-question-id="expected_profit_type">
+                    <label>3. 투자를 통해 기대하는 주된 수익 형태는 무엇인가요?</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="임대 수익">
+                            <i class="fas fa-money-bill-wave"></i> 안정적인 임대 수익 (월세)
+                        </button>
+                        <button type="button" class="survey-option-btn" data-value="시세 차익">
+                            <i class="fas fa-chart-line"></i> 미래 가치 상승으로 인한 시세 차익
+                        </button>
+                        <button type="button" class="survey-option-btn" data-value="둘 다">
+                            <i class="fas fa-handshake"></i> 두 가지 모두 고려
+                        </button>
+                    </div>
+                    <input type="hidden" name="expected_profit_type" id="expected_profit_type-input">
+                </div>
+
+                <div class="question-slide" data-question-id="expected_roi">
+                    <label>4. 기대하는 연간 투자 수익률은 어느 정도인가요?</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="3~5%">3%~5%</button>
+                        <button type="button" class="survey-option-btn" data-value="5~7%">5%~7%</button>
+                        <button type="button" class="survey-option-btn" data-value="7% 이상">7% 이상</button>
+                    </div>
+                    <input type="hidden" name="expected_roi" id="expected_roi-input">
+                </div>
+
+                <div class="question-slide" data-question-id="investment_type">
+                    <label>5. 선호하는 투자 유형은 무엇인가요?</label>
+                    <div class="option-buttons multi-select">
+                        <button type="button" class="survey-option-btn" data-value="재개발 투자">재개발 투자</button>
+                        <button type="button" class="survey-option-btn" data-value="토지">토지</button>
+                        <button type="button" class="survey-option-btn" data-value="상가">상가</button>
+                        <button type="button" class="survey-option-btn" data-value="분양권">분양권</button>
+                        <button type="button" class="survey-option-btn" data-value="청약">청약</button>
+                    </div>
+                    <input type="hidden" name="investment_type" id="investment_type-input">
+                </div>
+
+                <div class="question-slide" data-question-id="investment_period">
+                    <label>6. 희망하는 투자 기간은 어떻게 되시나요?</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="단기">단기 (1~3년)</button>
+                        <button type="button" class="survey-option-btn" data-value="중기">중기 (3~7년)</button>
+                        <button type="button" class="survey-option-btn" data-value="장기">장기 (7년 이상)</button>
+                    </div>
+                    <input type="hidden" name="investment_period" id="investment_period-input">
+                </div>
+
+                <div class="question-slide" data-question-id="investment_experience">
+                    <label>7. 부동산 투자 경험이 있으신가요?</label>
+                    <div class="option-buttons">
+                        <button type="button" class="survey-option-btn" data-value="처음">처음</button>
+                        <button type="button" class="survey-option-btn" data-value="1~2회">1~2회</button>
+                        <button type="button" class="survey-option-btn" data-value="다수">다수</button>
+                    </div>
+                    <input type="hidden" name="investment_experience" id="investment_experience-input">
+                </div>
+
+                <div class="question-slide" data-question-id="important_conditions_inv">
+                    <label>8. 투자를 고려할 때 가장 중요하게 생각하는 요소 3가지를 선택해주세요.</label>
+                    <div class="option-buttons multi-select">
+                        <button type="button" class="survey-option-btn" data-value="공실 위험도">공실 위험도</button>
+                        <button type="button" class="survey-option-btn" data-value="개발 호재">개발 호재</button>
+                        <button type="button" class="survey-option-btn" data-value="역세권/교통">역세권/교통</button>
+                        <button type="button" class="survey-option-btn" data-value="환금성">환금성 (매매 용이성)</button>
+                        <button type="button" class="survey-option-btn" data-value="세금 혜택">세금 혜택</button>
+                        <button type="button" class="survey-option-btn" data-value="배후수요">안정적인 배후수요</button>
+                    </div>
+                    <input type="hidden" name="important_conditions_inv" id="important_conditions_inv-input">
+                </div>
+            </div>
+
+            <div class="survey-navigation">
+                <button type="button" id="prev-btn" class="nav-button" style="display:none;"><i class="fas fa-arrow-left"></i> 이전</button>
+                <button type="button" id="next-btn" class="nav-button">다음 <i class="fas fa-arrow-right"></i></button>
+                <button type="submit" id="submit-survey-btn" class="submit-button" style="display:none;">추천 매물 보기</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="survey.js"></script>
+</body>
+</html>

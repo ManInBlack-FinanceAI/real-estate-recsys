@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8" />
+  <title>부동산 실거래가 조회</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+    }
+
+    /* 헤더 */
+    header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 3px;
+    }
+
+    /* 부제목 */
+    #subtitle {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+      padding: 10px 0;
+    }
+
+    /* 전체 레이아웃 */
+    main {
+      display: grid;
+      grid-template-columns: 15% 1fr 15%;
+      height: calc(100vh - 100px);
+    }
+
+    /* 좌/우 광고 공간 */
+    .ad-space {
+      background: #f0f0f0;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+
+    /* 중앙 메인 컨텐츠 */
+    #content {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    /* 필터 영역 */
+    #filters {
+      background: #fff;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      margin-right: 5px;
+    }
+
+    input {
+      padding: 4px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    /* 지도 */
+    #map {
+      flex: 1;
+      min-height: 400px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+    }
+
+    /* 리스트 */
+    #list {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 헤더 -->
+  <header>MAN IN BLACK</header>
+  <!-- 부제목 -->
+  <div id="subtitle">FIND YOUR OWN REAL ESTATE</div>
+
+  <main>
+    <!-- 좌측 광고 -->
+    <div class="ad-space"></div>
+
+    <!-- 중앙 컨텐츠 -->
+    <div id="content">
+      <!-- 필터 영역 -->
+      <div id="filters">
+        <h3>실거래가 조회</h3>
+        <label>주소 입력:</label>
+        <input type="text" id="address" value="서울특별시 서초구 반포동" size="25" /><br /><br />
+        <label>기간:</label>
+        <input type="month" id="startYm" value="2024-11" />
+        ~
+        <input type="month" id="endYm" value="2025-01" />
+        <button id="searchBtn">조회</button>
+      </div>
+
+      <!-- 지도 -->
+      <div id="map"></div>
+
+      <!-- 리스트 -->
+      <div id="list"></div>
+    </div>
+
+    <!-- 우측 광고 -->
+    <div class="ad-space"></div>
+  </main>
+
+  <!-- 카카오 지도 SDK -->
+  <script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cec9de7588337d83cf7eda028124309b&libraries=services"></script>
+
+  <script>
+    let mapContainer = document.getElementById('map');
+    let mapOption = { center: new kakao.maps.LatLng(37.5665, 126.9780), level: 6 };
+    let map = new kakao.maps.Map(mapContainer, mapOption);
+    let geocoder = new kakao.maps.services.Geocoder();
+    let markers = [];
+
+    // 조회 버튼 클릭 시
+    document.getElementById("searchBtn").addEventListener("click", function () {
+      const addr = document.getElementById("address").value.trim();
+      const startYm = document.getElementById("startYm").value.replace("-", "");
+      const endYm = document.getElementById("endYm").value.replace("-", "");
+
+      if (!addr) { alert("주소를 입력하세요!"); return; }
+
+      // 주소로 좌표 검색 후 지도 이동
+      geocoder.addressSearch(addr, async function (result, status) {
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+          const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+          map.setCenter(coords);
+        }
+
+        // 주소 검색 결과와 상관없이 API 호출은 진행
+        try {
+          const res = await fetch(`/api/deals?address=${encodeURIComponent(addr)}&startYm=${startYm}&endYm=${endYm}`);
+          const data = await res.json();
+          renderListAndMap(data, addr);
+        } catch (err) {
+          console.error("API 호출 실패:", err);
+          alert("데이터 조회에 실패했습니다.");
+        }
+      });
+    });
+
+    // 리스트 + 지도 출력
+    function renderListAndMap(deals, searchAddr) {
+      // 기존 마커 제거
+      markers.forEach(m => m.setMap(null));
+      markers = [];
+
+      if (deals.length === 0) {
+        document.getElementById("list").innerHTML = "<p>조회된 데이터가 없습니다.</p>";
+        return;
+      }
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>아파트</th>
+              <th>거래금액(만원)</th>
+              <th>면적(㎡)</th>
+              <th>층</th>
+              <th>법정동</th>
+              <th>계약일자</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      deals.forEach(d => {
+        const dealDate = `${d.year}-${d.month.padStart(2, "0")}-${d.day.padStart(2, "0")}`;
+        const fullAddr = `${searchAddr} ${d.jibun} ${d.apt}`;
+
+        html += `
+          <tr>
+            <td>${d.apt}</td>
+            <td>${d.price}</td>
+            <td>${d.area}</td>
+            <td>${d.floor}</td>
+            <td>${d.dong}</td>
+            <td>${dealDate}</td>
+          </tr>
+        `;
+
+        geocoder.addressSearch(fullAddr, function (result, status) {
+          if (status === kakao.maps.services.Status.OK) {
+            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+            let marker = new kakao.maps.Marker({ map: map, position: coords });
+            markers.push(marker);
+
+            let infowindow = new kakao.maps.InfoWindow({
+              content: `<div style="padding:5px;font-size:13px;">
+                          <b>${d.apt}</b><br/>
+                          가격: ${d.price}만원<br/>
+                          면적: ${d.area}㎡, 층: ${d.floor}<br/>
+                          일자: ${dealDate}
+                        </div>`
+            });
+
+            let open = false;
+            kakao.maps.event.addListener(marker, 'click', function () {
+              if (open) { infowindow.close(); open = false; }
+              else { infowindow.open(map, marker); open = true; }
+            });
+          }
+        });
+      });
+
+      html += "</tbody></table>";
+      document.getElementById("list").innerHTML = html;
+    }
+  </script>
+</body>
+
+</html>

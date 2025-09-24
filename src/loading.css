@@ -1,0 +1,96 @@
+/* loading.css */
+
+body { /* 로딩 페이지를 위한 body 배경색 재정의 */
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 화면 전체 높이 사용 */
+    margin: 0;
+    overflow: hidden; /* 스크롤바 방지 */
+    text-align: center;
+}
+
+.loading-container {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    width: 90%;
+}
+
+.loading-animation {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 40px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-animation i.fa-magnifying-glass-location {
+    font-size: 5em;
+    color: #007bff;
+    position: absolute;
+    animation: rotateAndScale 3s ease-in-out infinite alternate;
+}
+
+.loading-animation .house-outline {
+    position: absolute;
+    font-size: 6em;
+    color: #28a745; /* 집 아이콘 색상 */
+    opacity: 0.2;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes rotateAndScale {
+    0% { transform: rotate(0deg) scale(0.8); opacity: 0.7; }
+    50% { transform: rotate(15deg) scale(1.1); opacity: 1; }
+    100% { transform: rotate(0deg) scale(0.8); opacity: 0.7; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.2; }
+    50% { transform: scale(1); opacity: 0.4; }
+    100% { transform: scale(0.8); opacity: 0.2; }
+}
+
+
+.loading-container h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2em;
+    color: #222;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.loading-container .sub-message {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.tip-of-the-day {
+    background-color: #f8f9fa;
+    border: 1px solid #e2e6ea;
+    border-left: 5px solid #007bff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: left;
+    margin-top: 30px;
+}
+
+.tip-of-the-day h3 {
+    color: #007bff;
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.tip-of-the-day p {
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.6;
+}

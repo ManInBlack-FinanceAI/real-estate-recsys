@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 부동산 찾기 - 추천 결과</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="results.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            <div class="logo">FIND MY HOME</div>
+        </div>
+        <div class="navbar-center">
+            <p>당신에게 완벽한 집을 찾아보세요.</p>
+        </div>
+        <div class="navbar-right">
+            <a href="index.html" class="back-to-main">메인으로</a>
+        </div>
+    </header>
+
+    <div class="results-container">
+        <div class="results-header">
+            <h1 id="user-personalized-title">OOO님을 위한 맞춤 분석 결과입니다.</h1>
+            <p id="user-summary">OOO님은 <strong>'교통 편의성'</strong>과 <strong>'자녀 교육 환경'</strong>을 중시하는군요!</p>
+            <div class="match-score">
+                <span>추천 매물 일치율</span>
+                <span id="match-percentage">95%</span>
+            </div>
+        </div>
+
+        <div class="results-content">
+            <div class="recommendation-list-area">
+                <h2>추천 매물 리스트</h2>
+                <div id="recommendation-list">
+                    <div class="property-card">
+                        <img src="https://via.placeholder.com/300x200?text=Property+Image+1" alt="추천 매물 이미지" class="property-image">
+                        <div class="card-details">
+                            <h3>매물명 1</h3>
+                            <p class="location">OOO시 OOO구 OOO동</p>
+                            <p class="price">매매가 5억 2천만원 / 전세 3억</p>
+                            <div class="keywords">
+                                <span class="keyword">#역세권</span>
+                                <span class="keyword">#초등학교인접</span>
+                                <span class="keyword">#신축급</span>
+                            </div>
+                            <button class="view-details-btn">상세보기</button>
+                        </div>
+                    </div>
+                    <div class="property-card">
+                        <img src="https://via.placeholder.com/300x200?text=Property+Image+2" alt="추천 매물 이미지" class="property-image">
+                        <div class="card-details">
+                            <h3>매물명 2</h3>
+                            <p class="location">OOO시 OOO구 OOO동</p>
+                            <p class="price">매매가 4억 8천만원 / 전세 2억 8천</p>
+                            <div class="keywords">
+                                <span class="keyword">#공원뷰</span>
+                                <span class="keyword">#조용한환경</span>
+                                <span class="keyword">#넉넉한주차</span>
+                            </div>
+                            <button class="view-details-btn">상세보기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendation-reasons-area">
+                    <h3>나를 위한 추천 이유 키워드</h3>
+                    <div id="reason-keywords">
+                        <span class="reason-tag">#초등학교인접</span>
+                        <span class="reason-tag">#편리한대중교통</span>
+                        <span class="reason-tag">#병원인근</span>
+                        <span class="reason-tag">#대형마트</span>
+                        <span class="reason-tag">#남향</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-area">
+                <h2>매물 위치 지도</h2>
+                <div id="map-container">
+                    <p>여기에 지도 API가 표시될 예정입니다. (지도는 구현하지 않음)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="results.js"></script>
+</body>
+</html>
