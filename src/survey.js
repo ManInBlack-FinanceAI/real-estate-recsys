@@ -75,8 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   nextBtn.addEventListener('click', ()=>{
     if(!validate()) return;
-    const curSlide = slides[idx];
-    const qid = curSlide?.dataset?.questionId;
     setIdx(Math.min(slides.length-1, idx+1));
   });
 

@@ -121,20 +121,20 @@
     <input type="hidden" name="pyung_range" id="pyung_range-input" required>
 </div>
 
-<!-- STEP 5-1: 층 (아파트 선택 시에만, 7 → 다음 눌렀을 때 표시) -->
+<!-- STEP 6: 층 (선택형 버튼) -->
 <div class="question-slide" data-question-id="floor_step" style="display:none;">
-    <h2>5-1. 원하는 층 (아파트 선택 시)</h2>
+    <h2>6. 원하는 층</h2>
     <div class="option-buttons">
-        <button type="button" class="survey-option-btn" data-value="저층(1~5층)">저층(1~5층)</button>
-        <button type="button" class="survey-option-btn" data-value="중층(6~15층)">중층(6~15층)</button>
-        <button type="button" class="survey-option-btn" data-value="고층(16층~)">고층(16층~)</button>
+        <button type="button" class="survey-option-btn" data-value="저층(1~10층)">저층(1~10층)</button>
+        <button type="button" class="survey-option-btn" data-value="중층(11~20층)">중층(11~20층)</button>
+        <button type="button" class="survey-option-btn" data-value="고층(21층 이상)">고층(21층 이상)</button>
     </div>
     <input type="hidden" name="floor_group" id="floor_group-input">
 </div>
 
-<!-- STEP 6: 신축 여부 (단일 선택 버튼) -->
+<!-- STEP 7: 신축 여부 (단일 선택 버튼) -->
 <div class="question-slide" data-question-id="new_build">
-    <h2>6. 신축 여부</h2>
+    <h2>7. 신축 여부</h2>
     <div class="option-buttons">
         <button type="button" class="survey-option-btn" data-value="신축(5년 이내)">신축(5년 이내)</button>
         <button type="button" class="survey-option-btn" data-value="준신축(10년 이내)">준신축(10년 이내)</button>
@@ -143,9 +143,9 @@
     <input type="hidden" name="new_build" id="new_build-input" required>
 </div>
 
-<!-- STEP 7: 중요 항목 순위 (드래그, 상위 5개 모두 사용) -->
+<!-- STEP 8: 중요 항목 순위 (드래그, 상위 5개 모두 사용) -->
 <div class="question-slide" data-question-id="priority">
-    <h2>7. 중요 항목 순위</h2>
+    <h2>8. 중요 항목 순위</h2>
     <p class="srvy-muted">위로 갈수록 더 중요. 제출 시 <b>상위 5개 모두</b> 사용.</p>
     <ul id="rankList" class="rank-list">
         <li draggable="true" data-key="price">예산(가격)</li>
