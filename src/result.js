@@ -171,4 +171,208 @@ document.addEventListener('DOMContentLoaded', () => {
         // 중복 제거 및 적절한 개수로 제한
         return Array.from(new Set(keywords)).slice(0, 7); // 최대 7개 키워드
     }
+
+
+    // --- 부동산 계산기 로직 시작 ---
+
+    // 헬퍼 함수: 숫자 포맷 (세 자리마다 콤마)
+    function formatNumber(num) {
+        return new Intl.NumberFormat('ko-KR').format(Math.round(num));
+    }
+
+    // 대출 계산기
+    const loanAmountInput = document.getElementById('loan-amount');
+    const loanInterestRateInput = document.getElementById('loan-interest-rate');
+    const loanPeriodInput = document.getElementById('loan-period');
+    const monthlyPaymentSpan = document.getElementById('monthly-payment');
+    const totalInterestSpan = document.getElementById('total-interest');
+
+    function calculateLoan() {
+        const principal = parseFloat(loanAmountInput.value) * 10000; // 만원 단위를 원 단위로
+        const annualRate = parseFloat(loanInterestRateInput.value) / 100;
+        const loanYears = parseFloat(loanPeriodInput.value);
+
+        if (isNaN(principal) || isNaN(annualRate) || isNaN(loanYears) || principal <= 0 || annualRate < 0 || loanYears <= 0) {
+            monthlyPaymentSpan.textContent = '0';
+            totalInterestSpan.textContent = '0';
+            return;
+        }
+
+        const monthlyRate = annualRate / 12;
+        const numberOfPayments = loanYears * 12;
+
+        let monthlyPayment = 0;
+        if (monthlyRate === 0) { // 이자율이 0%인 경우
+            monthlyPayment = principal / numberOfPayments;
+        } else {
+            // 원리금 균등 상환 방식 공식
+            monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+        }
+
+        const totalPayment = monthlyPayment * numberOfPayments;
+        const totalInterest = totalPayment - principal;
+
+        monthlyPaymentSpan.textContent = formatNumber(monthlyPayment);
+        totalInterestSpan.textContent = formatNumber(totalInterest);
+    }
+
+    loanAmountInput.addEventListener('input', calculateLoan);
+    loanInterestRateInput.addEventListener('input', calculateLoan);
+    loanPeriodInput.addEventListener('input', calculateLoan);
+    calculateLoan(); // 초기 계산 실행
+
+    // 취득세 계산기
+    const acquisitionPriceInput = document.getElementById('acquisition-price');
+    const acquisitionAreaInput = document.getElementById('acquisition-area'); // 면적은 세율에 영향 없으나, UI 유지를 위해
+    const isMultipleHouseSelect = document.getElementById('is-multiple-house');
+    const acquisitionTaxSpan = document.getElementById('acquisition-tax');
+    const localEducationTaxSpan = document.getElementById('local-education-tax');
+    const ruralSpecialTaxSpan = document.getElementById('rural-special-tax');
+    const totalAcquisitionTaxSpan = document.getElementById('total-acquisition-tax');
+
+    function calculateAcquisitionTax() {
+        const price = parseFloat(acquisitionPriceInput.value) * 10000; // 만원 단위를 원 단위로
+        const isMultiple = isMultipleHouseSelect.value === 'true';
+
+        if (isNaN(price) || price <= 0) {
+            acquisitionTaxSpan.textContent = '0';
+            localEducationTaxSpan.textContent = '0';
+            ruralSpecialTaxSpan.textContent = '0';
+            totalAcquisitionTaxSpan.textContent = '0';
+            return;
+        }
+
+        let acquisitionTaxRate = 0; // 취득세율
+        let ruralSpecialTaxRate = 0; // 농어촌특별세율
+        // 지방교육세율은 취득세의 10%
+
+        // 2024년 기준 간략화된 주택 취득세율 (조정지역 여부, 공시지가, 면적 등 복잡한 조건 제외)
+        // 실제로는 6억 이하, 6억 초과 9억 이하, 9억 초과 구간별로 다르고
+        // 조정지역 2주택, 3주택 이상, 법인 등 복잡한 조건이 많습니다.
+        // 여기서는 매우 단순화하여 1주택/다주택만 구분
+        if (!isMultiple) { // 1주택자
+            if (price <= 600000000) acquisitionTaxRate = 0.01; // 6억 이하 1%
+            else if (price <= 900000000) acquisitionTaxRate = 0.01 + ((price - 600000000) / 300000000) * 0.02; // 6~9억 1~3%
+            else acquisitionTaxRate = 0.03; // 9억 초과 3%
+            ruralSpecialTaxRate = 0.002; // 85m² 이하 비과세, 초과는 취득세의 0.2%
+        } else { // 2주택 이상 (조정지역 여부, 주택 수에 따라 세율이 훨씬 복잡함)
+                 // 여기서는 투기과열지구를 고려하여 2주택자 8%, 3주택 이상 12%의 최고 세율을 가정 (매우 단순화)
+            acquisitionTaxRate = 0.08; // 조정지역 2주택 이상 간략화
+            // if (price > 0 && isMultiple) acquisitionTaxRate = 0.12; // 3주택 이상 가정 (더 높을 수 있음)
+            ruralSpecialTaxRate = 0.004; // 85m² 초과시 취득세의 0.4%
+        }
+
+        let calculatedAcquisitionTax = price * acquisitionTaxRate;
+        const calculatedLocalEducationTax = calculatedAcquisitionTax * 0.1; // 취득세의 10%
+        let calculatedRuralSpecialTax = 0;
+
+        // 85m² 초과일 경우 농어촌특별세 부과 (간이 계산이므로 면적 input을 사용)
+        const area = parseFloat(acquisitionAreaInput.value);
+        if (area > 85) { // 85m² 초과일 경우 농어촌특별세
+            calculatedRuralSpecialTax = price * ruralSpecialTaxRate;
+        }
+
+
+        const totalTax = calculatedAcquisitionTax + calculatedLocalEducationTax + calculatedRuralSpecialTax;
+
+        acquisitionTaxSpan.textContent = formatNumber(calculatedAcquisitionTax);
+        localEducationTaxSpan.textContent = formatNumber(calculatedLocalEducationTax);
+        ruralSpecialTaxSpan.textContent = formatNumber(calculatedRuralSpecialTax);
+        totalAcquisitionTaxSpan.textContent = formatNumber(totalTax);
+    }
+
+    acquisitionPriceInput.addEventListener('input', calculateAcquisitionTax);
+    acquisitionAreaInput.addEventListener('input', calculateAcquisitionTax);
+    isMultipleHouseSelect.addEventListener('change', calculateAcquisitionTax);
+    calculateAcquisitionTax(); // 초기 계산 실행
+
+    // 양도세 계산기
+    const salePriceInput = document.getElementById('sale-price');
+    const acquisitionCostYangdoInput = document.getElementById('acquisition-cost-yangdo');
+    const holdingPeriodInput = document.getElementById('holding-period');
+    const isLongTermOwnerSelect = document.getElementById('is-long-term-owner');
+    const capitalGainSpan = document.getElementById('capital-gain');
+    const capitalGainsTaxSpan = document.getElementById('capital-gains-tax');
+
+    function calculateCapitalGainsTax() {
+        const salePrice = parseFloat(salePriceInput.value) * 10000;
+        const acquisitionCost = parseFloat(acquisitionCostYangdoInput.value) * 10000;
+        const holdingYears = parseFloat(holdingPeriodInput.value);
+        const isLongTermExempt = isLongTermOwnerSelect.value === 'true'; // 1세대 1주택 비과세 요건 충족 가정
+
+        if (isNaN(salePrice) || isNaN(acquisitionCost) || isNaN(holdingYears) || salePrice <= 0 || acquisitionCost <= 0) {
+            capitalGainSpan.textContent = '0';
+            capitalGainsTaxSpan.textContent = '0';
+            return;
+        }
+
+        const gain = salePrice - acquisitionCost;
+        capitalGainSpan.textContent = formatNumber(gain);
+
+        let capitalGainsTax = 0;
+
+        if (gain <= 0) { // 양도 차익이 없으면 세금 없음
+            capitalGainsTaxSpan.textContent = '0';
+            return;
+        }
+
+        // 1세대 1주택 비과세 (12억 이하) - 가정
+        // 실제로는 2년 거주 요건, 조정대상지역 취득 시 보유/거주 기간 등 복잡
+        if (isLongTermExempt && holdingYears >= 2 && salePrice <= 1200000000) { // 12억까지 비과세 (2년 보유, 2년 거주 등 요건 가정)
+            capitalGainsTaxSpan.textContent = '0';
+            return;
+        }
+
+        // 일반 양도세율 (매우 단순화된 예시, 실제로는 누진공제, 장기보유특별공제 등 복잡)
+        // 투기과열지구 내 다주택자 중과, 단기 양도 중과 등 고려 안 됨.
+        let taxRate = 0.06; // 최저세율
+        // 실제 세율 구간은 훨씬 더 세분화되어 있으며, 여기에 누진공제가 붙습니다.
+        // 이 코드는 단순히 차익 구간별 최대 세율을 적용한 것이므로 실제와 다릅니다.
+        if (gain <= 12000000) taxRate = 0.06;
+        else if (gain <= 46000000) taxRate = 0.15;
+        else if (gain <= 88000000) taxRate = 0.24;
+        else if (gain <= 150000000) taxRate = 0.35;
+        else if (gain <= 300000000) taxRate = 0.38;
+        else if (gain <= 500000000) taxRate = 0.40;
+        else taxRate = 0.42;
+
+        capitalGainsTax = gain * taxRate;
+        // 지방소득세 10% (양도소득세의 10%)
+        capitalGainsTax = capitalGainsTax * 1.1;
+
+        capitalGainsTaxSpan.textContent = formatNumber(capitalGainsTax);
+    }
+
+    salePriceInput.addEventListener('input', calculateCapitalGainsTax);
+    acquisitionCostYangdoInput.addEventListener('input', calculateCapitalGainsTax);
+    holdingPeriodInput.addEventListener('input', calculateCapitalGainsTax);
+    isLongTermOwnerSelect.addEventListener('change', calculateCapitalGainsTax);
+    calculateCapitalGainsTax(); // 초기 계산 실행
+
+    // --- 부동산 계산기 로직 끝 ---
+
+
+    // --- 스크롤 애니메이션 로직 시작 ---
+    const calculatorSection = document.querySelector('.calculator-section');
+    if (calculatorSection) {
+        // 초기 상태를 CSS로 설정했으므로 JS에서는 opacity와 transform을 직접 변경합니다.
+        // results.css에 transition 속성이 정의되어 있어야 부드러운 애니메이션이 됩니다.
+        // calculatorSection.style.opacity = '0'; // (CSS에서 이미 처리)
+        // calculatorSection.style.transform = 'translateY(50px)'; // (CSS에서 이미 처리)
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target); // 한 번 보이면 더 이상 관찰하지 않음
+                }
+            });
+        }, {
+            threshold: 0.2 // 뷰포트의 20%가 보이면 실행
+        });
+        observer.observe(calculatorSection);
+    }
+    // --- 스크롤 애니메이션 로직 끝 ---
+
 });

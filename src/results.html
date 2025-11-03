@@ -86,6 +86,88 @@
             </div>
         </div>
     </div>
+    </div> <section class="calculator-section">
+            <h2>부동산 계산기</h2>
+            <p class="calculator-intro">복잡한 부동산 세금과 대출, 이제 쉽고 빠르게 계산해보세요. (정확한 금액은 전문가와 상담 필수)</p>
+
+            <div class="calculators-container">
+                <div class="calculator-card">
+                    <h3><i class="fas fa-calculator"></i> 대출 계산기</h3>
+                    <div class="input-group">
+                        <label for="loan-amount">대출 금액 (만원)</label>
+                        <input type="number" id="loan-amount" value="30000" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="loan-interest-rate">연 이자율 (%)</label>
+                        <input type="number" id="loan-interest-rate" value="3.5" step="0.1" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="loan-period">대출 기간 (년)</label>
+                        <input type="number" id="loan-period" value="30" min="1" max="50">
+                    </div>
+                    <div class="result-display">
+                        <p>월 상환액: <span id="monthly-payment">0</span> 원</p>
+                        <p>총 이자액: <span id="total-interest">0</span> 원</p>
+                        <p class="disclaimer">※ 투기과열지구 내 LTV/DTI 등 규제는 고려되지 않았습니다. 실제 상담이 필요합니다.</p>
+                    </div>
+                </div>
+
+                <div class="calculator-card">
+                    <h3><i class="fas fa-file-invoice"></i> 취득세 계산기</h3>
+                    <div class="input-group">
+                        <label for="acquisition-price">취득 가액 (만원)</label>
+                        <input type="number" id="acquisition-price" value="50000" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="acquisition-area">면적 (m²)</label>
+                        <input type="number" id="acquisition-area" value="85" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="is-multiple-house">다주택 여부</label>
+                        <select id="is-multiple-house">
+                            <option value="false">1주택</option>
+                            <option value="true">2주택 이상</option>
+                        </select>
+                    </div>
+                    <div class="result-display">
+                        <p>취득세: <span id="acquisition-tax">0</span> 원</p>
+                        <p>지방교육세: <span id="local-education-tax">0</span> 원</p>
+                        <p>농어촌특별세: <span id="rural-special-tax">0</span> 원</p>
+                        <p>총 취득세 등: <span id="total-acquisition-tax">0</span> 원</p>
+                        <p class="disclaimer">※ 조정지역 다주택 여부, 면적 등에 따라 세율이 상이합니다. 정확한 계산은 지자체에 문의하세요.</p>
+                    </div>
+                </div>
+
+                <div class="calculator-card">
+                    <h3><i class="fas fa-hand-holding-usd"></i> 양도세 계산기</h3>
+                    <div class="input-group">
+                        <label for="sale-price">양도 가액 (만원)</label>
+                        <input type="number" id="sale-price" value="70000" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="acquisition-cost-yangdo">취득 가액 (만원)</label>
+                        <input type="number" id="acquisition-cost-yangdo" value="50000" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="holding-period">보유 기간 (년)</label>
+                        <input type="number" id="holding-period" value="3" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="is-long-term-owner">장기보유 여부 (1세대 1주택)</label>
+                        <select id="is-long-term-owner">
+                            <option value="false">해당 없음</option>
+                            <option value="true">해당 (비과세 요건 충족 가정)</option>
+                        </select>
+                    </div>
+                    <div class="result-display">
+                        <p>양도 차익: <span id="capital-gain">0</span> 원</p>
+                        <p>양도 소득세: <span id="capital-gains-tax">0</span> 원</p>
+                        <p class="disclaimer">※ 1세대 1주택 비과세, 조정지역 여부, 보유기간 등 복잡한 조건이 많습니다. 세무사와 상담 필수!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
 
     <script src="results.js"></script>
 </body>
