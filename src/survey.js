@@ -77,17 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!validate()) return;
     const curSlide = slides[idx];
     const qid = curSlide?.dataset?.questionId;
-    if(qid === 'pyung_range'){
-      const prop = (document.getElementById('property_type-input')||{}).value;
-      if(prop === '아파트'){
-        const nextIsFloor = slides[idx+1] && slides[idx+1].dataset && slides[idx+1].dataset.questionId === 'floor_step';
-        if(nextIsFloor){ setIdx(idx+1); return; }
-      } else {
-        if(slides[idx+1] && slides[idx+1].dataset && slides[idx+1].dataset.questionId === 'floor_step'){
-          setIdx(idx+2); return;
-        }
-      }
-    }
     setIdx(Math.min(slides.length-1, idx+1));
   });
 
