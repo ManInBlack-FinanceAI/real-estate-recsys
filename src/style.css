@@ -113,7 +113,7 @@ button {
 
 /* Sidebar */
 .sidebar {
-    width: 220px;
+    width: 120px;
     background-color: #fff;
     padding: 30px 0 20px 25px;
     border-right: 1px solid #eee;
@@ -121,6 +121,14 @@ button {
     flex-direction: column;
     align-items: flex-start;
     box-shadow: 2px 0 5px rgba(0,0,0,0.03);
+    flex-shrink: 0;
+}
+
+/* content는 사이드바 옆에 바로 붙게 */
+.content {
+    flex: 1;
+    padding: 0px;
+    margin: 0;
 }
 
 .sidebar .profile-name {
@@ -152,15 +160,17 @@ button {
     padding: 30px 50px;
     position: relative;
     overflow: hidden;
+    padding-top: 0;
+    margin-top: 5px;
 }
 
 /* Main Navigation (inside content) */
 .main-nav {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 60px;
-    padding-right: 20px;
+    margin-top: 5px;
+    padding-top: 0;
 }
 
 .main-nav ul {
@@ -364,6 +374,72 @@ button {
     font-size: 1em;
     color: #777;
     line-height: 1.7;
+}
+
+.menu-logo {
+  display: flex;
+  align-items: center;
+  margin:0;
+  padding: 0;
+}
+
+.menu-logo img {
+  height: 150px;
+  margin-right: 8px;
+}
+
+.menu-logo span {
+  font-size: 26px;
+  font-weight: bold;
+  color: #000;
+  line-height: 1.2;
+}
+
+.service-page {
+  padding: 40px;
+}
+
+/* 서비스 소개 메인 배경 */
+.service-intro {
+  position: relative;
+  padding: 80px;
+  color: #000;
+  text-align: center;
+  z-index: 1;
+  bacjgroung-color: rgba(255,255,255,0.7);
+}
+
+.service-intro::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: url("building_night_view.jpg") no-repeat center center / cover;
+  opacity: 0.2;   /* 연하게 처리 */
+  z-index: -1;
+}
+
+.service-intro h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.service-intro p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #000;
+}
+
+.service-intro button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 /* 추가: 배경 도형들은 메인 페이지 HTML에서 제거했으므로 관련 CSS는 삭제 */

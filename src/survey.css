@@ -189,3 +189,22 @@ textarea:focus {
     background-color: #218838;
     transform: translateY(-3px);
 }
+
+/*수정됨 : 선택 미선택 경고 메시지 스타일 */
+.validation-message {
+    margin-top:12px;
+    font-size:14px;
+    font-weight:700;
+    color:#e11d48; /* 붉은 경고색 */
+}
+/* /수정됨 */
+
+
+/* === Survey v2 (buttons-everywhere, except #4 style wrap) === */
+.srvy-cardish{border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fafafa}
+.rank-list{list-style:none;margin:12px 0 0;padding:0;border:1px dashed #e5e7eb;border-radius:12px}
+.rank-list li{padding:12px 14px;border-bottom:1px dashed #e5e7eb;cursor:grab}
+.rank-list li:last-child{border-bottom:none}
+.rank-list li.dragging{opacity:.6}
+.srvy-muted{color:#6b7280}
+/* === /Survey v2 === */
