@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>맞춤 분석 | Man in Black</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 기존 스타일 재사용 -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- 페이지 전용 보조 스타일 -->
+  <link rel="stylesheet" href="cus_an.css" />
+  <!-- 폰트어썸 아이콘 (index.html과 통일) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <!-- 상단 네비 (index/service와 동일 구조) -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <div class="logo">FIND MY HOME</div>
+      <div class="edit-mode">
+        <i class="fas fa-desktop"></i>
+        <i class="fas fa-tablet-alt"></i>
+        <i class="fas fa-mobile-alt"></i>
+      </div>
+    </div>
+    <div class="navbar-center">
+      <p>데이터 기반 맞춤 분석 흐름을 한눈에</p>
+      <a href="service.html" class="learn-more">서비스 자세히 보기</a>
+    </div>
+    <div class="navbar-right">
+      <button class="start-now" onclick="location.href='survey.html'">시작하기</button>
+      <a href="index.html" class="back-to-main" style="margin-left:12px;">메인으로</a>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- 좌측 사이드바 (index/service와 동일) -->
+    <aside class="sidebar">
+      <div class="profile-name">MY REAL ESTATE ADVISOR</div>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </aside>
+
+    <!-- 우측 콘텐츠 -->
+    <main class="content">
+      <!-- 우측 상단 내비 -->
+      <nav class="main-nav">
+        <div class="menu-logo">
+          <img src="맨인블랙 로고.png" alt="Man in Black Logo">
+          <span>Men in<br>Black</span>
+        </div>
+        <ul>
+          <li><a href="service.html">서비스 소개</a></li>
+          <li><a href="#">추천 사례</a></li>
+          <li><a href="cus_an.html" class="active">부동산 가이드</a></li>
+          <li><a href="#">문의</a></li>
+        </ul>
+        <div class="login">
+          <i class="fas fa-user-circle"></i>
+          <span>로그인</span>
+        </div>
+      </nav>
+
+      <!-- 본문: 맞춤 분석 개요 -->
+      <section class="an-section">
+        <h1>맞춤 분석</h1>
+        <p class="an-lead">
+          한국은행 ECOS · 국토교통부 RTMS · 공공데이터포털 등 공공 데이터와 내부 가공 지표를 결합하고,
+          사용자의 설문 가중치를 반영해 <b>“나에게 맞는 집”</b>을 추천합니다.
+        </p>
+      </section>
+
+      <!-- 1) 서비스 흐름 -->
+      <section class="an-section">
+        <h2>서비스 흐름</h2>
+        <div class="an-flow-grid">
+          <div class="step-item an-clickless">
+            <i class="fas fa-download"></i>
+            <h3>1. 데이터 수집</h3>
+            <p>ECOS·국토부·공공데이터포털·지도/경로 API</p>
+          </div>
+          <div class="step-item an-clickless">
+            <i class="fas fa-broom"></i>
+            <h3>2. 정제/전처리</h3>
+            <p>정합성·결측치 처리, 단위/코드 통일</p>
+          </div>
+          <div class="step-item an-clickless">
+            <i class="fas fa-sliders-h"></i>
+            <h3>3. 지표 생성</h3>
+            <p>역거리·도보시간·POI/학군·CPI 등 파생</p>
+          </div>
+          <div class="step-item an-clickless">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>4. 설문 응답</h3>
+            <p>예산·입지·면적·가중치 입력</p>
+          </div>
+          <div class="step-item an-clickless">
+            <i class="fas fa-chart-line"></i>
+            <h3>5. 매칭/점수화</h3>
+            <p>필터링 + 가중합 → 랭킹 산출</p>
+          </div>
+          <div class="step-item an-clickless">
+            <i class="fas fa-map-marked-alt"></i>
+            <h3>6. 추천/지도</h3>
+            <p>후보 리스트·지도/상세 보기</p>
+          </div>
+          <div class="step-item an-clickless">
+            <i class="fas fa-sync-alt"></i>
+            <h3>7. 피드백</h3>
+            <p>선호 수정 시 재산출</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2) 데이터 출처 -->
+      <section class="an-section">
+        <h2>데이터 출처</h2>
+        <div class="an-card-grid">
+          <div class="an-card">
+            <h3>한국은행 ECOS <small>금리/물가/지수</small></h3>
+            <ul>
+              <li>기준금리, 주담대금리</li>
+              <li>CPI(소비자물가지수)</li>
+              <li>주택매매/전세/아파트매매<br>가격지수</li>
+              <li>경제활동인구, 본원통화</li>
+            </ul>
+          </div>
+          <div class="an-card">
+            <h3>국토교통부 RTMS <small>실거래/속성</small></h3>
+            <ul>
+              <li>거래금액·거래일자·전용면적·<br>층·건축년도</li>
+              <li>지번/도로명·법정동코드</li>
+            </ul>
+          </div>
+          <div class="an-card">
+            <h3>공공데이터포털 <small>생활편의/시설</small></h3>
+            <ul>
+              <li>지하철역/버스정류장 위치·수</li>
+              <li>병원/약국·공원·마트/편의점 분포</li>
+              <li>고속도로 진입로·소음/도로 인접도</li>
+            </ul>
+          </div>
+          <div class="an-card">
+            <h3>지도/경로 API <small>Kakao 등</small></h3>
+            <ul>
+              <li>역/정류장까지 거리·도보시간</li>
+              <li>출발지→후보 통근시간</li>
+              <li>아파트 건물의 위·경도</li>
+            </ul>
+          </div>
+          <div class="an-card">
+            <h3>내부 파생 지표</h3>
+            <ul>
+              <li>역세권거리, 병원거리, 공원개수</li>
+              <li>편의점/마트수, 학군 점수</li>
+              <li>가격/입지 종합 스코어</li>
+            </ul>
+          </div>
+        </div>
+        <p class="an-note">※ 모든 공공 API 약관을 준수하며, 일부 지표는 내부 가공·결합하여 산출합니다.</p>
+      </section>
+
+      <!-- 3) 설문 항목 -->
+      <section class="an-section">
+        <h2>설문 항목</h2>
+
+        <div class="an-filter">
+          <button class="an-pill is-active" data-tag="all">전체</button>
+          <button class="an-pill" data-tag="예산">예산</button>
+          <button class="an-pill" data-tag="입지">입지</button>
+          <button class="an-pill" data-tag="교통">교통</button>
+          <button class="an-pill" data-tag="생활">생활</button>
+          <button class="an-pill" data-tag="학군">학군</button>
+          <button class="an-pill" data-tag="금융">금융</button>
+          <button class="an-pill" data-tag="스펙">주택스펙</button>
+        </div>
+
+        <h3>필수 질문</h3>
+        <div class="an-tablewrap">
+          <table class="an-table">
+            <thead>
+              <tr><th>질문</th><th>key</th><th>설명</th><th>연결 데이터</th></tr>
+            </thead>
+            <tbody id="an-required">
+              <tr data-tags="예산 금융">
+                <td>최대 예산(구매가)</td>
+                <td><code>budget_max</code></td>
+                <td>총 매입 가능 한도</td>
+                <td>국토부 실거래가</td>
+              </tr>
+              <tr data-tags="금융 예산">
+                <td>대출 사용 여부/한도</td>
+                <td><code>loan_use, loan_limit</code></td>
+                <td>LTV·상환능력 고려</td>
+                <td>ECOS 금리(참조)</td>
+              </tr>
+              <tr data-tags="입지">
+                <td>선호 지역(시·구·동)</td>
+                <td><code>pref_region</code></td>
+                <td>관심 생활권 제한</td>
+                <td>법정동코드·좌표</td>
+              </tr>
+              <tr data-tags="스펙">
+                <td>주택 유형</td>
+                <td><code>housing_type</code></td>
+                <td>아파트/오피스텔/빌라 등</td>
+                <td>물건 속성</td>
+              </tr>
+              <tr data-tags="스펙">
+                <td>전용면적(㎡) 범위</td>
+                <td><code>area_min, area_max</code></td>
+                <td>면적 구간 지정</td>
+                <td>실거래 면적</td>
+              </tr>
+              <tr data-tags="입지">
+                <td>입주 가능 시기</td>
+                <td><code>move_in_deadline</code></td>
+                <td>입주 시점 제약</td>
+                <td>거래일자/잔금</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>선택/가중치 질문</h3>
+        <div class="an-tablewrap">
+          <table class="an-table">
+            <thead>
+              <tr><th>질문</th><th>key</th><th>설명</th><th>연결 데이터</th></tr>
+            </thead>
+            <tbody id="an-optional">
+              <tr data-tags="교통 입지">
+                <td>역까지 거리(도보) 선호</td>
+                <td><code>max_station_dist, weight_station_dist</code></td>
+                <td>역세권 거리 허용치/가중치</td>
+                <td>역 좌표·도보시간</td>
+              </tr>
+              <tr data-tags="교통 입지">
+                <td>통근 시간(출발지)</td>
+                <td><code>commute_origin, commute_time_max</code></td>
+                <td>출발지→후보 통근시간</td>
+                <td>경로 API</td>
+              </tr>
+              <tr data-tags="생활">
+                <td>병원 접근성</td>
+                <td><code>weight_hospital, max_hospital_dist</code></td>
+                <td>병원까지 거리/개수 반영</td>
+                <td>병원 좌표·거리</td>
+              </tr>
+              <tr data-tags="생활">
+                <td>마트/편의점/상권</td>
+                <td><code>weight_market, weight_convenience</code></td>
+                <td>근린 상권 선호</td>
+                <td>POI 수</td>
+              </tr>
+              <tr data-tags="생활 학군">
+                <td>학군/학교 밀도</td>
+                <td><code>weight_school</code></td>
+                <td>초/중/고 밀도·거리</td>
+                <td>학교 위치·밀도</td>
+              </tr>
+              <tr data-tags="스펙">
+                <td>층 선호(저/중/고)</td>
+                <td><code>floor_pref</code></td>
+                <td>채광/소음/뷰 고려</td>
+                <td>실거래 층</td>
+              </tr>
+              <tr data-tags="스펙">
+                <td>준공연도(신축 선호)</td>
+                <td><code>built_year_min</code></td>
+                <td>노후도/수선 부담</td>
+                <td>건축년도</td>
+              </tr>
+              <tr data-tags="생활">
+                <td>관리비 민감도</td>
+                <td><code>maintenance_sensitivity</code></td>
+                <td>대단지/시설 대비</td>
+                <td>면적·시설(추정)</td>
+              </tr>
+              <tr data-tags="입지">
+                <td>고속도로/큰도로 인접</td>
+                <td><code>max_highway_dist, weight_noise</code></td>
+                <td>소음 회피</td>
+                <td>고속도로 거리</td>
+              </tr>
+              <tr data-tags="스펙 생활">
+                <td>주차/EV 충전</td>
+                <td><code>need_parking, need_ev</code></td>
+                <td>차량 보유 고려</td>
+                <td>단지 시설(추가 입력)</td>
+              </tr>
+              <tr data-tags="생활">
+                <td>반려동물 여부</td>
+                <td><code>pet_allowed</code></td>
+                <td>단지 규정 확인</td>
+                <td>단지 정보</td>
+              </tr>
+              <tr data-tags="입지 스펙">
+                <td>향/채광(남향 등)</td>
+                <td><code>orientation_pref</code></td>
+                <td>일조 선호</td>
+                <td>평면·층수(추정)</td>
+              </tr>
+              <tr data-tags="입지">
+                <td>보안/치안</td>
+                <td><code>weight_security</code></td>
+                <td>CCTV/경비·지역 치안</td>
+                <td>단지/지역 통계</td>
+              </tr>
+              <tr data-tags="입지">
+                <td>구매 목적(자가/투자)</td>
+                <td><code>buy_purpose</code></td>
+                <td>수익/거주 가중치</td>
+                <td>가격지수·유동성</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="an-actions">
+          <button id="an-open-json" class="an-btn ghost">JSON 스키마 보기</button>
+          <a href="survey.html" class="an-btn primary">맞춤 설문 시작하기</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- JSON 스키마 모달 -->
+  <div id="an-modal" class="an-modal" aria-hidden="true">
+    <div class="an-modal-backdrop"></div>
+    <div class="an-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="an-modal-title">
+      <div class="an-modal-head">
+        <h3 id="an-modal-title">설문 응답 JSON 스키마 (예시)</h3>
+        <button id="an-close-modal" class="an-x" aria-label="닫기">✕</button>
+      </div>
+<pre class="an-code" id="an-json">{
+  "budget_max": 800000000,
+  "loan_use": true,
+  "loan_limit": 400000000,
+  "pref_region": ["서울특별시 강서구", "경기도 고양시 일산서구"],
+  "housing_type": "apartment",
+  "area_min": 59,
+  "area_max": 84,
+  "move_in_deadline": "2026-03-31",
+  "max_station_dist": 800,
+  "weight_station_dist": 0.9,
+  "commute_origin": "여의도",
+  "commute_time_max": 60,
+  "weight_hospital": 0.6,
+  "max_hospital_dist": 1500,
+  "weight_market": 0.7,
+  "weight_convenience": 0.7,
+  "weight_school": 0.8,
+  "floor_pref": "mid",
+  "built_year_min": 2015,
+  "maintenance_sensitivity": 0.5,
+  "max_highway_dist": 500,
+  "weight_noise": 0.8,
+  "need_parking": true,
+  "need_ev": false,
+  "pet_allowed": true,
+  "orientation_pref": "south",
+  "weight_security": 0.6,
+  "buy_purpose": "self"
+}</pre>
+    </div>
+  </div>
+
+  <script src="cus_an.js"></script>
+</body>
+</html>
