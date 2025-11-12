@@ -1,11 +1,62 @@
 // results.js
 
+// 카카오맵 전역 변수
+let map;
+let currentMarker;
+
+// 카카오맵 초기화
+function initKakaoMap() {
+    const container = document.getElementById('map-area');
+    if (!container) return;
+    
+    const options = {
+        center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 시청 기본 위치
+        level: 5
+    };
+    
+    map = new kakao.maps.Map(container, options);
+}
+
+// 지도에 마커 표시
+function showLocationOnMap(lat, lng, propertyName) {
+    if (!map) {
+        initKakaoMap();
+    }
+    
+    // 기존 마커 제거
+    if (currentMarker) {
+        currentMarker.setMap(null);
+    }
+    
+    const position = new kakao.maps.LatLng(lat, lng);
+    
+    // 새 마커 생성
+    currentMarker = new kakao.maps.Marker({
+        position: position,
+        map: map
+    });
+    
+    // 인포윈도우 생성
+    const infowindow = new kakao.maps.InfoWindow({
+        content: `<div style="padding:5px;font-size:12px;width:200px;text-align:center;">${propertyName}</div>`
+    });
+    
+    infowindow.open(map, currentMarker);
+    
+    // 지도 중심 이동
+    map.setCenter(position);
+    map.setLevel(4);
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const userPersonalizedTitle = document.getElementById('user-personalized-title');
     const userSummary = document.getElementById('user-summary');
     const matchPercentage = document.getElementById('match-percentage');
     const recommendationList = document.getElementById('recommendation-list');
     const reasonKeywordsContainer = document.getElementById('reason-keywords');
+    
+    // 카카오맵 초기화
+    initKakaoMap();
 
     // 세션 스토리지와 로컬 스토리지에서 설문 데이터 가져오기
     let surveyData = null;
@@ -76,6 +127,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const card = document.createElement('div');
             card.classList.add('property-card');
             
+            // 위도, 경도 데이터 (CSV에서 가져오거나 기본값 사용)
+            const lat = Number(property['위도']) || Number(property['latitude']) || (37.5665 + Math.random() * 0.1 - 0.05);
+            const lng = Number(property['경도']) || Number(property['longitude']) || (126.9780 + Math.random() * 0.1 - 0.05);
+            
             // 키워드 생성
             const keywords = [];
             const distance = Number(property['distance_to_station_m']) || 0;
@@ -108,6 +163,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <button class="view-details-btn" onclick="alert('상세 정보: ${property['아파트명']}\\n위치: ${property['도로명']}\\n면적: ${area}㎡')">상세보기</button>
                 </div>
             `;
+            
+            // 카드 클릭 시 지도에 위치 표시
+            card.addEventListener('click', () => {
+                showLocationOnMap(lat, lng, property['아파트명'] || '매물');
+                
+                // 기존에 선택된 카드의 스타일 제거
+                document.querySelectorAll('.property-card').forEach(c => {
+                    c.style.border = '1px solid #eee';
+                    c.style.backgroundColor = '#fff';
+                });
+                
+                // 현재 카드에 선택 스타일 적용
+                card.style.border = '2px solid #007bff';
+                card.style.backgroundColor = '#f0f8ff';
+            });
+            
             recommendationList.appendChild(card);
         });
         
