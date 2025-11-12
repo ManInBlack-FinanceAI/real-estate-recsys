@@ -1,0 +1,106 @@
+/* 페이지 섹션 간격 */
+.an-section { margin: 24px 0; }
+
+/* 리드 문장 */
+.an-lead { color:#555; margin-top:8px; }
+
+/* 흐름 그리드: 기존 .step-item 스타일 재사용 */
+.an-flow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+.an-clickless { cursor: default; }
+
+/* 카드 그리드 (데이터 출처용) */
+.an-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 16px;
+}
+.an-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  padding: 20px;
+}
+.an-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.1em;
+}
+.an-card h3 small { color:#888; font-weight: 500; }
+.an-card ul { margin: 10px 0 0 18px; color:#555; }
+
+/* 설문 테이블 */
+.an-tablewrap {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  overflow: auto;
+}
+.an-table { width:100%; border-collapse: collapse; min-width: 720px; }
+.an-table th, .an-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+.an-table thead th {
+  position: sticky; top: 0; background: #fafafa; z-index: 1; color:#333;
+}
+.an-table code {
+  background:#f7f7f7; border:1px solid #eee; border-radius: 6px;
+  padding: 2px 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* 필터 pill */
+.an-filter { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 12px; }
+.an-pill {
+  padding:6px 10px; border:1px solid #e4e7ec; border-radius:999px;
+  background:#fff; cursor:pointer; font-size:12px;
+}
+.an-pill.is-active { border-color:#007bff; color:#007bff; }
+
+/* 액션 버튼 */
+.an-actions { display:flex; gap:10px; margin-top: 14px; }
+.an-btn {
+  padding:10px 14px; border-radius:10px; font-weight:700; border:1px solid #e4e7ec; background:#fff; color:#333; text-decoration:none; display:inline-block;
+}
+.an-btn.primary { background:#007bff; color:#fff; border-color:#007bff; }
+.an-btn.ghost:hover { border-color:#007bff; }
+
+/* 모달 */
+.an-modal { position: fixed; inset:0; display:none; }
+.an-modal[aria-hidden="false"]{ display:block; }
+.an-modal-backdrop { position:absolute; inset:0; background: rgba(0,0,0,.45); }
+.an-modal-dialog {
+  position: relative; background:#fff; width:min(940px,calc(100% - 24px));
+  margin: 60px auto; border-radius: 10px; overflow:hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,.18);
+}
+.an-modal-head {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 14px; border-bottom:1px solid #eee;
+}
+.an-x { border:none; background:transparent; font-size:18px; color:#666; cursor:pointer; }
+.an-code { margin:0; padding:14px; font-size:12px; color:#333; white-space: pre; overflow:auto; }
+
+/* 모바일 */
+@media (max-width:640px){
+  .an-table { min-width: 600px; }
+}
+
+/* 서비스 흐름 카드 호버 고정(전역 .step-item:hover 덮어쓰기) */
+.an-flow-grid .step-item {
+  transform: none !important;     /* 어떤 초기 변형도 제거 */
+  transition: none !important;    /* 호버 전환 효과 제거 */
+  cursor: default;                /* 포인터 커서 방지(정보 카드 느낌) */
+}
+
+.an-flow-grid .step-item:hover,
+.an-flow-grid .step-item:focus,
+.an-flow-grid .step-item:active {
+  transform: none !important;     /* 떠오르기/확대/이동 방지 */
+  top: 0 !important;              /* hover에서 top 이동 쓰는 테마 대비 */
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08) !important; /* 평상시와 동일한 깊이 */
+  filter: none !important;        /* 밝기/블러 등 시각효과 제거 */
+}
