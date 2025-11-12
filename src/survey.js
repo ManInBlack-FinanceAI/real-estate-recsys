@@ -118,8 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
       property_type: (document.getElementById('property_type-input')||{}).value || null,
       deal_type: (document.getElementById('deal_type-input')||{}).value || null,
       budget_range: (document.getElementById('budget_range-input')||{}).value || null,
-      loan_ratio: Number((document.getElementById('loanRatio')||{}).value || null),
-      loan_rate: Number((document.getElementById('loanRate')||{}).value || null),
+      loan_ratio: Number((document.getElementById('loanRatio')||{}).value || 0),
+      loan_rate: Number((document.getElementById('loanRate')||{}).value || 0),
       regions: (document.getElementById('regions-input')||{}).value ? (document.getElementById('regions-input').value.split(',').map(s=>s.trim()).filter(Boolean)) : [],
       move_in: (document.getElementById('move_in-input')||{}).value || null,
       pyung_range: (document.getElementById('pyung_range-input')||{}).value || null,
@@ -130,7 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
     data.rank_top5 = data.rank_all.slice(0,5);
     data.pref_is_apartment = data.property_type === '아파트';
     data.pref_is_sale = data.deal_type === '매매';
+    
+    // 세션 스토리지에도 저장 (페이지 새로고침 시에도 유지)
+    sessionStorage.setItem('survey_v2', JSON.stringify(data));
     localStorage.setItem('survey_v2', JSON.stringify(data));
+    
+    console.log('설문 데이터 저장:', data);
     window.location.href = 'results.html';
   });
 

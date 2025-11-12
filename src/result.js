@@ -1,17 +1,45 @@
 // results.js
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const userPersonalizedTitle = document.getElementById('user-personalized-title');
     const userSummary = document.getElementById('user-summary');
     const matchPercentage = document.getElementById('match-percentage');
     const recommendationList = document.getElementById('recommendation-list');
     const reasonKeywordsContainer = document.getElementById('reason-keywords');
 
-    // 로컬 스토리지에서 사용자 답변 가져오기
+    // 세션 스토리지와 로컬 스토리지에서 설문 데이터 가져오기
+    let surveyData = null;
+    const surveyV2String = sessionStorage.getItem('survey_v2') || localStorage.getItem('survey_v2');
+    if (surveyV2String) {
+        surveyData = JSON.parse(surveyV2String);
+        console.log('설문 데이터 로드:', surveyData);
+    }
+    
+    // 기존 userSurveyAnswers도 호환성을 위해 로드
     const userSurveyAnswersString = localStorage.getItem('userSurveyAnswers');
     let userAnswers = {};
     if (userSurveyAnswersString) {
         userAnswers = JSON.parse(userSurveyAnswersString);
+    }
+    
+    // CSV 데이터 로드 및 필터링
+    let filteredProperties = [];
+    try {
+        const csvData = await loadCSV('../data_for_filter.csv');
+        console.log('CSV 데이터 로드 완료:', csvData.length);
+        
+        if (surveyData && csvData.length > 0) {
+            filteredProperties = filterProperties(csvData, surveyData);
+            console.log('필터링 완료:', filteredProperties.length);
+            
+            // 우선순위에 따라 정렬
+            if (surveyData.rank_top5 && surveyData.rank_top5.length > 0) {
+                filteredProperties = sortByPriorities(filteredProperties, surveyData.rank_top5);
+                console.log('정렬 완료');
+            }
+        }
+    } catch (error) {
+        console.error('CSV 로드 또는 필터링 오류:', error);
     }
 
     // 가상의 사용자 이름 (실제로는 로그인 정보 등에서 가져옴)
@@ -37,45 +65,124 @@ document.addEventListener('DOMContentLoaded', () => {
     const randomMatch = Math.floor(Math.random() * (99 - 85 + 1)) + 85; // 85% ~ 99%
     matchPercentage.textContent = `${randomMatch}%`;
 
-    // 2. 추천 매물 리스트 생성 (가상 데이터)
-    const recommendedProperties = generateDummyProperties(userAnswers); // 사용자 답변 기반 더미 데이터 생성
+    // 2. 추천 매물 리스트 생성 (필터링된 실제 데이터 사용)
     recommendationList.innerHTML = ''; // 기존 내용 비우기
 
-    if (recommendedProperties.length > 0) {
-        recommendedProperties.forEach(property => {
+    if (filteredProperties.length > 0) {
+        // 상위 10개만 표시
+        const topProperties = filteredProperties.slice(0, 10);
+        
+        topProperties.forEach(property => {
             const card = document.createElement('div');
             card.classList.add('property-card');
+            
+            // 키워드 생성
+            const keywords = [];
+            const distance = Number(property['distance_to_station_m']) || 0;
+            if (distance < 500) keywords.push('역세권');
+            
+            const buildYear = Number(property['건축년도']) || 0;
+            const currentYear = new Date().getFullYear();
+            if (buildYear >= currentYear - 5) keywords.push('신축');
+            else if (buildYear >= currentYear - 10) keywords.push('준신축');
+            
+            const floor = Number(property['층']) || 0;
+            if (floor >= 15) keywords.push('고층');
+            
+            const area = Number(property['전용면적(㎡)']) || 0;
+            if (area > 100) keywords.push('넓은평수');
+            
             card.innerHTML = `
-                <img src="${property.image}" alt="${property.name} 이미지" class="property-image">
+                <img src="https://via.placeholder.com/300x200?text=${encodeURIComponent(property['아파트명'] || '매물')}" 
+                     alt="${property['아파트명']} 이미지" class="property-image">
                 <div class="card-details">
-                    <h3>${property.name}</h3>
-                    <p class="location">${property.location}</p>
-                    <p class="price">${property.price}</p>
+                    <h3>${property['아파트명'] || '정보없음'}</h3>
+                    <p class="location">${property['시군구명']} ${property['법정동']}</p>
+                    <p class="price">매매 ${formatPrice(Number(property['거래금액(만원)']))} (${sqmToPyung(area)}평)</p>
+                    <p class="detail-info">
+                        ${floor}층 · ${buildYear}년 준공 · ${property['nearest_station']} 도보 ${property['walk_minutes_est']}분
+                    </p>
                     <div class="keywords">
-                        ${property.keywords.map(kw => `<span class="keyword">#${kw}</span>`).join('')}
+                        ${keywords.map(kw => `<span class="keyword">#${kw}</span>`).join('')}
                     </div>
-                    <button class="view-details-btn">상세보기</button>
+                    <button class="view-details-btn" onclick="alert('상세 정보: ${property['아파트명']}\\n위치: ${property['도로명']}\\n면적: ${area}㎡')">상세보기</button>
                 </div>
             `;
             recommendationList.appendChild(card);
         });
+        
+        // 매칭 점수 업데이트 (필터 조건 충족률 기반)
+        const matchScore = Math.min(95, 70 + Math.floor((filteredProperties.length / 10) * 5));
+        matchPercentage.textContent = `${matchScore}%`;
     } else {
-        recommendationList.innerHTML = '<p style="text-align: center; color: #777;">아직 추천할 매물이 없습니다. 설문 내용을 다시 확인해주세요.</p>';
+        recommendationList.innerHTML = '<p style="text-align: center; color: #777;">설문 조건에 맞는 매물이 없습니다. 조건을 조정해주세요.</p>';
+        matchPercentage.textContent = '0%';
     }
 
 
-    // 3. 추천 이유 키워드 업데이트
+    // 3. 추천 이유 키워드 업데이트 (설문 데이터 기반)
     reasonKeywordsContainer.innerHTML = '';
-    const reasons = generateReasonKeywords(userAnswers); // 사용자 답변 기반 추천 이유 생성
+    const reasons = [];
+    
+    if (surveyData) {
+        // 예산 관련
+        if (surveyData.budget_range) {
+            reasons.push(`예산${surveyData.budget_range}`);
+        }
+        
+        // 지역 관련
+        if (surveyData.regions && surveyData.regions.length > 0) {
+            surveyData.regions.slice(0, 2).forEach(region => {
+                reasons.push(region.replace('서울특별시 ', ''));
+            });
+        }
+        
+        // 평수 관련
+        if (surveyData.pyung_range) {
+            reasons.push(surveyData.pyung_range);
+        }
+        
+        // 신축 여부
+        if (surveyData.new_build && surveyData.new_build !== '무관') {
+            reasons.push(surveyData.new_build.replace(/\(.*\)/, ''));
+        }
+        
+        // 입주 시기
+        if (surveyData.move_in) {
+            reasons.push(`입주${surveyData.move_in}`);
+        }
+        
+        // 우선순위 상위 2개
+        if (surveyData.rank_top5 && surveyData.rank_top5.length > 0) {
+            const priorityMap = {
+                'price': '가격중시',
+                'region': '지역중시',
+                'station': '역세권중시',
+                'size_floor': '평수중시',
+                'newer': '신축중시'
+            };
+            surveyData.rank_top5.slice(0, 2).forEach(key => {
+                if (priorityMap[key]) {
+                    reasons.push(priorityMap[key]);
+                }
+            });
+        }
+    }
+    
+    // 기존 방식도 백업으로 사용
+    if (reasons.length === 0) {
+        reasons.push(...generateReasonKeywords(userAnswers));
+    }
+    
     if (reasons.length > 0) {
-        reasons.forEach(reason => {
+        reasons.slice(0, 7).forEach(reason => {
             const tag = document.createElement('span');
             tag.classList.add('reason-tag');
             tag.textContent = `#${reason}`;
             reasonKeywordsContainer.appendChild(tag);
         });
     } else {
-         reasonKeywordsContainer.innerHTML = '<p style="font-size: 0.9em; color: #999;">설문 결과를 바탕으로 한 추천 키워드가 없습니다.</p>';
+        reasonKeywordsContainer.innerHTML = '<p style="font-size: 0.9em; color: #999;">설문 결과를 바탕으로 한 추천 키워드가 없습니다.</p>';
     }
 
 
