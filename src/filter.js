@@ -131,34 +131,6 @@ function newBuildToYearRange(newBuild, currentYear = new Date().getFullYear()) {
 }
 
 /**
- * 입주 희망시기를 조회연월 범위로 변환
- * @param {string} moveIn - 입주 희망시기 (예: "즉시", "3개월 이내")
- * @returns {Object} {minMonth: string, maxMonth: string} YYYYMM 형식
- */
-function moveInToMonthRange(moveIn) {
-  const now = new Date();
-  const currentYearMonth = now.getFullYear() * 100 + (now.getMonth() + 1);
-  
-  if (!moveIn || moveIn === '즉시') {
-    return { minMonth: 0, maxMonth: currentYearMonth };
-  }
-  
-  let monthsAhead = 0;
-  if (moveIn === '3개월 이내') {
-    monthsAhead = 3;
-  } else if (moveIn === '6개월 이내') {
-    monthsAhead = 6;
-  } else if (moveIn === '1년 이내') {
-    monthsAhead = 12;
-  }
-  
-  const futureDate = new Date(now.getFullYear(), now.getMonth() + monthsAhead, 1);
-  const futureYearMonth = futureDate.getFullYear() * 100 + (futureDate.getMonth() + 1);
-  
-  return { minMonth: currentYearMonth, maxMonth: futureYearMonth };
-}
-
-/**
  * 설문 데이터로 CSV 데이터 필터링
  * @param {Array} data - CSV 파싱된 데이터
  * @param {Object} surveyData - 설문 응답 데이터
@@ -185,16 +157,6 @@ function filterProperties(data, surveyData) {
     console.log(`예산 필터 후: ${filtered.length}개`);
   }
   
-  // 2. 자금 조달 방식 (주담대금리) - 대출 비율이 높을수록 금리가 중요
-  // 금리가 입력되었다면 해당 금리보다 낮은 매물만 필터링
-  if (surveyData.loan_ratio > 0 && surveyData.loan_rate > 0) {
-    filtered = filtered.filter(item => {
-      const itemRate = Number(item['주담대금리']) || 0;
-      return itemRate <= surveyData.loan_rate;
-    });
-    console.log(`금리 필터 후: ${filtered.length}개`);
-  }
-  
   // 3. 희망 지역 (시군구명 또는 법정동)
   if (surveyData.regions && surveyData.regions.length > 0) {
     filtered = filtered.filter(item => {
@@ -210,17 +172,7 @@ function filterProperties(data, surveyData) {
     });
     console.log(`지역 필터 후: ${filtered.length}개`);
   }
-  
-  // 4. 입주 희망시기 (조회연월)
-  if (surveyData.move_in && surveyData.move_in !== '무관') {
-    const monthRange = moveInToMonthRange(surveyData.move_in);
-    filtered = filtered.filter(item => {
-      const itemMonth = Number(item['조회연월']) || 0;
-      return itemMonth >= monthRange.minMonth && itemMonth <= monthRange.maxMonth;
-    });
-    console.log(`입주시기 필터 후: ${filtered.length}개`);
-  }
-  
+
   // 5. 평수 (전용면적)
   if (surveyData.pyung_range) {
     const areaRange = pyungToSquareMeter(surveyData.pyung_range);
