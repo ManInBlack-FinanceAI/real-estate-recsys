@@ -442,6 +442,182 @@ button {
   border-radius: 5px;
 }
 
+/* ===== 공통 모달 ===== */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 2000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 28px 28px;
+    width: 420px;
+    max-width: 90%;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+    position: relative;
+}
+
+.modal-box h2 {
+    margin: 0 0 8px;
+    font-size: 1.4rem;
+}
+
+.modal-desc {
+    margin: 0 0 20px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #999;
+}
+
+.modal-close:hover {
+    color: #555;
+}
+
+.modal-form-group {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modal-form-group label {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.modal-form-group input {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.modal-form-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+}
+
+.primary-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 600;
+    background: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.primary-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+.full-width {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.link-button {
+    border: none;
+    padding: 0;
+    background: none;
+    color: #007bff;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.link-button:hover {
+    text-decoration: underline;
+}
+
+.auth-forms {
+    display: none;
+}
+
+.auth-forms.active {
+    display: block;
+}
+
+
+/* FAQ 모달 전용 */
+
+.faq-box {
+    width: 640px;
+    max-width: 94%;
+}
+
+.faq-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    margin: 8px 0 16px;
+    background: #fafafa;
+}
+
+.faq-search i {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.faq-search input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 0.9rem;
+    background: transparent;
+}
+
+.faq-list {
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.faq-item + .faq-item {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.faq-item h3 {
+    margin: 0 0 4px;
+    font-size: 0.95rem;
+}
+
+.faq-item p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: #555;
+}
+
 /* 추가: 배경 도형들은 메인 페이지 HTML에서 제거했으므로 관련 CSS는 삭제 */
 
 /* 모든 페이지의 footer 또는 공통 하단 영역이 있다면 여기에 추가 */
