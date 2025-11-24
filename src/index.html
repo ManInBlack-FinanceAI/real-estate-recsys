@@ -58,6 +58,36 @@
                     <i class="fab fa-instagram"></i>
                 </a>
             </div>
+
+            <!-- ✅ 서울 권역별 검색 TOP3 위젯 -->
+            <div class="region-ranking-widget">
+                <h3>서울 핵심 권역</h3>
+
+                <div class="region-tabs">
+                    <button class="region-tab" data-region="gangdong">
+                        <div class="region-icon region-icon-gangdong">동</div>
+                        <span>강동</span>
+                    </button>
+                    <button class="region-tab" data-region="gangseo">
+                        <div class="region-icon region-icon-gangseo">서</div>
+                        <span>강서</span>
+                    </button>
+                    <button class="region-tab active" data-region="gangnam">
+                        <div class="region-icon region-icon-gangnam">남</div>
+                        <span>강남</span>
+                    </button>
+                    <button class="region-tab" data-region="gangbuk">
+                        <div class="region-icon region-icon-gangbuk">북</div>
+                        <span>강북</span>
+                    </button>
+                </div>
+
+                <div class="region-top3">
+                    <p class="region-top3-title">검색 TOP 3</p>
+                    <ol class="region-top3-list"></ol>
+                </div>
+            </div>
+
         </aside>
 
         <main class="content">
@@ -91,8 +121,9 @@
                     <p class="hero-eyebrow">실거래 데이터 기반 맞춤 추천</p>
 
                     <h1>
-                        단 몇 분 만에,<br>
-                        나만을 위한 집을 찾아보세요.
+                        나에게 잘 맞는<br>
+                        나에게 적합한 부동산<br>
+                        Men in Black
                     </h1>
 
                     <p class="hero-subtitle">
@@ -263,6 +294,84 @@
             </div>
         </div>
     </footer>
+
+    <script>
+    // 권역별 검색 TOP3 데이터 (예시 문구 — 나중에 실제 검색 랭킹으로 교체 가능)
+    const REGION_TOP3 = {
+        gangnam: [
+        '역삼동 · 10년 이내 신축 전세',
+        '잠실동 · 한강뷰 중층 매매',
+        '삼성동 · 도보 5분 역세권 아파트'
+        ],
+        gangbuk: [
+        '성북구 · 한옥 감성 단독주택',
+        '종로구 · 대학가 인근 소형 아파트',
+        '강북구 · 가성비 좋은 구축 아파트'
+        ],
+        gangseo: [
+        '마곡동 · 업무지구 인근 신축',
+        '염창동 · 공항 접근성 좋은 전세',
+        '가양동 · 한강 산책로 인접 단지'
+        ],
+        gangdong: [
+        '천호동 · 복합상권 중심 아파트',
+        '길동 · 학군 좋은 중형 평형',
+        '고덕동 · 신축 브랜드 아파트'
+        ]
+    };
+
+    // 초기 DOM 로딩 후 실행
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabs   = document.querySelectorAll('.region-tab');
+        const widget = document.querySelector('.region-ranking-widget');
+        if (!tabs.length || !widget) return;
+
+        const top3Box = widget.querySelector('.region-top3');
+        const titleEl = widget.querySelector('.region-top3-title');
+        const listEl  = widget.querySelector('.region-top3-list');
+
+        const setRegionTop3 = (region, labelText) => {
+            const items = REGION_TOP3[region] || [];
+            listEl.innerHTML = '';
+            items.forEach(text => {
+                const li = document.createElement('li');
+                li.textContent = text;
+                listEl.appendChild(li);
+        });
+
+        // 제목 & 박스 표시
+            titleEl.textContent = `${labelText} 검색 TOP 3`;
+            top3Box.classList.add('visible');   // 🔑 CSS에서 display:block 으로 전환
+        };
+
+        // 🔵 초기: active 다 제거 + TOP3 박스 숨김
+        tabs.forEach(tab => tab.classList.remove('active'));
+        top3Box.classList.remove('visible');
+
+        // 탭 클릭 시에만 TOP3 보이도록
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                event.stopPropagation(); // 클릭이 document까지 바로 전파되는 것 방지
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const region = tab.dataset.region;
+                const label  = tab.querySelector('span')?.textContent || '';
+                setRegionTop3(region, label);
+            });
+        });
+
+        document.addEventListener('click', (event) => {
+            // 클릭한 곳이 region-ranking-widget 안이면 무시
+            if (widget.contains(event.target)) return;
+
+            // 밖을 클릭한 경우 → TOP3 숨기고 active 제거
+            top3Box.classList.remove('visible');
+            tabs.forEach(t => t.classList.remove('active'));
+        });
+    });
+    </script>
 
 </body>
 </html>
