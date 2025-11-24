@@ -111,6 +111,7 @@ button {
     min-height: calc(100vh - 50px); /* Adjust based on navbar height */
     background-color: #fff;
     box-shadow: 0 0 15px rgba(0,0,0,0.08);
+    margin: 10px 10px 0px;
 }
 
 /* Sidebar */
@@ -125,6 +126,9 @@ button {
 
     position: relative;
     z-index: 200;      /* 나중에 TOP3가 메인 이미지보다 앞으로 나오도록 하는 밑바탕 */
+
+    background-color: #f3f4f6;        /* 연한 회색 느낌 */
+    border-right: 1px solid #e5e7eb;
 }
 
 /* content는 사이드바 옆에 바로 붙게 */
@@ -433,6 +437,10 @@ button {
     align-items: center;
     margin-top: 5px;
     padding-top: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #ffffff;
 }
 
 .main-nav ul {
