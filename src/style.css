@@ -115,15 +115,16 @@ button {
 
 /* Sidebar */
 .sidebar {
-    width: 120px;
-    background-color: #fff;
-    padding: 30px 0 20px 25px;
-    border-right: 1px solid #eee;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.03);
-    flex-shrink: 0;
+
+    flex: 0 0 150px;
+    width: 150px;
+    max-width: 150px;
+
+    position: relative;
+    z-index: 200;      /* 나중에 TOP3가 메인 이미지보다 앞으로 나오도록 하는 밑바탕 */
 }
 
 /* content는 사이드바 옆에 바로 붙게 */
@@ -155,6 +156,265 @@ button {
     color: #007bff;
     transform: translateX(5px);
 }
+
+/* ===== 왼쪽 사이드바: 설문 인기 선택지 요약 ===== */
+.sidebar .survey-hints {
+    margin-top: 32px;
+    width: 100%;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    padding: 16px 14px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+
+.sidebar .survey-hints h3 {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* 안쪽 리스트를 세로 스크롤 영역으로 */
+.sidebar .survey-hints-list {
+    max-height: 220px;        /* 필요하면 더 키우거나 줄여도 됨 */
+    overflow-y: auto;
+    padding-right: 4px;       /* 스크롤바 생겨도 텍스트가 안 붙게 */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    /* 스크롤바 공통 설정 */
+    scrollbar-width: thin;                      /* Firefox */
+    scrollbar-color: #d1d5db transparent;       /* Firefox */
+}
+
+/* WebKit 기반 브라우저용 (Chrome, Edge, Safari 등) */
+.sidebar .survey-hints-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar .survey-hints-list::-webkit-scrollbar-track {
+    background: transparent;                    /* 배경에 자연스럽게 */
+}
+
+.sidebar .survey-hints-list::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 999px;
+    border: 2px solid transparent;              /* 둥글게 + 여백 느낌 */
+}
+
+/* hover 시 살짝 진하게 */
+.sidebar .survey-hints-list::-webkit-scrollbar-thumb:hover {
+    background-color: #9ca3af;
+}
+/* 각 항목 스타일 */
+.sidebar .survey-hints-item {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 0;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.sidebar .survey-hints-item:last-child {
+    border-bottom: none;
+}
+
+.sidebar .survey-hints-item strong {
+    font-size: 0.85rem;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.sidebar .survey-hints-item span {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* ===== 서울 권역별 검색 TOP3 위젯 ===== */
+.region-ranking-widget {
+    margin-top: 16px;
+    width: 100%;             /* 사이드바 안에서만 꽉 차도록 */
+    max-width: 90%;
+    box-sizing: border-box;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    padding: 12px 10px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.10);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    position: sticky;
+    top: 100px;
+    z-index: 220;            /* 메인 컨텐츠보다 위에 오도록 한 번 더 올려줌 */
+}
+
+.region-ranking-widget h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+
+/* 왼쪽: 권역 탭 컬럼 */
+/* ✅ 동·서·남·북을 위에서 아래로 세로 정렬 */
+.sidebar .region-tabs {
+    display: flex !important;
+    flex-direction: column !important;  /* 세로 방향 */
+    gap: 6px;
+    margin-top: 6px;
+}
+
+/* 각 버튼은 가로로 배치 (아이콘 왼쪽, 글자 오른쪽) */
+.sidebar .region-tab {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+
+/* 각 권역 탭 버튼 */
+.region-tab {
+    display: flex;
+    flex-direction: row;     /* 아이콘 위, 글자 아래 */
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.region-tab span {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.region-tab .region-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #f9fafb;
+}
+
+/* 로고 컬러 (권역별 색 다르게) */
+.region-icon-gangnam {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);  /* 보랏빛 */
+}
+.region-icon-gangbuk {
+    background: linear-gradient(135deg, #10b981, #22c55e);  /* 초록 */
+}
+.region-icon-gangseo {
+    background: linear-gradient(135deg, #f97316, #ea580c);  /* 주황 */
+}
+.region-icon-gangdong {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);  /* 파랑 */
+}
+
+/* 탭 hover / active 상태 */
+.region-tab:hover {
+    background-color: rgba(148, 163, 184, 0.12);
+    transform: translateY(-1px);
+}
+
+.region-tab.active {
+    background-color: rgba(79, 70, 229, 0.08);
+}
+
+/* ✅ 동서남북 오른쪽에 뜨는 검색 TOP3 팝업 */
+.region-top3 {
+    display: none;                 /* 기본은 숨김 */
+    position: absolute;
+    top: 4px;                      /* 동서남북 카드의 상단에서 살짝 아래로 */
+    left: calc(100% + 10px);       /* 카드 오른쪽에서 12px 떨어지게 */
+    
+    width: auto;
+    min-width: 200px;
+    max-width: 230px;              /* 글자수 고려해서 적당한 범위 */
+    box-sizing: border-box;
+
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 8px 10px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.20);
+    border: 1px solid #e5e7eb;
+
+    z-index: 9999;                  /* ✅ building_night_view 보다 항상 앞에 오도록 크게 */
+}
+
+/* JS에서 visible 클래스를 붙이면 오른쪽 팝업 표시 */
+.region-top3.visible {
+    display: block;
+}
+
+/* 안의 텍스트는 가독성 위주로 */
+.region-top3-title {
+    margin: 0 0 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.region-top3-list {
+    margin: 0;
+    padding-left: 18px;
+    list-style: decimal;
+    font-size: 0.78rem;
+    color: #4b5563;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+
+/* 스크롤바 커스텀 (있다면 그대로 유지) */
+.region-top3-list::-webkit-scrollbar {
+    width: 4px;
+}
+.region-top3-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.region-top3-list::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 999px;
+}
+.region-top3-list::-webkit-scrollbar-thumb:hover {
+    background-color: #9ca3af;
+}
+
+/* 반응형: 화면이 아주 좁을 때는 위/아래로 쌓기 */
+@media (max-width: 1024px) {
+    .region-ranking-widget {
+        grid-template-columns: 1fr;
+        row-gap: 12px;
+    }
+    .region-top3 {
+        border-left: none;
+        border-top: 1px solid #e5e7eb;
+        padding-left: 0;
+        padding-top: 10px;
+    }
+}
+
 
 /* Main Content Area */
 .content {
@@ -240,17 +500,19 @@ button {
 
 
 .hero-text h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.8em;
-    line-height: 1.2;
-    color: #222;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+        'Segoe UI', system-ui, sans-serif;
+    font-size: 3.4em;          /* 살짝 작게 정제된 느낌 */
+    line-height: 1.25;
+    color: #f9fafb;            /* 어두운 배경에서 잘 보이는 밝은 톤 */
     margin-bottom: 25px;
-    letter-spacing: -1px;
+    letter-spacing: -0.03em;
 }
+
 
 .hero-text p {
     font-size: 1.1em;
-    color: #666;
+    color: #e5e7eb;
     margin-bottom: 40px;
     line-height: 1.8;
 }
@@ -398,7 +660,8 @@ button {
 }
 
 .service-introduction-section h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+        'Segoe UI', system-ui, sans-serif;
     font-size: 2.5em;
     color: #222;
     margin-bottom: 60px;
