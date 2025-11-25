@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // CSV 데이터 로드 및 필터링
     let filteredProperties = [];
     try {
-        const csvData = await loadCSV('../data_for_filter.csv');
+        const csvData = await loadCSV('../SRE.csv');
         console.log('CSV 데이터 로드 완료:', csvData.length);
         
         if (surveyData && csvData.length > 0) {
