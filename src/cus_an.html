@@ -15,7 +15,7 @@
   <!-- 상단 네비 (index/service와 동일 구조) -->
   <header class="navbar">
     <div class="navbar-left">
-      <div class="logo">FIND MY HOME</div>
+      <a href="index.html" class="logo">FIND MY HOME</a>
       <div class="edit-mode">
         <i class="fas fa-desktop"></i>
         <i class="fas fa-tablet-alt"></i>
@@ -28,7 +28,6 @@
     </div>
     <div class="navbar-right">
       <button class="start-now" onclick="location.href='survey.html'">시작하기</button>
-      <a href="index.html" class="back-to-main" style="margin-left:12px;">메인으로</a>
     </div>
   </header>
 
@@ -50,19 +49,22 @@
       <nav class="main-nav">
         <div class="menu-logo">
           <img src="맨인블랙 로고.png" alt="Man in Black Logo">
-          <span>Men in<br>Black</span>
+          <span>Men In<br>Black</span>
         </div>
+
         <ul>
           <li><a href="service.html">서비스 소개</a></li>
-          <li><a href="#">추천 사례</a></li>
-          <li><a href="cus_an.html" class="active">부동산 가이드</a></li>
-          <li><a href="#">문의</a></li>
+          <li><a href="cus_an.html">부동산 가이드</a></li>
+          <li><a href="#" id="nav-faq">문의</a></li>
+          <li><a href="#" class="book-session">추천 사례</a></li>
         </ul>
+
         <div class="login">
           <i class="fas fa-user-circle"></i>
           <span>로그인</span>
         </div>
       </nav>
+
 
       <!-- 본문: 맞춤 분석 개요 -->
       <section class="an-section">
