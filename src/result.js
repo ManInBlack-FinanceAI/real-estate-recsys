@@ -17,6 +17,129 @@ function initKakaoMap() {
     map = new kakao.maps.Map(container, options);
 }
 
+/**
+ * API에서 매물 데이터 가져오기
+ */
+async function fetchPropertiesFromAPI(surveyData) {
+    try {
+        // 설문 데이터를 API 파라미터로 변환
+        const params = new URLSearchParams();
+        
+        // 지역 필터
+        if (surveyData.regions && surveyData.regions.length > 0) {
+            params.append('regions', surveyData.regions.map(r => r.replace('서울특별시 ', '')).join(','));
+        }
+        
+        // 예산 필터
+        if (surveyData.budget_range) {
+            const [min, max] = parseBudgetRange(surveyData.budget_range);
+            params.append('min_price', min);
+            params.append('max_price', max);
+        }
+        
+        // 평수 필터
+        if (surveyData.pyung_range) {
+            const [min, max] = parsePyungRange(surveyData.pyung_range);
+            params.append('min_area', min * 3.3);  // 평 -> m²
+            params.append('max_area', max * 3.3);
+        }
+        
+        // 신축 필터
+        if (surveyData.new_build && surveyData.new_build !== '무관') {
+            const currentYear = new Date().getFullYear();
+            if (surveyData.new_build.includes('신축')) {
+                params.append('min_year', currentYear - 5);
+            } else if (surveyData.new_build.includes('준신축')) {
+                params.append('min_year', currentYear - 10);
+            }
+        }
+        
+        // 역세권 필터
+        if (surveyData.rank_top5 && surveyData.rank_top5[0] === 'station') {
+            params.append('max_station_dist', 500);  // 500m 이내
+        }
+        
+        // 정렬 (우선순위 기반)
+        if (surveyData.rank_top5 && surveyData.rank_top5.length > 0) {
+            const sortMap = {
+                'price': 'price_asc',
+                'size_floor': 'area_desc',
+                'newer': 'year_desc',
+                'station': 'station_asc'
+            };
+            params.append('sort_by', sortMap[surveyData.rank_top5[0]] || 'price_asc');
+        }
+        
+        // 페이징
+        params.append('limit', 50);
+        params.append('offset', 0);
+        
+        // API 호출
+        const response = await fetch(`/cau19/api/properties.php?${params.toString()}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'API 호출 실패');
+        }
+        
+        console.log(`✅ API에서 ${data.count}개 매물 로드 완료 (전체: ${data.total}개)`);
+        return data;
+        
+    } catch (error) {
+        console.error('API 호출 오류:', error);
+        throw error;
+    }
+}
+
+/**
+ * 예산 범위 파싱
+ */
+function parseBudgetRange(budgetStr) {
+    const patterns = {
+        '3억 이하': [0, 30000],
+        '3~5억': [30000, 50000],
+        '5~7억': [50000, 70000],
+        '7~10억': [70000, 100000],
+        '10억 이상': [100000, 999999]
+    };
+    return patterns[budgetStr] || [0, 999999];
+}
+
+/**
+ * 평수 범위 파싱
+ */
+function parsePyungRange(pyungStr) {
+    const patterns = {
+        '10평대': [10, 20],
+        '20평대': [20, 30],
+        '30평대': [30, 40],
+        '40평대 이상': [40, 999]
+    };
+    return patterns[pyungStr] || [0, 999];
+}
+
+/**
+ * 가격 포맷
+ */
+function formatPrice(price) {
+    if (price >= 10000) {
+        return `${(price / 10000).toFixed(1)}억`;
+    }
+    return `${price}만원`;
+}
+
+/**
+ * 제곱미터를 평으로 변환
+ */
+function sqmToPyung(sqm) {
+    return (sqm * 0.3025).toFixed(1);
+}
+
 // 지도에 마커 표시
 function showLocationOnMap(lat, lng, propertyName) {
     if (!map) {
@@ -73,28 +196,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         userAnswers = JSON.parse(userSurveyAnswersString);
     }
     
-    // CSV 데이터 로드 및 필터링
+    // API에서 데이터 로드
     let filteredProperties = [];
     try {
-        const csvData = await loadCSV('../SRE.csv');
-        console.log('CSV 데이터 로드 완료:', csvData.length);
-        
-        if (surveyData && csvData.length > 0) {
-            filteredProperties = filterProperties(csvData, surveyData);
-            console.log('필터링 완료:', filteredProperties.length);
-            
-            // 우선순위에 따라 정렬
-            if (surveyData.rank_top5 && surveyData.rank_top5.length > 0) {
-                filteredProperties = sortByPriorities(filteredProperties, surveyData.rank_top5);
-                console.log('정렬 완료');
-            }
+        if (surveyData) {
+            const apiResponse = await fetchPropertiesFromAPI(surveyData);
+            filteredProperties = apiResponse.data;
+            console.log('✅ API에서 데이터 로드 완료:', filteredProperties.length);
+            console.log('첫 번째 데이터 샘플:', filteredProperties[0]); // 디버깅용
         }
     } catch (error) {
-        console.error('CSV 로드 또는 필터링 오류:', error);
+        console.error('API 호출 오류:', error);
+        recommendationList.innerHTML = '<p style="text-align: center; color: #e74c3c;">데이터를 불러오는 중 오류가 발생했습니다.</p>';
     }
 
-    // 가상의 사용자 이름 (실제로는 로그인 정보 등에서 가져옴)
-    const userName = "김부자"; // 예시 사용자 이름
+    // 가상의 사용자 이름
+    const userName = "김부자";
 
     // 1. 개인화된 제목 및 요약 업데이트
     userPersonalizedTitle.textContent = `${userName}님을 위한 맞춤 분석 결과입니다.`;
@@ -112,69 +229,121 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     userSummary.innerHTML = summaryText;
 
-    // 가상의 매칭 점수 (실제로는 추천 알고리즘 결과)
-    const randomMatch = Math.floor(Math.random() * (99 - 85 + 1)) + 85; // 85% ~ 99%
-    matchPercentage.textContent = `${randomMatch}%`;
-
-    // 2. 추천 매물 리스트 생성 (필터링된 실제 데이터 사용)
-    recommendationList.innerHTML = ''; // 기존 내용 비우기
+    // 2. 추천 매물 리스트 생성
+    recommendationList.innerHTML = '';
 
     if (filteredProperties.length > 0) {
-        // 상위 10개만 표시
         const topProperties = filteredProperties.slice(0, 10);
         
         topProperties.forEach(property => {
             const card = document.createElement('div');
             card.classList.add('property-card');
             
-            // 위도, 경도 데이터 (CSV에서 가져오거나 기본값 사용)
-            const lat = Number(property['위도']) || Number(property['latitude']) || (37.5665 + Math.random() * 0.1 - 0.05);
-            const lng = Number(property['경도']) || Number(property['longitude']) || (126.9780 + Math.random() * 0.1 - 0.05);
+            // 위도, 경도 (한글 키 사용!)
+            const lat = parseFloat(property['위도']) || 37.5665;
+            const lng = parseFloat(property['경도']) || 126.9780;
+            
+            // 안전한 값 가져오기 함수
+            function safeGet(obj, key, defaultValue = '') {
+                const value = obj[key];
+                if (value === null || value === undefined || value === '') {
+                    return defaultValue;
+                }
+                return value;
+            }
             
             // 키워드 생성
             const keywords = [];
-            const distance = Number(property['distance_to_station_m']) || 0;
-            if (distance < 500) keywords.push('역세권');
             
-            const buildYear = Number(property['건축년도']) || 0;
+            // 역세권
+            const stationDist = parseFloat(property['역거리']);
+            if (!isNaN(stationDist) && stationDist < 500) {
+                keywords.push('역세권');
+            }
+            
+            // 신축
+            const buildYear = parseInt(property['건축년도']);
             const currentYear = new Date().getFullYear();
-            if (buildYear >= currentYear - 5) keywords.push('신축');
-            else if (buildYear >= currentYear - 10) keywords.push('준신축');
+            if (!isNaN(buildYear)) {
+                if (buildYear >= currentYear - 5) {
+                    keywords.push('신축');
+                } else if (buildYear >= currentYear - 10) {
+                    keywords.push('준신축');
+                }
+            }
             
-            const floor = Number(property['층']) || 0;
-            if (floor >= 15) keywords.push('고층');
+            // 층 카테고리
+            const floorCategory = property['층_카테고리'];
+            if (floorCategory && floorCategory !== '알수없음') {
+                keywords.push(floorCategory);
+            }
             
-            const area = Number(property['전용면적(㎡)']) || 0;
-            if (area > 100) keywords.push('넓은평수');
+            // 면적
+            const area = parseFloat(property['전용면적_㎡']);
+            if (!isNaN(area) && area > 100) {
+                keywords.push('넓은평수');
+            }
+            
+            // 편의시설
+            const martCount = parseInt(property['마트수']);
+            const convCount = parseInt(property['편의점수']);
+            const parkCount = parseInt(property['공원개수']);
+            
+            if (!isNaN(martCount) && martCount >= 3) keywords.push('마트인근');
+            if (!isNaN(convCount) && convCount >= 10) keywords.push('편의점다수');
+            if (!isNaN(parkCount) && parkCount >= 10) keywords.push('공원인근');
+            
+            // 가격 포맷
+            const price = parseInt(property['거래금액_만원']);
+            const priceText = formatPrice(price);
+            
+            // 평수 (API에서 이미 계산된 값 사용)
+            const pyung = parseFloat(property['평수']);
+            const pyungText = !isNaN(pyung) ? pyung.toFixed(1) + '평' : '평수 정보없음';
+            
+            // 층 정보 (층_원본 우선, 없으면 층_숫자)
+            let floorText = property['층_원본'] || '';
+            if (!floorText && property['층_숫자']) {
+                floorText = property['층_숫자'] + '층';
+            }
+            if (!floorText) {
+                floorText = '층 정보없음';
+            }
+            
+            // 역 정보
+            const stationName = safeGet(property, '최단지하철역', '정보없음');
+            const walkTime = property['역도보시간'];
+            const walkTimeText = walkTime && !isNaN(parseFloat(walkTime)) 
+                ? `도보 ${Math.round(parseFloat(walkTime))}분` 
+                : '도보시간 정보없음';
             
             card.innerHTML = `
                 <img src="https://via.placeholder.com/300x200?text=${encodeURIComponent(property['아파트명'] || '매물')}" 
                      alt="${property['아파트명']} 이미지" class="property-image">
                 <div class="card-details">
-                    <h3>${property['아파트명'] || '정보없음'}</h3>
-                    <p class="location">${property['시군구명']} ${property['법정동']}</p>
-                    <p class="price">매매 ${formatPrice(Number(property['거래금액(만원)']))} (${sqmToPyung(area)}평)</p>
+                    <h3>${safeGet(property, '아파트명', '정보없음')}</h3>
+                    <p class="location">${safeGet(property, '시군구명', '')} ${safeGet(property, '법정동', '')}</p>
+                    <p class="price">매매 ${priceText} (${pyungText})</p>
                     <p class="detail-info">
-                        ${floor}층 · ${buildYear}년 준공 · ${property['nearest_station']} 도보 ${property['walk_minutes_est']}분
+                        ${floorText} · ${safeGet(property, '건축년도', '?')}년 준공 · ${stationName} ${walkTimeText}
                     </p>
                     <div class="keywords">
                         ${keywords.map(kw => `<span class="keyword">#${kw}</span>`).join('')}
                     </div>
-                    <button class="view-details-btn" onclick="alert('상세 정보: ${property['아파트명']}\\n위치: ${property['도로명']}\\n면적: ${area}㎡')">상세보기</button>
+                    <button class="view-details-btn" onclick="showPropertyDetails(${property['id']})">상세보기</button>
                 </div>
             `;
             
-            // 카드 클릭 시 지도에 위치 표시
+            // 카드 클릭 이벤트
             card.addEventListener('click', () => {
                 showLocationOnMap(lat, lng, property['아파트명'] || '매물');
                 
-                // 기존에 선택된 카드의 스타일 제거
+                // 선택 스타일 적용
                 document.querySelectorAll('.property-card').forEach(c => {
                     c.style.border = '1px solid #eee';
                     c.style.backgroundColor = '#fff';
                 });
                 
-                // 현재 카드에 선택 스타일 적용
                 card.style.border = '2px solid #007bff';
                 card.style.backgroundColor = '#f0f8ff';
             });
@@ -182,7 +351,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             recommendationList.appendChild(card);
         });
         
-        // 매칭 점수 업데이트 (필터 조건 충족률 기반)
+        // 매칭 점수 업데이트
         const matchScore = Math.min(95, 70 + Math.floor((filteredProperties.length / 10) * 5));
         matchPercentage.textContent = `${matchScore}%`;
     } else {
@@ -190,8 +359,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         matchPercentage.textContent = '0%';
     }
 
-
-    // 3. 추천 이유 키워드 업데이트 (설문 데이터 기반)
+    // 3. 추천 이유 키워드 업데이트
     reasonKeywordsContainer.innerHTML = '';
     const reasons = [];
     
@@ -254,100 +422,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     } else {
         reasonKeywordsContainer.innerHTML = '<p style="font-size: 0.9em; color: #999;">설문 결과를 바탕으로 한 추천 키워드가 없습니다.</p>';
-    }
-
-
-    // 가상 추천 매물 데이터 생성 함수 (실제 API 연동 시 이 부분 대체)
-    function generateDummyProperties(answers) {
-        const purpose = answers.purpose;
-        const properties = [];
-
-        if (purpose === '주거용') {
-            properties.push(
-                {
-                    name: "강남역 센트럴 아이파크",
-                    location: "서울 강남구 역삼동",
-                    price: "매매 12억 5천만원 / 전세 7억",
-                    keywords: ["역세권", "신축", "편의시설"],
-                    image: "https://via.placeholder.com/300x200/4285F4/FFFFFF?text=Apt+Gangnam"
-                },
-                {
-                    name: "분당 파크뷰",
-                    location: "경기 성남시 분당구 정자동",
-                    price: "매매 9억 8천만원 / 전세 6억",
-                    keywords: ["공원인접", "학군우수", "조용한환경"],
-                    image: "https://via.placeholder.com/300x200/34A853/FFFFFF?text=Apt+Bundang"
-                },
-                {
-                    name: "마포 한강 뷰 아파트",
-                    location: "서울 마포구 상수동",
-                    price: "매매 10억 1천만원 / 전세 6억 5천",
-                    keywords: ["한강뷰", "교통편리", "깔끔한인테리어"],
-                    image: "https://via.placeholder.com/300x200/FBBC05/FFFFFF?text=Apt+Mapo"
-                }
-            );
-        } else if (purpose === '투자용') {
-            properties.push(
-                {
-                    name: "역삼동 오피스텔 (수익률 5.5%)",
-                    location: "서울 강남구 역삼동",
-                    price: "매매 3억 5천만원",
-                    keywords: ["역세권", "임대수익", "소액투자"],
-                    image: "https://via.placeholder.com/300x200/EA4335/FFFFFF?text=Office+Yeoksam"
-                },
-                {
-                    name: "판교 상가 (시세차익 기대)",
-                    location: "경기 성남시 분당구 판교동",
-                    price: "매매 15억",
-                    keywords: ["개발호재", "시세차익", "배후수요풍부"],
-                    image: "https://via.placeholder.com/300x200/4285F4/FFFFFF?text=Shop+Pangyo"
-                },
-                {
-                    name: "영등포 재개발 예정지 빌라",
-                    location: "서울 영등포구 신길동",
-                    price: "매매 4억 2천만원",
-                    keywords: ["재개발", "장기투자", "미래가치"],
-                    image: "https://via.placeholder.com/300x200/34A853/FFFFFF?text=Villa+Yeongdeungpo"
-                }
-            );
-        }
-        return properties;
-    }
-
-    // 가상 추천 이유 키워드 생성 함수
-    function generateReasonKeywords(answers) {
-        const purpose = answers.purpose;
-        const keywords = [];
-
-        // 공통 키워드
-        keywords.push("개인맞춤분석");
-        keywords.push("최신매물정보");
-
-        if (purpose === '주거용') {
-            const conditions = answers.important_conditions_res || [];
-            if (conditions.includes("교통 편의성")) keywords.push("편리한대중교통");
-            if (conditions.includes("자녀 교육 환경")) keywords.push("우수한학군");
-            if (conditions.includes("자연 친화적 환경")) keywords.push("쾌적한자연환경");
-            if (conditions.includes("편의시설")) keywords.push("생활편의시설");
-            if (conditions.includes("신축/깔끔한 인테리어")) keywords.push("신축/리모델링");
-            if (conditions.includes("조용한 환경")) keywords.push("소음걱정NO");
-            if (conditions.includes("주차 공간")) keywords.push("넉넉한주차");
-            if (answers.region_res) keywords.push(answers.region_res.split(',')[0].trim()); // 첫 번째 지역 키워드
-            if (answers.housing_type_res) keywords.push(answers.housing_type_res[0]); // 첫 번째 주거 형태
-        } else if (purpose === '투자용') {
-            const conditions = answers.important_conditions_inv || [];
-            if (conditions.includes("공실 위험도")) keywords.push("안정적수익");
-            if (conditions.includes("개발 호재")) keywords.push("개발호재기대");
-            if (conditions.includes("역세권/교통")) keywords.push("교통프리미엄");
-            if (conditions.includes("환금성")) keywords.push("높은환금성");
-            if (conditions.includes("세금 혜택")) keywords.push("세금절감");
-            if (conditions.includes("안정적인 배후수요")) keywords.push("풍부한배후수요");
-            if (answers.investment_type) keywords.push(answers.investment_type[0]); // 첫 번째 투자 유형
-            if (answers.expected_profit_type) keywords.push(answers.expected_profit_type); // 수익 형태
-        }
-
-        // 중복 제거 및 적절한 개수로 제한
-        return Array.from(new Set(keywords)).slice(0, 7); // 최대 7개 키워드
     }
 
 
