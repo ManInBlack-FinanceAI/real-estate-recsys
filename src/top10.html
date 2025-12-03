@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <title>거래 TOP 10 - Man in Black</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css"/>
+</head>
+<body>
+  <!-- 상단 navbar는 service.html에서 복사 -->
+  <header class="navbar">
+   <div class="navbar-left">
+    <a class="logo" href="index.html">
+     FIND MY HOME
+    </a>
+    <div class="edit-mode">
+     <i class="fas fa-desktop">
+     </i>
+     <i class="fas fa-tablet-alt">
+     </i>
+     <i class="fas fa-mobile-alt">
+     </i>
+    </div>
+   </div>
+   <div class="navbar-center">
+    <p>
+     당신에게 완벽한 집을 찾아보세요.
+    </p>
+    <a class="learn-more" href="#">
+     서비스 자세히 보기
+    </a>
+   </div>
+   <div class="navbar-right">
+    <button class="start-now">
+     시작하기
+    </button>
+    <i class="fas fa-times">
+    </i>
+   </div>
+  </header>
+
+  <div class="main-container">
+    <!-- 왼쪽 sidebar는 index.html과 동일 (계산기 포함) -->
+    <aside class="sidebar">
+    <div class="profile-name">
+     MY REAL ESTATE ADVISOR
+    </div>
+    <div class="social-icons">
+     <!-- Facebook 로그인 -->
+     <a href="https://www.facebook.com/login" rel="noopener noreferrer" target="_blank">
+      <i class="fab fa-facebook-f">
+      </i>
+     </a>
+     <!-- Twitter(X) 로그인 -->
+     <a href="https://twitter.com/login" rel="noopener noreferrer" target="_blank">
+      <i class="fab fa-twitter">
+      </i>
+     </a>
+     <!-- LinkedIn 로그인 -->
+     <a href="https://www.linkedin.com/login" rel="noopener noreferrer" target="_blank">
+      <i class="fab fa-linkedin-in">
+      </i>
+     </a>
+     <!-- Instagram 로그인 -->
+     <a href="https://www.instagram.com/accounts/login/" rel="noopener noreferrer" target="_blank">
+      <i class="fab fa-instagram">
+      </i>
+     </a>
+    </div>
+    <!-- 부동산 계산기 위젯 -->
+    <nav class="calc-widget">
+        <div class="calc-header">
+          <span>계산기 바로가기</span>
+        </div>
+        <ul class="calc-list">
+          <li>
+              <a href="results.html#calculator-section" class="calc-item">
+              <span class="calc-icon"><i class="fas fa-home"></i></span>
+              <span class="calc-label">대출 계산기</span>
+              </a>
+          </li>
+          <li>
+              <a href="results.html#calculator-section" class="calc-item">
+              <span class="calc-icon"><i class="fas fa-coins"></i></span>
+              <span class="calc-label">취득세 계산기</span>
+              </a>
+          </li>
+          <li>
+              <a href="results.html#calculator-section" class="calc-item">
+              <span class="calc-icon"><i class="fas fa-calculator"></i></span>
+              <span class="calc-label">양도세 계산기</span>
+              </a>
+          </li>
+        </ul>
+    </nav>
+
+    </aside>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="content">
+      <nav class="main-nav">
+        <div class="menu-logo">
+          <img src="맨인블랙 로고.png" alt="Man in Black Logo"/>
+          <span>Men In<br/>Black</span>
+        </div>
+        <ul>
+          <li><a href="service.html">서비스 소개</a></li>
+          <li><a href="cus_an.html">부동산 가이드</a></li>
+          <li><a href="#" id="nav-faq">문의</a></li>
+          <li><a href="top10.html" class="nav-top10">거래 TOP 10</a></li>
+        </ul>
+        <div class="login">
+          <i class="fas fa-user-circle"></i>
+          <span>로그인</span>
+        </div>
+      </nav>
+
+      <section class="top10-section">
+        <h1>서울 거래 TOP 10</h1>
+        <p class="top10-desc">
+          희망 지역을 선택하면, 해당 구에서 최근 거래량이 많은 아파트 상위 10개를 보여드립니다.
+        </p>
+
+        <!-- 설문 3번 느낌의 구 버튼들 -->
+        <div class="top10-region-buttons">
+          <button type="button" class="region-btn" data-region="강남구">강남구</button>
+          <button type="button" class="region-btn" data-region="강동구">강동구</button>
+          <button type="button" class="region-btn" data-region="강북구">강북구</button>
+          <button type="button" class="region-btn" data-region="강서구">강서구</button>
+          <button type="button" class="region-btn" data-region="관악구">관악구</button>
+          <button type="button" class="region-btn" data-region="광진구">광진구</button>
+          <button type="button" class="region-btn" data-region="구로구">구로구</button>
+          <button type="button" class="region-btn" data-region="금천구">금천구</button>
+          <button type="button" class="region-btn" data-region="노원구">노원구</button>
+          <button type="button" class="region-btn" data-region="도봉구">도봉구</button>
+          <button type="button" class="region-btn" data-region="동대문구">동대문구</button>
+          <button type="button" class="region-btn" data-region="동작구">동작구</button>
+          <button type="button" class="region-btn" data-region="마포구">마포구</button>
+          <button type="button" class="region-btn" data-region="서대문구">서대문구</button>
+          <button type="button" class="region-btn" data-region="서초구">서초구</button>
+          <button type="button" class="region-btn" data-region="성동구">성동구</button>
+          <button type="button" class="region-btn" data-region="성북구">성북구</button>
+          <button type="button" class="region-btn" data-region="송파구">송파구</button>
+          <button type="button" class="region-btn" data-region="양천구">양천구</button>
+          <button type="button" class="region-btn" data-region="영등포구">영등포구</button>
+          <button type="button" class="region-btn" data-region="용산구">용산구</button>
+          <button type="button" class="region-btn" data-region="송파구">송파구</button>
+          <button type="button" class="region-btn" data-region="은평구">은평구</button>
+          <button type="button" class="region-btn" data-region="종로구">종로구</button>
+          <button type="button" class="region-btn" data-region="중구">중구</button>
+          <button type="button" class="region-btn" data-region="중랑구">중랑구</button>
+        </div>
+
+        <div id="top10-result" class="top10-result">
+          <p class="placeholder">지역 버튼을 클릭하면 상위 10개 단지가 표시됩니다.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- footer + 모달 두 개는 service.html / index.html에서 그대로 복사 -->
+  <footer class="site-footer">
+   <div class="footer-inner">
+    <!-- 왼쪽: 링크 + 주소 + 카피라이트 -->
+    <div class="footer-left">
+     <nav class="footer-links">
+      <a href="#">
+       개인정보처리방침
+      </a>
+      <a href="#">
+       사이버감사실
+      </a>
+      <a href="#">
+       이메일수집거부
+      </a>
+      <a href="#">
+       채용문의
+      </a>
+     </nav>
+     <p class="footer-address">
+      서울캠퍼스  06974 서울특별시 동작구 흑석로 84
+      <br/>
+      TEL. 010-6886-8724  E-mail. eueseok@naver.com
+     </p>
+     <p class="footer-copy">
+      Copyright © 2025 Men in Black Real Estate. All Rights Reserved.
+     </p>
+    </div>
+    <!-- 오른쪽: 협찬/파트너 로고 -->
+    <div class="footer-right">
+     <p class="footer-label">
+      협찬 · 파트너
+     </p>
+     <img alt="중앙대학교 로고" class="footer-partner-logo" src="cau_logo.jpg"/>
+    </div>
+   </div>
+  </footer>
+  <!-- 로그인 / 회원가입 모달 -->
+  <div class="modal" id="auth-modal">
+   <div class="modal-box">
+    <button class="modal-close" type="button">
+     <i class="fas fa-times">
+     </i>
+    </button>
+    <!-- 로그인 폼 -->
+    <div class="auth-forms auth-login active">
+     <h2>
+      로그인
+     </h2>
+     <p class="modal-desc">
+      가입하신 아이디와 비밀번호를 입력해주세요.
+     </p>
+     <form>
+      <div class="modal-form-group">
+       <label for="login-id">
+        아이디
+       </label>
+       <input id="login-id" placeholder="이메일 또는 아이디" type="text"/>
+      </div>
+      <div class="modal-form-group">
+       <label for="login-password">
+        비밀번호
+       </label>
+       <input id="login-password" placeholder="비밀번호" type="password"/>
+      </div>
+      <button class="primary-btn full-width" type="submit">
+       로그인
+      </button>
+     </form>
+     <p class="modal-switch">
+      아직 회원이 아니신가요?
+      <button class="link-button" id="open-signup" type="button">
+       회원가입
+      </button>
+     </p>
+    </div>
+    <!-- 회원가입 폼 -->
+    <div class="auth-forms auth-signup">
+     <h2>
+      회원가입
+     </h2>
+     <p class="modal-desc">
+      개인맞춤 추천을 위해 최소한의 정보만 요청드려요.
+     </p>
+     <form>
+      <div class="modal-form-group">
+       <label for="signup-name">
+        이름
+       </label>
+       <input id="signup-name" placeholder="홍길동" type="text"/>
+      </div>
+      <div class="modal-form-group">
+       <label for="signup-email">
+        이메일
+       </label>
+       <input id="signup-email" placeholder="example@email.com" type="email"/>
+      </div>
+      <div class="modal-form-group">
+       <label for="signup-password">
+        비밀번호
+       </label>
+       <input id="signup-password" placeholder="영문/숫자 포함 8자 이상" type="password"/>
+      </div>
+      <div class="modal-form-group">
+       <label for="signup-region">
+        희망 거주 지역
+       </label>
+       <input id="signup-region" placeholder="예: 서울 강남, 경기 용인 등" type="text"/>
+      </div>
+      <button class="primary-btn full-width" type="submit">
+       회원가입 완료
+      </button>
+     </form>
+     <p class="modal-switch">
+      이미 계정이 있으신가요?
+      <button class="link-button" id="back-to-login" type="button">
+       로그인
+      </button>
+     </p>
+    </div>
+   </div>
+  </div>
+  <!-- 문의 / FAQ 모달 -->
+  <div class="modal" id="faq-modal">
+   <div class="modal-box faq-box">
+    <button class="modal-close" type="button">
+     <i class="fas fa-times">
+     </i>
+    </button>
+    <h2>
+     자주 하는 질문
+    </h2>
+    <p class="modal-desc">
+     Man in Black 서비스를 사용하면서 많이 물어보시는 질문들을 모았어요.
+    </p>
+    <!-- 검색 바 -->
+    <div class="faq-search">
+     <i class="fas fa-search">
+     </i>
+     <input id="faq-search-input" placeholder="예: 설문 시간, 추천 기준, 개인정보 등" type="text"/>
+    </div>
+    <!-- FAQ 리스트 -->
+    <div class="faq-list">
+     <div class="faq-item">
+      <h3>
+       Q. 설문에는 얼마나 시간이 걸리나요?
+      </h3>
+      <p>
+       A. 대부분 3~5분 안에 완료할 수 있습니다. 문항 수는 15개 내외이며, 휴대폰으로도 편하게 응답하실 수 있도록 구성했습니다.
+      </p>
+     </div>
+     <div class="faq-item">
+      <h3>
+       Q. 추천 결과는 어떤 기준으로 만들어지나요?
+      </h3>
+      <p>
+       A. 사용자가 응답한 예산, 직장 위치, 선호 주거 유형, 생활 패턴 등의 정보를 공공 데이터와 내부 지표(교통, 학군, 생활편의시설 등)와 결합해 점수화한 뒤 상위 매물을 추천합니다.
+      </p>
+     </div>
+     <div class="faq-item">
+      <h3>
+       Q. 전세·월세·매매 모두 추천해 주나요?
+      </h3>
+      <p>
+       A. 예산 및 선호 거래 유형에 따라 전세, 월세, 매매를 모두 포함해 후보군을 만들 수 있습니다. 설문 초반에 거래 유형을 선택하면 그에 맞춰 필터링됩니다.
+      </p>
+     </div>
+     <div class="faq-item">
+      <h3>
+       Q. 설문에 입력한 개인정보는 어떻게 사용되나요?
+      </h3>
+      <p>
+       A. 추천 알고리즘 개선과 개인화된 결과 제공을 위해서만 사용되며, 별도의 동의 없이 외부에 제공되지 않습니다. 자세한 내용은 추후 추가될 개인정보 처리방침에서 확인하실 수 있습니다.
+      </p>
+     </div>
+     <div class="faq-item">
+      <h3>
+       Q. 이 웹에서 바로 집을 계약할 수 있나요?
+      </h3>
+      <p>
+       A. 현재는 ‘맞춤 추천’ 컨설팅까지 제공하며, 실제 계약은 사용자가 선택한 부동산 중개업소 또는 플랫폼을 통해 진행하셔야 합니다. 추후 제휴 채널을 확대할 예정입니다.
+      </p>
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- 메인 스크립트 -->
+  <script src="script.js"></script>
+  <script>
+    const TOP10_DATA = {
+      "강남구": [
+        { name: "래미안대치팰리스", address: "대치동", volume: 120, price: "평균 23.1억" },
+        { name: "은마아파트", address: "대치동", volume: 95, price: "평균 18.4억" },
+        // ... 나머지 8개
+      ],
+      "서초구": [
+        { name: "반포자이", address: "반포동", volume: 110, price: "평균 21.0억" }
+        // ...
+      ],
+      "송파구": [
+        { name: "헬리오시티", address: "가락동", volume: 130, price: "평균 17.8억" }
+        // ...
+      ],
+      "마포구": [
+        { name: "마포래미안푸르지오", address: "아현동", volume: 80, price: "평균 13.5억" }
+        // ...
+      ]
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const regionBtns = document.querySelectorAll('.region-btn');
+      const resultEl = document.getElementById('top10-result');
+      if (!regionBtns.length || !resultEl) return;
+
+      regionBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const region = btn.dataset.region;
+          regionBtns.forEach(b => b.classList.toggle('is-active', b === btn));
+          renderTop10(region);
+        });
+      });
+
+      function renderTop10(region) {
+        const list = TOP10_DATA[region];
+        if (!list || !list.length) {
+          resultEl.innerHTML = `<p class="placeholder">${region} 지역의 거래 TOP 10 데이터가 아직 준비되지 않았습니다.</p>`;
+          return;
+        }
+
+        const rows = list.slice(0, 10).map((item, idx) => `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>${item.name}</td>
+            <td>${item.address || ""}</td>
+            <td>${item.volume != null ? item.volume + "건" : ""}</td>
+            <td>${item.price || ""}</td>
+          </tr>
+        `).join('');
+
+        resultEl.innerHTML = `
+          <h3 class="top10-title">${region} 거래량 상위 10개 단지</h3>
+          <table class="top10-table">
+            <thead>
+              <tr>
+                <th>순위</th>
+                <th>아파트명</th>
+                <th>주소</th>
+                <th>거래량</th>
+                <th>참고 시세</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

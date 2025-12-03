@@ -1,202 +1,368 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>   
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나만의 부동산 찾기 - 추천 결과</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="results.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=316f4a1784cdad434c26367272d95a28"></script>
-</head>
-<body>
-    <header class="navbar">
-        <div class="navbar-left">
-            <a href="index.html" class="logo">FIND MY HOME</a>
-        </div>
-        <div class="navbar-center">
-            <p>당신에게 완벽한 집을 찾아보세요.</p>
-        </div>
-        <div class="navbar-right">
-        </div>
-    </header>
-
-    <div class="results-container">
-        <div class="results-header">
-            <h1 id="user-personalized-title">OOO님을 위한 맞춤 분석 결과입니다.</h1>
-            <p id="user-summary">OOO님은 <strong>'교통 편의성'</strong>과 <strong>'자녀 교육 환경'</strong>을 중시하는군요!</p>
-            <div class="match-score">
-                <span>추천 매물 일치율</span>
-                <span id="match-percentage">95%</span>
-            </div>
-        </div>
-
-        <div class="results-content">
-            <div class="recommendation-list-area">
-                <h2>추천 매물 리스트</h2>
-                <div id="recommendation-list">
-                    <div class="property-card">
-                        <img src="https://via.placeholder.com/300x200?text=Property+Image+1" alt="추천 매물 이미지" class="property-image">
-                        <div class="card-details">
-                            <h3>매물명 1</h3>
-                            <p class="location">OOO시 OOO구 OOO동</p>
-                            <p class="price">매매가 5억 2천만원 / 전세 3억</p>
-                            <div class="keywords">
-                                <span class="keyword">#역세권</span>
-                                <span class="keyword">#초등학교인접</span>
-                                <span class="keyword">#신축급</span>
-                            </div>
-                            <button class="view-details-btn">상세보기</button>
-                        </div>
-                    </div>
-                    <div class="property-card">
-                        <img src="https://via.placeholder.com/300x200?text=Property+Image+2" alt="추천 매물 이미지" class="property-image">
-                        <div class="card-details">
-                            <h3>매물명 2</h3>
-                            <p class="location">OOO시 OOO구 OOO동</p>
-                            <p class="price">매매가 4억 8천만원 / 전세 2억 8천</p>
-                            <div class="keywords">
-                                <span class="keyword">#공원뷰</span>
-                                <span class="keyword">#조용한환경</span>
-                                <span class="keyword">#넉넉한주차</span>
-                            </div>
-                            <button class="view-details-btn">상세보기</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="recommendation-reasons-area">
-                    <h3>나를 위한 추천 이유 키워드</h3>
-                    <div id="reason-keywords">
-                        <span class="reason-tag">#초등학교인접</span>
-                        <span class="reason-tag">#편리한대중교통</span>
-                        <span class="reason-tag">#병원인근</span>
-                        <span class="reason-tag">#대형마트</span>
-                        <span class="reason-tag">#남향</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="map-area">
-                <h2>매물 위치 지도</h2>
-                <div id="map-area" style="width:100%;height:500px;"></div>
-            </div>
-        </div>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   나만의 부동산 찾기 - 추천 결과
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="results.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+  <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=316f4a1784cdad434c26367272d95a28" type="text/javascript">
+  </script>
+ </head>
+ <body>
+  <header class="navbar">
+   <div class="navbar-left">
+    <a class="logo" href="index.html">
+     FIND MY HOME
+    </a>
+   </div>
+   <div class="navbar-center">
+    <p>
+     당신에게 완벽한 집을 찾아보세요.
+    </p>
+   </div>
+   <div class="navbar-right">
+   </div>
+  </header>
+  <div class="results-container">
+   <div class="results-header">
+    <h1 id="user-personalized-title">
+     OOO님을 위한 맞춤 분석 결과입니다.
+    </h1>
+    <p id="user-summary">
+     OOO님은
+     <strong>
+      '교통 편의성'
+     </strong>
+     과
+     <strong>
+      '자녀 교육 환경'
+     </strong>
+     을 중시하는군요!
+    </p>
+    <div class="match-score">
+     <span>
+      추천 매물 일치율
+     </span>
+     <span id="match-percentage">
+      95%
+     </span>
     </div>
-    </div> <section class="calculator-section">
-            <h2>부동산 계산기</h2>
-            <p class="calculator-intro">복잡한 부동산 세금과 대출, 이제 쉽고 빠르게 계산해보세요. (정확한 금액은 전문가와 상담 필수)</p>
-
-            <div class="calculators-container">
-                <div class="calculator-card">
-                    <h3><i class="fas fa-calculator"></i> 대출 계산기</h3>
-                    <div class="input-group">
-                        <label for="loan-amount">대출 금액 (만원)</label>
-                        <input type="number" id="loan-amount" value="30000" min="0">
-                    </div>
-                    <div class="input-group">
-                        <label for="loan-interest-rate">연 이자율 (%)</label>
-                        <input type="number" id="loan-interest-rate" value="3.5" step="0.1" min="0">
-                    </div>
-                    <div class="input-group">
-                        <label for="loan-period">대출 기간 (년)</label>
-                        <input type="number" id="loan-period" value="30" min="1" max="50">
-                    </div>
-                    <div class="result-display">
-                        <p>월 상환액: <span id="monthly-payment">0</span> 원</p>
-                        <p>총 이자액: <span id="total-interest">0</span> 원</p>
-                        <p class="disclaimer">※ 투기과열지구 내 LTV/DTI 등 규제는 고려되지 않았습니다. 실제 상담이 필요합니다.</p>
-                    </div>
-                </div>
-
-                <div class="calculator-card">
-                    <h3><i class="fas fa-file-invoice"></i> 취득세 계산기</h3>
-                    <div class="input-group">
-                        <label for="acquisition-price">취득 가액 (만원)</label>
-                        <input type="number" id="acquisition-price" value="50000" min="0">
-                    </div>
-                    <div class="input-group">
-                        <label for="acquisition-area">면적 (m²)</label>
-                        <input type="number" id="acquisition-area" value="85" min="0">
-                    </div>
-                    <div class="input-group">
-                        <label for="is-multiple-house">다주택 여부</label>
-                        <select id="is-multiple-house">
-                            <option value="false">1주택</option>
-                            <option value="true">2주택 이상</option>
-                        </select>
-                    </div>
-                    <div class="result-display">
-                        <p>취득세: <span id="acquisition-tax">0</span> 원</p>
-                        <p>지방교육세: <span id="local-education-tax">0</span> 원</p>
-                        <p>농어촌특별세: <span id="rural-special-tax">0</span> 원</p>
-                        <p>총 취득세 등: <span id="total-acquisition-tax">0</span> 원</p>
-                        <p class="disclaimer">※ 조정지역 다주택 여부, 면적 등에 따라 세율이 상이합니다. 정확한 계산은 지자체에 문의하세요.</p>
-                    </div>
-                </div>
-
-                <div class="calculator-card">
-                    <h3><i class="fas fa-hand-holding-usd"></i> 양도세 계산기</h3>
-                    <div class="input-group">
-                        <label for="sale-price">양도 가액 (만원)</label>
-                        <input type="number" id="sale-price" value="70000" min="0">
-                    </div>
-                    <div class="input-group">
-                        <label for="acquisition-cost-yangdo">취득 가액 (만원)</label>
-                        <input type="number" id="acquisition-cost-yangdo" value="50000" min="0">
-                    </div>
-                    <div class="input-group">
-                        <label for="holding-period">보유 기간 (년)</label>
-                        <input type="number" id="holding-period" value="3" min="0">
-                    </div>
-                    <div class="input-group">
-                        <label for="is-long-term-owner">장기보유 여부 (1세대 1주택)</label>
-                        <select id="is-long-term-owner">
-                            <option value="false">해당 없음</option>
-                            <option value="true">해당 (비과세 요건 충족 가정)</option>
-                        </select>
-                    </div>
-                    <div class="result-display">
-                        <p>양도 차익: <span id="capital-gain">0</span> 원</p>
-                        <p>양도 소득세: <span id="capital-gains-tax">0</span> 원</p>
-                        <p class="disclaimer">※ 1세대 1주택 비과세, 조정지역 여부, 보유기간 등 복잡한 조건이 많습니다. 세무사와 상담 필수!</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    
-
-    <script src="filter.js"></script>
-    <script src="result.js"></script>
-
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <!-- 왼쪽: 링크 + 주소 + 카피라이트 -->
-            <div class="footer-left">
-                <nav class="footer-links">
-                    <a href="#">개인정보처리방침</a>
-                    <a href="#">사이버감사실</a>
-                    <a href="#">이메일수집거부</a>
-                    <a href="#">채용문의</a>
-                </nav>
-
-                <p class="footer-address">
-                    서울캠퍼스&nbsp;&nbsp;06974 서울특별시 동작구 흑석로 84<br>
-                    TEL. 010-6886-8724&nbsp;&nbsp;E-mail. eueseok@naver.com
-                </p>
-
-                <p class="footer-copy">
-                    Copyright © 2025 Men in Black Real Estate. All Rights Reserved.
-                </p>
-            </div>
-
-            <!-- 오른쪽: 협찬/파트너 로고 -->
-            <div class="footer-right">
-                <p class="footer-label">협찬 · 파트너</p>
-                <img src="cau_logo.jpg" alt="중앙대학교 로고" class="footer-partner-logo">
-            </div>
+   </div>
+   <div class="results-content">
+    <div class="recommendation-list-area">
+     <h2>
+      추천 매물 리스트
+     </h2>
+     <div id="recommendation-list">
+      <div class="property-card">
+       <img alt="추천 매물 이미지" class="property-image" src="https://via.placeholder.com/300x200?text=Property+Image+1"/>
+       <div class="card-details">
+        <h3>
+         매물명 1
+        </h3>
+        <p class="location">
+         OOO시 OOO구 OOO동
+        </p>
+        <p class="price">
+         매매가 5억 2천만원 / 전세 3억
+        </p>
+        <div class="keywords">
+         <span class="keyword">
+          #역세권
+         </span>
+         <span class="keyword">
+          #초등학교인접
+         </span>
+         <span class="keyword">
+          #신축급
+         </span>
         </div>
-    </footer>
-</body>
+        <button class="view-details-btn">
+         상세보기
+        </button>
+       </div>
+      </div>
+      <div class="property-card">
+       <img alt="추천 매물 이미지" class="property-image" src="https://via.placeholder.com/300x200?text=Property+Image+2"/>
+       <div class="card-details">
+        <h3>
+         매물명 2
+        </h3>
+        <p class="location">
+         OOO시 OOO구 OOO동
+        </p>
+        <p class="price">
+         매매가 4억 8천만원 / 전세 2억 8천
+        </p>
+        <div class="keywords">
+         <span class="keyword">
+          #공원뷰
+         </span>
+         <span class="keyword">
+          #조용한환경
+         </span>
+         <span class="keyword">
+          #넉넉한주차
+         </span>
+        </div>
+        <button class="view-details-btn">
+         상세보기
+        </button>
+       </div>
+      </div>
+     </div>
+     <div class="recommendation-reasons-area">
+      <h3>
+       나를 위한 추천 이유 키워드
+      </h3>
+      <div id="reason-keywords">
+       <span class="reason-tag">
+        #초등학교인접
+       </span>
+       <span class="reason-tag">
+        #편리한대중교통
+       </span>
+       <span class="reason-tag">
+        #병원인근
+       </span>
+       <span class="reason-tag">
+        #대형마트
+       </span>
+       <span class="reason-tag">
+        #남향
+       </span>
+      </div>
+     </div>
+    </div>
+    <div class="map-area">
+     <h2>
+      매물 위치 지도
+     </h2>
+     <div id="map-area" style="width:100%;height:500px;">
+     </div>
+    </div>
+   </div>
+  </div>
+  <section class="calculator-section" id="calculator-section">
+   <h2>
+    부동산 계산기
+   </h2>
+   <p class="calculator-intro">
+    복잡한 부동산 세금과 대출, 이제 쉽고 빠르게 계산해보세요. (정확한 금액은 전문가와 상담 필수)
+   </p>
+   <div class="calculators-container">
+    <div class="calculator-card">
+     <h3>
+      <i class="fas fa-calculator">
+      </i>
+      대출 계산기
+     </h3>
+     <div class="input-group">
+      <label for="loan-amount">
+       대출 금액 (만원)
+      </label>
+      <input id="loan-amount" min="0" type="number" value="30000"/>
+     </div>
+     <div class="input-group">
+      <label for="loan-interest-rate">
+       연 이자율 (%)
+      </label>
+      <input id="loan-interest-rate" min="0" step="0.1" type="number" value="3.5"/>
+     </div>
+     <div class="input-group">
+      <label for="loan-period">
+       대출 기간 (년)
+      </label>
+      <input id="loan-period" max="50" min="1" type="number" value="30"/>
+     </div>
+     <div class="result-display">
+      <p>
+       월 상환액:
+       <span id="monthly-payment">
+        0
+       </span>
+       원
+      </p>
+      <p>
+       총 이자액:
+       <span id="total-interest">
+        0
+       </span>
+       원
+      </p>
+      <p class="disclaimer">
+       ※ 투기과열지구 내 LTV/DTI 등 규제는 고려되지 않았습니다. 실제 상담이 필요합니다.
+      </p>
+     </div>
+    </div>
+    <div class="calculator-card">
+     <h3>
+      <i class="fas fa-file-invoice">
+      </i>
+      취득세 계산기
+     </h3>
+     <div class="input-group">
+      <label for="acquisition-price">
+       취득 가액 (만원)
+      </label>
+      <input id="acquisition-price" min="0" type="number" value="50000"/>
+     </div>
+     <div class="input-group">
+      <label for="acquisition-area">
+       면적 (m²)
+      </label>
+      <input id="acquisition-area" min="0" type="number" value="85"/>
+     </div>
+     <div class="input-group">
+      <label for="is-multiple-house">
+       다주택 여부
+      </label>
+      <select id="is-multiple-house">
+       <option value="false">
+        1주택
+       </option>
+       <option value="true">
+        2주택 이상
+       </option>
+      </select>
+     </div>
+     <div class="result-display">
+      <p>
+       취득세:
+       <span id="acquisition-tax">
+        0
+       </span>
+       원
+      </p>
+      <p>
+       지방교육세:
+       <span id="local-education-tax">
+        0
+       </span>
+       원
+      </p>
+      <p>
+       농어촌특별세:
+       <span id="rural-special-tax">
+        0
+       </span>
+       원
+      </p>
+      <p>
+       총 취득세 등:
+       <span id="total-acquisition-tax">
+        0
+       </span>
+       원
+      </p>
+      <p class="disclaimer">
+       ※ 조정지역 다주택 여부, 면적 등에 따라 세율이 상이합니다. 정확한 계산은 지자체에 문의하세요.
+      </p>
+     </div>
+    </div>
+    <div class="calculator-card">
+     <h3>
+      <i class="fas fa-hand-holding-usd">
+      </i>
+      양도세 계산기
+     </h3>
+     <div class="input-group">
+      <label for="sale-price">
+       양도 가액 (만원)
+      </label>
+      <input id="sale-price" min="0" type="number" value="70000"/>
+     </div>
+     <div class="input-group">
+      <label for="acquisition-cost-yangdo">
+       취득 가액 (만원)
+      </label>
+      <input id="acquisition-cost-yangdo" min="0" type="number" value="50000"/>
+     </div>
+     <div class="input-group">
+      <label for="holding-period">
+       보유 기간 (년)
+      </label>
+      <input id="holding-period" min="0" type="number" value="3"/>
+     </div>
+     <div class="input-group">
+      <label for="is-long-term-owner">
+       장기보유 여부 (1세대 1주택)
+      </label>
+      <select id="is-long-term-owner">
+       <option value="false">
+        해당 없음
+       </option>
+       <option value="true">
+        해당 (비과세 요건 충족 가정)
+       </option>
+      </select>
+     </div>
+     <div class="result-display">
+      <p>
+       양도 차익:
+       <span id="capital-gain">
+        0
+       </span>
+       원
+      </p>
+      <p>
+       양도 소득세:
+       <span id="capital-gains-tax">
+        0
+       </span>
+       원
+      </p>
+      <p class="disclaimer">
+       ※ 1세대 1주택 비과세, 조정지역 여부, 보유기간 등 복잡한 조건이 많습니다. 세무사와 상담 필수!
+      </p>
+     </div>
+    </div>
+   </div>
+  </section>
+  <script src="filter.js">
+  </script>
+  <script src="result.js">
+  </script>
+  <footer class="site-footer">
+   <div class="footer-inner">
+    <!-- 왼쪽: 링크 + 주소 + 카피라이트 -->
+    <div class="footer-left">
+     <nav class="footer-links">
+      <a href="#">
+       개인정보처리방침
+      </a>
+      <a href="#">
+       사이버감사실
+      </a>
+      <a href="#">
+       이메일수집거부
+      </a>
+      <a href="#">
+       채용문의
+      </a>
+     </nav>
+     <p class="footer-address">
+      서울캠퍼스  06974 서울특별시 동작구 흑석로 84
+      <br/>
+      TEL. 010-6886-8724  E-mail. eueseok@naver.com
+     </p>
+     <p class="footer-copy">
+      Copyright © 2025 Men in Black Real Estate. All Rights Reserved.
+     </p>
+    </div>
+    <!-- 오른쪽: 협찬/파트너 로고 -->
+    <div class="footer-right">
+     <p class="footer-label">
+      협찬 · 파트너
+     </p>
+     <img alt="중앙대학교 로고" class="footer-partner-logo" src="cau_logo.jpg"/>
+    </div>
+   </div>
+  </footer>
+ </body>
 </html>

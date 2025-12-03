@@ -1,198 +1,358 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나만의 부동산 찾기 - 설문</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="survey.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header class="navbar">
-        <div class="navbar-left">
-            <a href="index.html" class="logo">FIND MY HOME</a>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   나만의 부동산 찾기 - 설문
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="survey.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+ </head>
+ <body>
+  <header class="navbar">
+   <div class="navbar-left">
+    <a class="logo" href="index.html">
+     FIND MY HOME
+    </a>
+   </div>
+   <div class="navbar-center">
+    <p>
+     나에게 꼭 맞는 집을 찾아보세요.
+    </p>
+   </div>
+   <div class="navbar-right">
+   </div>
+  </header>
+  <div class="survey-container">
+   <h1>
+    나에게 꼭 맞는 집 찾기 설문
+   </h1>
+   <div class="progress-bar-container">
+    <div class="progress-bar-fill" style="width: 0%;">
+    </div>
+   </div>
+   <form id="property-recommendation-survey">
+    <div class="progress-bar">
+     <div class="progress-bar-fill" id="srvyProgress">
+     </div>
+    </div>
+    <!-- STEP 1: 예산 (선택형 버튼: 만원 단위 범주) -->
+    <div class="question-slide" data-question-id="budget_range">
+     <h2>
+      1. 부동산 구매 예산
+     </h2>
+     <p class="srvy-muted">
+      최소/최대 예산을 직접 입력해주세요. (단위: 억)
+     </p>
+     <div class="option-buttons budget-inputs">
+      <label>
+       최소 예산
+       <input id="budget-min" min="0" placeholder="예: 3 (3억)" step="0.1" type="number"/>
+      </label>
+      <label>
+       최대 예산
+       <input id="budget-max" min="0" placeholder="예: 8 (8억)" step="0.1" type="number"/>
+      </label>
+     </div>
+     <input id="budget_range-input" name="budget_range" required="" type="hidden"/>
+    </div>
+    <!-- STEP 2: 자금 조달 방식 (디자인만 버튼 톤으로 감싸기, 기능 유지) -->
+    <div class="question-slide" data-question-id="loan">
+     <h2>
+      2. 자금 조달 방식
+     </h2>
+     <div class="srvy-grid2 srvy-cardish">
+      <label class="srvy-field">
+       <span>
+        대출 비중(%)
+       </span>
+       <input id="loanRatio" max="80" min="0" name="loan_ratio" step="5" type="range" value="40"/>
+       <small>
+        현재:
+        <b id="loanRatioOut">
+         40%
+        </b>
+       </small>
+      </label>
+      <label class="srvy-field">
+       <span>
+        적용 금리(연 %, 선택)
+       </span>
+       <input id="loanRate" max="20" min="0" name="loan_rate" placeholder="예: 4.25" step="0.01" type="number"/>
+       <small>
+        미입력 시 내부/최근 분기 금리 사용
+       </small>
+      </label>
+     </div>
+    </div>
+    <!-- STEP 3: 희망 지역 (서울특별시 '구'만, 다중 선택 버튼) -->
+    <div class="question-slide" data-question-id="regions">
+     <h2>
+      3. 희망 지역 (서울특별시)
+     </h2>
+     <p class="guide-text">
+      복수 선택 가능
+     </p>
+     <div class="option-buttons multi-select" id="seoul-gu-buttons">
+      <button class="survey-option-btn" data-value="서울특별시 강남구" type="button">
+       강남구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 강동구" type="button">
+       강동구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 강북구" type="button">
+       강북구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 강서구" type="button">
+       강서구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 관악구" type="button">
+       관악구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 광진구" type="button">
+       광진구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 구로구" type="button">
+       구로구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 금천구" type="button">
+       금천구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 노원구" type="button">
+       노원구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 도봉구" type="button">
+       도봉구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 동대문구" type="button">
+       동대문구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 동작구" type="button">
+       동작구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 마포구" type="button">
+       마포구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 서대문구" type="button">
+       서대문구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 서초구" type="button">
+       서초구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 성동구" type="button">
+       성동구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 성북구" type="button">
+       성북구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 송파구" type="button">
+       송파구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 양천구" type="button">
+       양천구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 영등포구" type="button">
+       영등포구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 용산구" type="button">
+       용산구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 은평구" type="button">
+       은평구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 종로구" type="button">
+       종로구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 중구" type="button">
+       중구
+      </button>
+      <button class="survey-option-btn" data-value="서울특별시 중랑구" type="button">
+       중랑구
+      </button>
+     </div>
+     <input id="regions-input" name="regions" required="" type="hidden"/>
+    </div>
+    <!-- STEP 4: 입주 시기 (단일 선택 버튼) -->
+    <div class="question-slide" data-question-id="move_in">
+     <h2>
+      4. 입주 희망 시기
+     </h2>
+     <div class="option-buttons">
+      <button class="survey-option-btn" data-value="즉시" type="button">
+       즉시
+      </button>
+      <button class="survey-option-btn" data-value="3개월 이내" type="button">
+       3개월 이내
+      </button>
+      <button class="survey-option-btn" data-value="6개월 이내" type="button">
+       6개월 이내
+      </button>
+      <button class="survey-option-btn" data-value="1년 이내" type="button">
+       1년 이내
+      </button>
+     </div>
+     <input id="move_in-input" name="move_in" required="" type="hidden"/>
+    </div>
+    <!-- STEP 5: 평수 (선택형 버튼) -->
+    <div class="question-slide" data-question-id="pyung_range">
+     <h2>
+      5. 원하는 평수
+     </h2>
+     <div class="option-buttons">
+      <button class="survey-option-btn" data-value="~10평" type="button">
+       ~10평
+      </button>
+      <button class="survey-option-btn" data-value="11~20평" type="button">
+       11~20평
+      </button>
+      <button class="survey-option-btn" data-value="21~30평" type="button">
+       21~30평
+      </button>
+      <button class="survey-option-btn" data-value="31~40평" type="button">
+       31~40평
+      </button>
+      <button class="survey-option-btn" data-value="41평~" type="button">
+       41평 이상
+      </button>
+     </div>
+     <input id="pyung_range-input" name="pyung_range" required="" type="hidden"/>
+    </div>
+    <!-- STEP 6: 층 (선택형 버튼) -->
+    <div class="question-slide" data-question-id="floor_step" style="display:none;">
+     <h2>
+      6. 원하는 층
+     </h2>
+     <div class="option-buttons">
+      <button class="survey-option-btn" data-value="저층(1~10층)" type="button">
+       저층(1~10층)
+      </button>
+      <button class="survey-option-btn" data-value="중층(11~20층)" type="button">
+       중층(11~20층)
+      </button>
+      <button class="survey-option-btn" data-value="고층(21층 이상)" type="button">
+       고층(21층 이상)
+      </button>
+      <button class="survey-option-btn" data-value="상관없음" type="button">
+       상관없음
+      </button>
+     </div>
+     <input id="floor_group-input" name="floor_group" type="hidden"/>
+    </div>
+    <!-- STEP 7: 신축 여부 (단일 선택 버튼) -->
+    <div class="question-slide" data-question-id="new_build">
+     <h2>
+      7. 신축 여부
+     </h2>
+     <div class="option-buttons">
+      <button class="survey-option-btn" data-value="신축(5년 이내)" type="button">
+       신축(5년 이내)
+      </button>
+      <button class="survey-option-btn" data-value="준신축(10년 이내)" type="button">
+       준신축(10년 이내)
+      </button>
+      <button class="survey-option-btn" data-value="무관" type="button">
+       무관
+      </button>
+     </div>
+     <input id="new_build-input" name="new_build" required="" type="hidden"/>
+    </div>
+    <!-- STEP 8: 중요 항목 순위 -->
+    <div class="question-slide" data-question-id="priority">
+        <h2>8. 중요 항목 순위</h2>
+        <p class="srvy-muted">
+            왼쪽 네모를 클릭한 순서대로 1~5순위를 부여합니다. 다시 클릭하면 해제되고,
+            아래 ‘초기화’ 버튼으로 전부 리셋할 수 있습니다.
+        </p>
+
+        <ul id="rankList" class="rank-list">
+            <li class="priority-item" data-key="price">
+                <button type="button" class="priority-box"></button>
+                <span>예산(가격)</span>
+            </li>
+            <li class="priority-item" data-key="region">
+                <button type="button" class="priority-box"></button>
+                <span>지역</span>
+            </li>
+            <li class="priority-item" data-key="station">
+                <button type="button" class="priority-box"></button>
+                <span>역세권(지하철 접근성)</span>
+            </li>
+            <li class="priority-item" data-key="size_floor">
+                <button type="button" class="priority-box"></button>
+                <span>평수/층</span>
+            </li>
+            <li class="priority-item" data-key="newer">
+                <button type="button" class="priority-box"></button>
+                <span>신축 여부</span>
+            </li>
+        </ul>
+
+        <div class="priority-actions">
+            <button type="button" id="priority-reset" class="priority-reset">초기화</button>
         </div>
-        <div class="navbar-center">
-            <p>나에게 꼭 맞는 집을 찾아보세요.</p>
-        </div>
-        <div class="navbar-right">
-        </div>
-    </header>
 
-    <div class="survey-container">
-        <h1>나에게 꼭 맞는 집 찾기 설문</h1>
-        <div class="progress-bar-container">
-            <div class="progress-bar-fill" style="width: 0%;"></div>
-        </div>
-        <form id="property-recommendation-survey">
-<div class="progress-bar">
-    <div class="progress-bar-fill" id="srvyProgress"></div>
-
-</div>
-
-<!-- STEP 1: 예산 (선택형 버튼: 만원 단위 범주) -->
-<div class="question-slide" data-question-id="budget_range">
-    <h2>1. 부동산 구매 예산</h2>
-    <div class="option-buttons">
-        <button type="button" class="survey-option-btn" data-value="10억 미만">10억 미만</button>
-        <button type="button" class="survey-option-btn" data-value="10억 이상">10억 이상</button>
-        <button type="button" class="survey-option-btn" data-value="15억 이상">15억 이상</button>
-        <button type="button" class="survey-option-btn" data-value="20억 이상">20억 이상</button>
+        <input type="hidden" name="priority" id="priority-input">
     </div>
-    <input type="hidden" name="budget_range" id="budget_range-input" required>
-</div>
-
-<!-- STEP 2: 자금 조달 방식 (디자인만 버튼 톤으로 감싸기, 기능 유지) -->
-<div class="question-slide" data-question-id="loan">
-    <h2>2. 자금 조달 방식</h2>
-    <div class="srvy-grid2 srvy-cardish">
-        <label class="srvy-field">
-            <span>대출 비중(%)</span>
-            <input type="range" id="loanRatio" name="loan_ratio" min="0" max="80" step="5" value="40">
-            <small>현재: <b id="loanRatioOut">40%</b></small>
-        </label>
-        <label class="srvy-field">
-            <span>적용 금리(연 %, 선택)</span>
-            <input type="number" id="loanRate" name="loan_rate" step="0.01" min="0" max="20" placeholder="예: 4.25">
-            <small>미입력 시 내부/최근 분기 금리 사용</small>
-        </label>
+    <div class="navigation">
+     <button class="nav-button" id="prev-btn" type="button">
+      <i class="fas fa-arrow-left">
+      </i>
+      이전
+     </button>
+     <button class="nav-button" id="next-btn" type="button">
+      다음
+      <i class="fas fa-arrow-right">
+      </i>
+     </button>
+     <button class="submit-button" id="submit-survey-btn" style="display:none;" type="submit">
+      추천 매물 보기
+     </button>
+     <div aria-live="polite" class="validation-message" id="validation-message" role="alert" style="display:none;">
+      선택지를 선택해주세요.
+     </div>
     </div>
-</div>
-
-<!-- STEP 3: 희망 지역 (서울특별시 '구'만, 다중 선택 버튼) -->
-<div class="question-slide" data-question-id="regions">
-    <h2>3. 희망 지역 (서울특별시)</h2>
-    <p class="guide-text">복수 선택 가능</p>
-    <div class="option-buttons multi-select" id="seoul-gu-buttons">
-        <button type="button" class="survey-option-btn" data-value="서울특별시 강남구">강남구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 강동구">강동구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 강북구">강북구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 강서구">강서구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 관악구">관악구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 광진구">광진구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 구로구">구로구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 금천구">금천구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 노원구">노원구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 도봉구">도봉구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 동대문구">동대문구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 동작구">동작구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 마포구">마포구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 서대문구">서대문구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 서초구">서초구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 성동구">성동구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 성북구">성북구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 송파구">송파구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 양천구">양천구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 영등포구">영등포구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 용산구">용산구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 은평구">은평구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 종로구">종로구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 중구">중구</button>
-        <button type="button" class="survey-option-btn" data-value="서울특별시 중랑구">중랑구</button>
+   </form>
+  </div>
+  <script src="survey.js">
+  </script>
+  <footer class="site-footer">
+   <div class="footer-inner">
+    <!-- 왼쪽: 링크 + 주소 + 카피라이트 -->
+    <div class="footer-left">
+     <nav class="footer-links">
+      <a href="#">
+       개인정보처리방침
+      </a>
+      <a href="#">
+       사이버감사실
+      </a>
+      <a href="#">
+       이메일수집거부
+      </a>
+      <a href="#">
+       채용문의
+      </a>
+     </nav>
+     <p class="footer-address">
+      서울캠퍼스  06974 서울특별시 동작구 흑석로 84
+      <br/>
+      TEL. 010-6886-8724  E-mail. eueseok@naver.com
+     </p>
+     <p class="footer-copy">
+      Copyright © 2025 Men in Black Real Estate. All Rights Reserved.
+     </p>
     </div>
-    <input type="hidden" name="regions" id="regions-input" required>
-</div>
-
-<!-- STEP 4: 입주 시기 (단일 선택 버튼) -->
-<div class="question-slide" data-question-id="move_in">
-    <h2>4. 입주 희망 시기</h2>
-    <div class="option-buttons">
-        <button type="button" class="survey-option-btn" data-value="즉시">즉시</button>
-        <button type="button" class="survey-option-btn" data-value="3개월 이내">3개월 이내</button>
-        <button type="button" class="survey-option-btn" data-value="6개월 이내">6개월 이내</button>
-        <button type="button" class="survey-option-btn" data-value="1년 이내">1년 이내</button>
+    <!-- 오른쪽: 협찬/파트너 로고 -->
+    <div class="footer-right">
+     <p class="footer-label">
+      협찬 · 파트너
+     </p>
+     <img alt="중앙대학교 로고" class="footer-partner-logo" src="cau_logo.jpg"/>
     </div>
-    <input type="hidden" name="move_in" id="move_in-input" required>
-</div>
-
-<!-- STEP 5: 평수 (선택형 버튼) -->
-<div class="question-slide" data-question-id="pyung_range">
-    <h2>5. 원하는 평수</h2>
-    <div class="option-buttons">
-        <button type="button" class="survey-option-btn" data-value="~10평">~10평</button>
-        <button type="button" class="survey-option-btn" data-value="11~20평">11~20평</button>
-        <button type="button" class="survey-option-btn" data-value="21~30평">21~30평</button>
-        <button type="button" class="survey-option-btn" data-value="31~40평">31~40평</button>
-        <button type="button" class="survey-option-btn" data-value="41평~">41평 이상</button>
-    </div>
-    <input type="hidden" name="pyung_range" id="pyung_range-input" required>
-</div>
-
-<!-- STEP 6: 층 (선택형 버튼) -->
-<div class="question-slide" data-question-id="floor_step" style="display:none;">
-    <h2>6. 원하는 층</h2>
-    <div class="option-buttons">
-        <button type="button" class="survey-option-btn" data-value="저층(1~10층)">저층(1~10층)</button>
-        <button type="button" class="survey-option-btn" data-value="중층(11~20층)">중층(11~20층)</button>
-        <button type="button" class="survey-option-btn" data-value="고층(21층 이상)">고층(21층 이상)</button>
-    </div>
-    <input type="hidden" name="floor_group" id="floor_group-input">
-</div>
-
-<!-- STEP 7: 신축 여부 (단일 선택 버튼) -->
-<div class="question-slide" data-question-id="new_build">
-    <h2>7. 신축 여부</h2>
-    <div class="option-buttons">
-        <button type="button" class="survey-option-btn" data-value="신축(5년 이내)">신축(5년 이내)</button>
-        <button type="button" class="survey-option-btn" data-value="준신축(10년 이내)">준신축(10년 이내)</button>
-        <button type="button" class="survey-option-btn" data-value="무관">무관</button>
-    </div>
-    <input type="hidden" name="new_build" id="new_build-input" required>
-</div>
-
-<!-- STEP 8: 중요 항목 순위 (드래그, 상위 5개 모두 사용) -->
-<div class="question-slide" data-question-id="priority">
-    <h2>8. 중요 항목 순위</h2>
-    <p class="srvy-muted">위로 갈수록 더 중요. 제출 시 <b>상위 5개 모두</b> 사용.</p>
-    <ul id="rankList" class="rank-list">
-        <li draggable="true" data-key="price">예산(가격)</li>
-        <li draggable="true" data-key="region">지역</li>
-        <li draggable="true" data-key="station">역세권(지하철 접근성)</li>
-        <li draggable="true" data-key="size_floor">평수/층</li>
-        <li draggable="true" data-key="newer">신축 여부</li>
-    </ul>
-</div>
-
-<div class="navigation">
-    <button type="button" id="prev-btn" class="nav-button"><i class="fas fa-arrow-left"></i> 이전</button>
-    <button type="button" id="next-btn" class="nav-button">다음 <i class="fas fa-arrow-right"></i></button>
-    <button type="submit" id="submit-survey-btn" class="submit-button" style="display:none;">추천 매물 보기</button>
-    <div id="validation-message" class="validation-message" role="alert" aria-live="polite" style="display:none;">선택지를 선택해주세요.</div>
-</div>
-</form>
-    </div>
-
-    <script src="survey.js"></script>
-
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <!-- 왼쪽: 링크 + 주소 + 카피라이트 -->
-            <div class="footer-left">
-                <nav class="footer-links">
-                    <a href="#">개인정보처리방침</a>
-                    <a href="#">사이버감사실</a>
-                    <a href="#">이메일수집거부</a>
-                    <a href="#">채용문의</a>
-                </nav>
-
-                <p class="footer-address">
-                    서울캠퍼스&nbsp;&nbsp;06974 서울특별시 동작구 흑석로 84<br>
-                    TEL. 010-6886-8724&nbsp;&nbsp;E-mail. eueseok@naver.com
-                </p>
-
-                <p class="footer-copy">
-                    Copyright © 2025 Men in Black Real Estate. All Rights Reserved.
-                </p>
-            </div>
-
-            <!-- 오른쪽: 협찬/파트너 로고 -->
-            <div class="footer-right">
-                <p class="footer-label">협찬 · 파트너</p>
-                <img src="cau_logo.jpg" alt="중앙대학교 로고" class="footer-partner-logo">
-            </div>
-        </div>
-    </footer>
-</body>
+   </div>
+  </footer>
+ </body>
 </html>

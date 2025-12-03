@@ -1,303 +1,394 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>내게 꼭 맞는 부동산 찾기</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
-</head>
-
-<body>
-    <header class="navbar">
-        <div class="navbar-left">
-            <div class="logo">FIND MY HOME</div>
-            <div class="edit-mode">
-                <i class="fas fa-desktop"></i>
-                <i class="fas fa-tablet-alt"></i>
-                <i class="fas fa-mobile-alt"></i>
-            </div>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   내게 꼭 맞는 부동산 찾기
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  </link>
+ </head>
+ <body>
+  <header class="navbar">
+   <div class="navbar-left">
+    <div class="logo">
+     FIND MY HOME
+    </div>
+    <div class="edit-mode">
+     <i class="fas fa-desktop">
+     </i>
+     <i class="fas fa-tablet-alt">
+     </i>
+     <i class="fas fa-mobile-alt">
+     </i>
+    </div>
+   </div>
+   <div class="navbar-center">
+    <p>
+     당신에게 완벽한 집을 찾아보세요.
+    </p>
+    <a class="learn-more" href="#">
+     서비스 자세히 보기
+    </a>
+   </div>
+   <div class="navbar-right">
+    <button class="start-now">
+     시작하기
+    </button>
+    <i class="fas fa-times">
+    </i>
+   </div>
+  </header>
+  <div class="main-container">
+   <aside class="sidebar">
+    <div class="profile-name">
+     MY REAL ESTATE ADVISOR
+    </div>
+    <div class="social-icons">
+     <!-- Facebook 로그인 -->
+     <a href="https://www.facebook.com/login" rel="noopener noreferrer" target="_blank">
+      <i class="fab fa-facebook-f">
+      </i>
+     </a>
+     <!-- Twitter(X) 로그인 -->
+     <a href="https://twitter.com/login" rel="noopener noreferrer" target="_blank">
+      <i class="fab fa-twitter">
+      </i>
+     </a>
+     <!-- LinkedIn 로그인 -->
+     <a href="https://www.linkedin.com/login" rel="noopener noreferrer" target="_blank">
+      <i class="fab fa-linkedin-in">
+      </i>
+     </a>
+     <!-- Instagram 로그인 -->
+     <a href="https://www.instagram.com/accounts/login/" rel="noopener noreferrer" target="_blank">
+      <i class="fab fa-instagram">
+      </i>
+     </a>
+    </div>
+    <!-- 부동산 계산기 위젯 -->
+    <nav class="calc-widget" id="calc-widget-main">
+        <div class="calc-header">
+        <span>계산기 바로가기</span>
         </div>
-        <div class="navbar-center">
-            <p>당신에게 완벽한 집을 찾아보세요.</p>
-            <a href="#" class="learn-more">서비스 자세히 보기</a>
-        </div>
-        <div class="navbar-right">
-            <button class="start-now">시작하기</button>
-            <i class="fas fa-times"></i>
-        </div>
-    </header>
+        <ul class="calc-list">
+        <li>
+            <a href="results.html#calculator-section" class="calc-item">
+            <span class="calc-icon"><i class="fas fa-home"></i></span>
+            <span class="calc-label">대출 계산기</span>
+            </a>
+        </li>
+        <li>
+            <a href="results.html#calculator-section" class="calc-item">
+            <span class="calc-icon"><i class="fas fa-coins"></i></span>
+            <span class="calc-label">취득세 계산기</span>
+            </a>
+        </li>
+        <li>
+            <a href="results.html#calculator-section" class="calc-item">
+            <span class="calc-icon"><i class="fas fa-calculator"></i></span>
+            <span class="calc-label">양도세 계산기</span>
+            </a>
+        </li>
+        </ul>
+    </nav>
 
-    <div class="main-container">
-        <aside class="sidebar">
-            <div class="profile-name">MY REAL ESTATE ADVISOR</div>
-            <div class="social-icons">
-                <!-- Facebook 로그인 -->
-                <a href="https://www.facebook.com/login"
-                    target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-
-                <!-- Twitter(X) 로그인 -->
-                <a href="https://twitter.com/login"
-                    target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-twitter"></i>
-                </a>
-
-                <!-- LinkedIn 로그인 -->
-                <a href="https://www.linkedin.com/login"
-                    target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-
-                <!-- Instagram 로그인 -->
-                <a href="https://www.instagram.com/accounts/login/"
-                    target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            </div>
-
-            <!-- ✅ 서울 권역별 검색 TOP3 위젯 -->
-            <div class="region-ranking-widget">
-                <h3>서울 핵심 권역</h3>
-
-                <div class="region-tabs">
-                    <button class="region-tab" data-region="gangdong">
-                        <div class="region-icon region-icon-gangdong">동</div>
-                        <span>강동</span>
-                    </button>
-                    <button class="region-tab" data-region="gangseo">
-                        <div class="region-icon region-icon-gangseo">서</div>
-                        <span>강서</span>
-                    </button>
-                    <button class="region-tab active" data-region="gangnam">
-                        <div class="region-icon region-icon-gangnam">남</div>
-                        <span>강남</span>
-                    </button>
-                    <button class="region-tab" data-region="gangbuk">
-                        <div class="region-icon region-icon-gangbuk">북</div>
-                        <span>강북</span>
-                    </button>
-                </div>
-
-                <div class="region-top3">
-                    <p class="region-top3-title">검색 TOP 3</p>
-                    <ol class="region-top3-list"></ol>
-                </div>
-            </div>
-
-        </aside>
-
-
-        <main class="content">
-            <nav class="main-nav">
-                <!-- 로고 + 텍스트 추가 -->
-                <div class="menu-logo">
-                    <img src="맨인블랙 로고.png" alt="Man in Black Logo">
-                    <span>Men In<br>Black</span>
-                </div>
-
-                <ul>
-                    <li><a href="service.html">서비스 소개</a></li>
-                    <li><a href="cus_an.html">부동산 가이드</a></li>
-                    <li><a href="#" id="nav-faq">문의</a></li>
-                    <li><a href="#" class="book-session">추천 사례</a></li>
-                </ul>
-                <div class="login">
-                    <i class="fas fa-user-circle"></i>
-                    <span>로그인</span>
-                </div>
-            </nav>
-            
-            <section class="hero-section">
-                <!-- 배경이 될 큰 이미지 -->
-                <img src="building_night_view.jpg"
-                    alt="야간 아파트 단지 전경"
-                    class="hero-bg-image">
-
-                <!-- 어두운 그라디언트 위에 올라가는 텍스트 -->
-                <div class="hero-text">
-                    <p class="hero-eyebrow">실거래 데이터 기반 맞춤 추천</p>
-
-                    <h1>
-                        나에게 잘 맞는<br>
-                        나에게 적합한 부동산<br>
-                        Men in Black
-                    </h1>
-
-                    <p class="hero-subtitle">
-                        간단한 설문을 통해 당신의 라이프스타일에 꼭 맞는
+   </aside>
+   <main class="content">
+    <nav class="main-nav">
+     <!-- 로고 + 텍스트 추가 -->
+     <div class="menu-logo">
+      <img alt="Man in Black Logo" src="맨인블랙 로고.png"/>
+      <span>
+       Men In
+       <br/>
+       Black
+      </span>
+     </div>
+     <ul>
+      <li>
+       <a href="service.html">
+        서비스 소개
+       </a>
+      </li>
+      <li>
+       <a href="cus_an.html">
+        부동산 가이드
+       </a>
+      </li>
+      <li>
+       <a href="#" id="nav-faq">
+        문의
+       </a>
+      </li>
+      <li>
+       <a href="top10.html" class="nav-top10">거래 TOP 10</a>
+      </li>
+     </ul>
+     <div class="login">
+      <i class="fas fa-user-circle">
+      </i>
+      <span>
+       로그인
+      </span>
+     </div>
+    </nav>
+    <section class="hero-section">
+     <!-- 배경이 될 큰 이미지 -->
+     <img alt="야간 아파트 단지 전경" class="hero-bg-image" src="building_night_view.jpg"/>
+     <!-- 어두운 그라디언트 위에 올라가는 텍스트 -->
+     <div class="hero-text">
+      <p class="hero-eyebrow">
+       실거래 데이터 기반 맞춤 추천
+      </p>
+      <h1>
+       나에게 잘 맞는
+       <br/>
+       나에게 적합한 부동산
+       <br/>
+       Men in Black
+      </h1>
+      <p class="hero-subtitle">
+       간단한 설문을 통해 당신의 라이프스타일에 꼭 맞는
                         최적의 주거 옵션을 데이터로 선별해드립니다.
-                    </p>
-
-                    <button class="start-survey-button" onclick="location.href='survey.html'">
-                        나에게 꼭 맞는 부동산 확인하기
-                    </button>
-                </div>
-            </section>
-
-
-            <section class="service-introduction-section">
-                <h2>어떻게 나만의 집을 찾을 수 있을까요?</h2>
-                <div class="steps-container">
-                    <div class="step-item" onclick="location.href='survey.html'" style="cursor:pointer;">
-                        <i class="fas fa-question-circle"></i>
-                        <h3>1. 설문 참여</h3>
-                        <p>간단한 질문에 답변하고 당신의 취향을 알려주세요.</p>
-                    </div>
-                    <div class="step-item" onclick="location.href='cus_an.html'" style="cursor:pointer;">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>2. 맞춤 분석</h3>
-                        <p>수십만 건의 데이터를 분석하여 최적의 매물을 선별합니다.</p>
-                    </div>
-                    <div class="step-item">
-                        <i class="fas fa-home"></i>
-                        <h3>3. 결과 확인</h3>
-                        <p>당신만을 위한 맞춤 부동산 추천 결과를 바로 받아보세요.</p>
-                    </div>
-                </div>
-            </section>
-        </main>
+      </p>
+      <button class="start-survey-button" onclick="location.href='survey.html'">
+       나에게 꼭 맞는 부동산 확인하기
+      </button>
+     </div>
+    </section>
+    <section class="service-introduction-section">
+     <h2>
+      어떻게 나만의 집을 찾을 수 있을까요?
+     </h2>
+     <div class="steps-container">
+      <div class="step-item" onclick="location.href='survey.html'" style="cursor:pointer;">
+       <i class="fas fa-question-circle">
+       </i>
+       <h3>
+        1. 설문 참여
+       </h3>
+       <p>
+        간단한 질문에 답변하고 당신의 취향을 알려주세요.
+       </p>
+      </div>
+      <div class="step-item" onclick="location.href='cus_an.html'" style="cursor:pointer;">
+       <i class="fas fa-chart-line">
+       </i>
+       <h3>
+        2. 맞춤 분석
+       </h3>
+       <p>
+        수십만 건의 데이터를 분석하여 최적의 매물을 선별합니다.
+       </p>
+      </div>
+      <div class="step-item">
+       <i class="fas fa-home">
+       </i>
+       <h3>
+        3. 결과 확인
+       </h3>
+       <p>
+        당신만을 위한 맞춤 부동산 추천 결과를 바로 받아보세요.
+       </p>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div>
+  <script src="script.js">
+  </script>
+  <!-- 로그인 / 회원가입 모달 -->
+  <div class="modal" id="auth-modal">
+   <div class="modal-box">
+    <button class="modal-close" type="button">
+     <i class="fas fa-times">
+     </i>
+    </button>
+    <!-- 로그인 폼 -->
+    <div class="auth-forms auth-login active">
+     <h2>
+      로그인
+     </h2>
+     <p class="modal-desc">
+      가입하신 아이디와 비밀번호를 입력해주세요.
+     </p>
+     <form>
+      <div class="modal-form-group">
+       <label for="login-id">
+        아이디
+       </label>
+       <input id="login-id" placeholder="이메일 또는 아이디" type="text"/>
+      </div>
+      <div class="modal-form-group">
+       <label for="login-password">
+        비밀번호
+       </label>
+       <input id="login-password" placeholder="비밀번호" type="password"/>
+      </div>
+      <button class="primary-btn full-width" type="submit">
+       로그인
+      </button>
+     </form>
+     <p class="modal-switch">
+      아직 회원이 아니신가요?
+      <button class="link-button" id="open-signup" type="button">
+       회원가입
+      </button>
+     </p>
     </div>
-
-    <script src="script.js"></script>
-    <!-- 로그인 / 회원가입 모달 -->
-    <div id="auth-modal" class="modal">
-        <div class="modal-box">
-            <button class="modal-close" type="button">
-                <i class="fas fa-times"></i>
-            </button>
-
-            <!-- 로그인 폼 -->
-            <div class="auth-forms auth-login active">
-                <h2>로그인</h2>
-                <p class="modal-desc">가입하신 아이디와 비밀번호를 입력해주세요.</p>
-                <form>
-                    <div class="modal-form-group">
-                        <label for="login-id">아이디</label>
-                        <input type="text" id="login-id" placeholder="이메일 또는 아이디">
-                    </div>
-                    <div class="modal-form-group">
-                        <label for="login-password">비밀번호</label>
-                        <input type="password" id="login-password" placeholder="비밀번호">
-                    </div>
-                    <button type="submit" class="primary-btn full-width">로그인</button>
-                </form>
-                <p class="modal-switch">
-                    아직 회원이 아니신가요?
-                    <button type="button" class="link-button" id="open-signup">회원가입</button>
-                </p>
-            </div>
-
-            <!-- 회원가입 폼 -->
-            <div class="auth-forms auth-signup">
-                <h2>회원가입</h2>
-                <p class="modal-desc">개인맞춤 추천을 위해 최소한의 정보만 요청드려요.</p>
-                <form>
-                    <div class="modal-form-group">
-                        <label for="signup-name">이름</label>
-                        <input type="text" id="signup-name" placeholder="홍길동">
-                    </div>
-                    <div class="modal-form-group">
-                        <label for="signup-email">이메일</label>
-                        <input type="email" id="signup-email" placeholder="example@email.com">
-                    </div>
-                    <div class="modal-form-group">
-                        <label for="signup-password">비밀번호</label>
-                        <input type="password" id="signup-password" placeholder="영문/숫자 포함 8자 이상">
-                    </div>
-                    <div class="modal-form-group">
-                        <label for="signup-region">희망 거주 지역</label>
-                        <input type="text" id="signup-region" placeholder="예: 서울 강남, 경기 용인 등">
-                    </div>
-                    <button type="submit" class="primary-btn full-width">회원가입 완료</button>
-                </form>
-                <p class="modal-switch">
-                    이미 계정이 있으신가요?
-                    <button type="button" class="link-button" id="back-to-login">로그인</button>
-                </p>
-            </div>
-        </div>
+    <!-- 회원가입 폼 -->
+    <div class="auth-forms auth-signup">
+     <h2>
+      회원가입
+     </h2>
+     <p class="modal-desc">
+      개인맞춤 추천을 위해 최소한의 정보만 요청드려요.
+     </p>
+     <form>
+      <div class="modal-form-group">
+       <label for="signup-name">
+        이름
+       </label>
+       <input id="signup-name" placeholder="홍길동" type="text"/>
+      </div>
+      <div class="modal-form-group">
+       <label for="signup-email">
+        이메일
+       </label>
+       <input id="signup-email" placeholder="example@email.com" type="email"/>
+      </div>
+      <div class="modal-form-group">
+       <label for="signup-password">
+        비밀번호
+       </label>
+       <input id="signup-password" placeholder="영문/숫자 포함 8자 이상" type="password"/>
+      </div>
+      <div class="modal-form-group">
+       <label for="signup-region">
+        희망 거주 지역
+       </label>
+       <input id="signup-region" placeholder="예: 서울 강남, 경기 용인 등" type="text"/>
+      </div>
+      <button class="primary-btn full-width" type="submit">
+       회원가입 완료
+      </button>
+     </form>
+     <p class="modal-switch">
+      이미 계정이 있으신가요?
+      <button class="link-button" id="back-to-login" type="button">
+       로그인
+      </button>
+     </p>
     </div>
-    
-    <!-- 문의 / FAQ 모달 -->
-    <div id="faq-modal" class="modal">
-        <div class="modal-box faq-box">
-            <button class="modal-close" type="button">
-                <i class="fas fa-times"></i>
-            </button>
-        <h2>자주 하는 질문</h2>
-        <p class="modal-desc">
-        Man in Black 서비스를 사용하면서 많이 물어보시는 질문들을 모았어요.
-        </p>
-
+   </div>
+  </div>
+  <!-- 문의 / FAQ 모달 -->
+  <div class="modal" id="faq-modal">
+   <div class="modal-box faq-box">
+    <button class="modal-close" type="button">
+     <i class="fas fa-times">
+     </i>
+    </button>
+    <h2>
+     자주 하는 질문
+    </h2>
+    <p class="modal-desc">
+     Man in Black 서비스를 사용하면서 많이 물어보시는 질문들을 모았어요.
+    </p>
     <!-- 검색 바 -->
     <div class="faq-search">
-        <i class="fas fa-search"></i>
-        <input type="text" id="faq-search-input"
-               placeholder="예: 설문 시간, 추천 기준, 개인정보 등">
+     <i class="fas fa-search">
+     </i>
+     <input id="faq-search-input" placeholder="예: 설문 시간, 추천 기준, 개인정보 등" type="text"/>
     </div>
-
     <!-- FAQ 리스트 -->
     <div class="faq-list">
-      <div class="faq-item">
-        <h3>Q. 설문에는 얼마나 시간이 걸리나요?</h3>
-        <p>A. 대부분 3~5분 안에 완료할 수 있습니다. 문항 수는 15개 내외이며, 휴대폰으로도 편하게 응답하실 수 있도록 구성했습니다.</p>
-      </div>
-      <div class="faq-item">
-        <h3>Q. 추천 결과는 어떤 기준으로 만들어지나요?</h3>
-        <p>A. 사용자가 응답한 예산, 직장 위치, 선호 주거 유형, 생활 패턴 등의 정보를 공공 데이터와 내부 지표(교통, 학군, 생활편의시설 등)와 결합해 점수화한 뒤 상위 매물을 추천합니다.</p>
-      </div>
-      <div class="faq-item">
-        <h3>Q. 전세·월세·매매 모두 추천해 주나요?</h3>
-        <p>A. 예산 및 선호 거래 유형에 따라 전세, 월세, 매매를 모두 포함해 후보군을 만들 수 있습니다. 설문 초반에 거래 유형을 선택하면 그에 맞춰 필터링됩니다.</p>
-      </div>
-      <div class="faq-item">
-        <h3>Q. 설문에 입력한 개인정보는 어떻게 사용되나요?</h3>
-        <p>A. 추천 알고리즘 개선과 개인화된 결과 제공을 위해서만 사용되며, 별도의 동의 없이 외부에 제공되지 않습니다. 자세한 내용은 추후 추가될 개인정보 처리방침에서 확인하실 수 있습니다.</p>
-      </div>
-      <div class="faq-item">
-        <h3>Q. 이 웹에서 바로 집을 계약할 수 있나요?</h3>
-        <p>A. 현재는 ‘맞춤 추천’ 컨설팅까지 제공하며, 실제 계약은 사용자가 선택한 부동산 중개업소 또는 플랫폼을 통해 진행하셔야 합니다. 추후 제휴 채널을 확대할 예정입니다.</p>
-      </div>
+     <div class="faq-item">
+      <h3>
+       Q. 설문에는 얼마나 시간이 걸리나요?
+      </h3>
+      <p>
+       A. 대부분 3~5분 안에 완료할 수 있습니다. 문항 수는 15개 내외이며, 휴대폰으로도 편하게 응답하실 수 있도록 구성했습니다.
+      </p>
+     </div>
+     <div class="faq-item">
+      <h3>
+       Q. 추천 결과는 어떤 기준으로 만들어지나요?
+      </h3>
+      <p>
+       A. 사용자가 응답한 예산, 직장 위치, 선호 주거 유형, 생활 패턴 등의 정보를 공공 데이터와 내부 지표(교통, 학군, 생활편의시설 등)와 결합해 점수화한 뒤 상위 매물을 추천합니다.
+      </p>
+     </div>
+     <div class="faq-item">
+      <h3>
+       Q. 전세·월세·매매 모두 추천해 주나요?
+      </h3>
+      <p>
+       A. 예산 및 선호 거래 유형에 따라 전세, 월세, 매매를 모두 포함해 후보군을 만들 수 있습니다. 설문 초반에 거래 유형을 선택하면 그에 맞춰 필터링됩니다.
+      </p>
+     </div>
+     <div class="faq-item">
+      <h3>
+       Q. 설문에 입력한 개인정보는 어떻게 사용되나요?
+      </h3>
+      <p>
+       A. 추천 알고리즘 개선과 개인화된 결과 제공을 위해서만 사용되며, 별도의 동의 없이 외부에 제공되지 않습니다. 자세한 내용은 추후 추가될 개인정보 처리방침에서 확인하실 수 있습니다.
+      </p>
+     </div>
+     <div class="faq-item">
+      <h3>
+       Q. 이 웹에서 바로 집을 계약할 수 있나요?
+      </h3>
+      <p>
+       A. 현재는 ‘맞춤 추천’ 컨설팅까지 제공하며, 실제 계약은 사용자가 선택한 부동산 중개업소 또는 플랫폼을 통해 진행하셔야 합니다. 추후 제휴 채널을 확대할 예정입니다.
+      </p>
+     </div>
     </div>
+   </div>
   </div>
-</div>
-
-
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <!-- 왼쪽: 링크 + 주소 + 카피라이트 -->
-            <div class="footer-left">
-                <nav class="footer-links">
-                    <a href="#">개인정보처리방침</a>
-                    <a href="#">사이버감사실</a>
-                    <a href="#">이메일수집거부</a>
-                    <a href="#">채용문의</a>
-                </nav>
-
-                <p class="footer-address">
-                    서울캠퍼스&nbsp;&nbsp;06974 서울특별시 동작구 흑석로 84<br>
-                    TEL. 010-6886-8724&nbsp;&nbsp;E-mail. eueseok@naver.com
-                </p>
-
-                <p class="footer-copy">
-                    Copyright © 2025 Men in Black Real Estate. All Rights Reserved.
-                </p>
-            </div>
-
-            <!-- 오른쪽: 협찬/파트너 로고 -->
-            <div class="footer-right">
-                <p class="footer-label">협찬 · 파트너</p>
-                <img src="cau_logo.jpg" alt="중앙대학교 로고" class="footer-partner-logo">
-            </div>
-        </div>
-    </footer>
-
-    <script>
-    // 권역별 검색 TOP3 데이터 (예시 문구 — 나중에 실제 검색 랭킹으로 교체 가능)
+  <footer class="site-footer">
+   <div class="footer-inner">
+    <!-- 왼쪽: 링크 + 주소 + 카피라이트 -->
+    <div class="footer-left">
+     <nav class="footer-links">
+      <a href="#">
+       개인정보처리방침
+      </a>
+      <a href="#">
+       사이버감사실
+      </a>
+      <a href="#">
+       이메일수집거부
+      </a>
+      <a href="#">
+       채용문의
+      </a>
+     </nav>
+     <p class="footer-address">
+      서울캠퍼스  06974 서울특별시 동작구 흑석로 84
+      <br/>
+      TEL. 010-6886-8724  E-mail. eueseok@naver.com
+     </p>
+     <p class="footer-copy">
+      Copyright © 2025 Men in Black Real Estate. All Rights Reserved.
+     </p>
+    </div>
+    <!-- 오른쪽: 협찬/파트너 로고 -->
+    <div class="footer-right">
+     <p class="footer-label">
+      협찬 · 파트너
+     </p>
+     <img alt="중앙대학교 로고" class="footer-partner-logo" src="cau_logo.jpg"/>
+    </div>
+   </div>
+  </footer>
+  <script>
+   // 권역별 검색 TOP3 데이터 (예시 문구 — 나중에 실제 검색 랭킹으로 교체 가능)
     const REGION_TOP3 = {
         gangnam: [
         '역삼동 · 10년 이내 신축 전세',
@@ -372,7 +463,6 @@
             tabs.forEach(t => t.classList.remove('active'));
         });
     });
-    </script>
-
-</body>
+  </script>
+ </body>
 </html>
