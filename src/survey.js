@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const budgetMaxInput = document.getElementById('budget-max');
   const budgetHidden = document.getElementById('budget_range-input');
 
+  // 🔹 새로 추가: 역세권 도보 시간 입력
+  const stationWalkInput  = document.getElementById('station-walk-minutes');
+  const stationWalkHidden = document.getElementById('station_walk-input');
+
   function updateBudgetHidden() {
     if (!budgetHidden) return;
     const min = Number(budgetMinInput?.value || '');
@@ -32,8 +36,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 }
 
+// 🔹 새로 추가: 역세권 hidden 값 동기화
+function updateStationWalkHidden() {
+  if (!stationWalkHidden) return;
+  const v = Number(stationWalkInput?.value || '');
+
+  if (!isNaN(v) && v > 0) {
+    stationWalkHidden.value = String(v); // 숫자를 그대로 저장
+    hideVal();
+  } else {
+    stationWalkHidden.value = '';
+  }
+}
+
 budgetMinInput?.addEventListener('input', updateBudgetHidden);
 budgetMaxInput?.addEventListener('input', updateBudgetHidden);
+
+// 🔹 새로 추가
+stationWalkInput?.addEventListener('input', updateStationWalkHidden);
+
 let idx = 0;
 
 function setIdx(i){
@@ -184,6 +205,8 @@ surveyForm.addEventListener('submit', (e)=>{
     pyung_range: (document.getElementById('pyung_range-input')||{}).value || null,
     floor_group: (document.getElementById('floor_group-input')||{}).value || null,
     new_build: (document.getElementById('new_build-input')||{}).value || null,
+    // 🔹 새로 추가: 역세권 도보 시간(분)
+    station_walk:  Number((document.getElementById('station_walk-input') || {}).value || 0),
     rank_all: (() => {
       const priorityInput = document.getElementById('priority-input');
       if (priorityInput && priorityInput.value.trim()) {

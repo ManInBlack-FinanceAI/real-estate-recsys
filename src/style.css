@@ -752,18 +752,17 @@ button {
   padding: 40px;
 }
 
-/* 서비스 소개 메인 배경 */
+/* ===== 서비스 소개 히어로 섹션 ===== */
+
 .service-intro {
   position: relative;
-  padding: 64px 24px;
-  color: #111827;
-  text-align: center;
   z-index: 1;
-  background-color: rgba(255, 255, 255, 0.85);
-  max-width: 960px;
+  max-width: 1100px;
   margin: 40px auto 80px;
-  border-radius: 24px;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  padding: 40px 40px 32px;
+  border-radius: 32px;
+  background-color: #f9fafb;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.20);
   overflow: hidden;
 }
 
@@ -771,39 +770,156 @@ button {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("building_night_view.jpg") no-repeat center center / cover;
-  opacity: 0.25;
-  z-index: -1;
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #e5e7eb 40%,
+    #d1d5db 100%
+  );
+  z-index: -2;
 }
 
-.service-intro h1 {
-  font-size: 32px;
-  margin-bottom: 16px;
+/* 상단: 왼쪽 텍스트 / 오른쪽 비주얼 2열 레이아웃 */
+.service-hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+  gap: 40px;
+  align-items: center;
 }
 
-.service-intro p {
-  font-size: 16px;
-  line-height: 1.7;
+@media (max-width: 900px) {
+  .service-hero-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .service-hero-right {
+    align-items: center;
+  }
+}
+
+.service-hero-left {
+  position: relative;
+}
+
+/* 작은 라벨은 기존 index 히어로의 .hero-eyebrow 스타일 재사용 */
+.service-hero-left .hero-eyebrow {
   margin-bottom: 12px;
 }
 
-.service-intro button {
-  margin-top: 20px;
-  padding: 12px 24px;
-  font-size: 16px;
-  border: none;
-  background: #111827;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 999px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+.service-hero-left h1 {
+  font-size: 2.2rem;
+  line-height: 1.35;
+  letter-spacing: -0.03em;
+  margin: 0 0 16px;
+  color: #111827;
 }
 
-.service-intro button:hover {
+.service-hero-title-accent {
+  display: block;
+  color: #ef4444;  /* 첫 번째 예시처럼 강조되는 첫 줄 */
+}
+
+.service-hero-lead {
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: #4b5563;
+  margin-bottom: 14px;
+}
+
+.service-hero-bullets {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* CTA 버튼 */
+.service-hero-cta {
+  margin-top: 22px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: none;
+  background-color: #111827;
+  color: #f9fafb;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.service-hero-cta:hover {
   background-color: #020617;
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.35);
 }
+
+/* 오른쪽 비주얼 영역 */
+.service-hero-right {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* 오른쪽 상단 배지 */
+.service-hero-badge {
+  background-color: rgba(17, 24, 39, 0.9);
+  color: #e5e7eb;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  text-align: right;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.55);
+}
+
+.service-hero-badge .badge-title {
+  display: block;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.service-hero-badge .badge-sub {
+  display: block;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+/* 정장 실루엣 이미지를 정갈하게 보여주는 카드 */
+.service-hero-silhouette {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 28px;
+  background-color: #ffffff;
+  padding: 16px 18px;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.28);
+}
+
+.service-hero-silhouette img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 하단 회색 바 영역 */
+.service-hero-bottom {
+  margin-top: 36px;
+  padding: 20px 24px;
+  border-radius: 20px;
+  background-color: #111827;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.service-hero-bottom strong {
+  color: #f97316;  /* 포인트 컬러 */
+}
+
 
 
 /* ===== 공통 모달 ===== */

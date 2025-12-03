@@ -203,6 +203,17 @@ function filterProperties(data, surveyData) {
     console.log(`신축 필터 후: ${filtered.length}개`);
   }
 
+  // 8. 역세권 도보 시간 필터  🔹🔹🔹 여기 추가
+  if (surveyData.station_walk && surveyData.station_walk > 0) {
+    const maxWalk = Number(surveyData.station_walk);
+    filtered = filtered.filter(item => {
+      // CSV의 '역도보시간' 열 사용 (분 단위라고 가정)
+      const walk = Number(item['역도보시간']) || Infinity;
+      return walk <= maxWalk;
+    });
+    console.log(`역세권(도보 ${maxWalk}분 이내) 필터 후: ${filtered.length}개`);
+  }
+  
   console.log('필터링 완료:', filtered.length);
   return filtered;
 }
