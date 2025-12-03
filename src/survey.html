@@ -59,39 +59,10 @@
      </div>
      <input id="budget_range-input" name="budget_range" required="" type="hidden"/>
     </div>
-    <!-- STEP 2: 자금 조달 방식 (디자인만 버튼 톤으로 감싸기, 기능 유지) -->
-    <div class="question-slide" data-question-id="loan">
-     <h2>
-      2. 자금 조달 방식
-     </h2>
-     <div class="srvy-grid2 srvy-cardish">
-      <label class="srvy-field">
-       <span>
-        대출 비중(%)
-       </span>
-       <input id="loanRatio" max="80" min="0" name="loan_ratio" step="5" type="range" value="40"/>
-       <small>
-        현재:
-        <b id="loanRatioOut">
-         40%
-        </b>
-       </small>
-      </label>
-      <label class="srvy-field">
-       <span>
-        적용 금리(연 %, 선택)
-       </span>
-       <input id="loanRate" max="20" min="0" name="loan_rate" placeholder="예: 4.25" step="0.01" type="number"/>
-       <small>
-        미입력 시 내부/최근 분기 금리 사용
-       </small>
-      </label>
-     </div>
-    </div>
-    <!-- STEP 3: 희망 지역 (서울특별시 '구'만, 다중 선택 버튼) -->
+    <!-- STEP 2: 희망 지역 (서울특별시 '구'만, 다중 선택 버튼) -->
     <div class="question-slide" data-question-id="regions">
      <h2>
-      3. 희망 지역 (서울특별시)
+      2. 희망 지역 (서울특별시)
      </h2>
      <p class="guide-text">
       복수 선택 가능
@@ -175,31 +146,10 @@
      </div>
      <input id="regions-input" name="regions" required="" type="hidden"/>
     </div>
-    <!-- STEP 4: 입주 시기 (단일 선택 버튼) -->
-    <div class="question-slide" data-question-id="move_in">
-     <h2>
-      4. 입주 희망 시기
-     </h2>
-     <div class="option-buttons">
-      <button class="survey-option-btn" data-value="즉시" type="button">
-       즉시
-      </button>
-      <button class="survey-option-btn" data-value="3개월 이내" type="button">
-       3개월 이내
-      </button>
-      <button class="survey-option-btn" data-value="6개월 이내" type="button">
-       6개월 이내
-      </button>
-      <button class="survey-option-btn" data-value="1년 이내" type="button">
-       1년 이내
-      </button>
-     </div>
-     <input id="move_in-input" name="move_in" required="" type="hidden"/>
-    </div>
-    <!-- STEP 5: 평수 (선택형 버튼) -->
+    <!-- STEP 3: 평수 (선택형 버튼) -->
     <div class="question-slide" data-question-id="pyung_range">
      <h2>
-      5. 원하는 평수
+      3. 원하는 평수
      </h2>
      <div class="option-buttons">
       <button class="survey-option-btn" data-value="~10평" type="button">
@@ -220,10 +170,10 @@
      </div>
      <input id="pyung_range-input" name="pyung_range" required="" type="hidden"/>
     </div>
-    <!-- STEP 6: 층 (선택형 버튼) -->
+    <!-- STEP 4: 층 (선택형 버튼) -->
     <div class="question-slide" data-question-id="floor_step" style="display:none;">
      <h2>
-      6. 원하는 층
+      4. 원하는 층
      </h2>
      <div class="option-buttons">
       <button class="survey-option-btn" data-value="저층(1~10층)" type="button">
@@ -241,10 +191,10 @@
      </div>
      <input id="floor_group-input" name="floor_group" type="hidden"/>
     </div>
-    <!-- STEP 7: 신축 여부 (단일 선택 버튼) -->
+    <!-- STEP 5: 신축 여부 (단일 선택 버튼) -->
     <div class="question-slide" data-question-id="new_build">
      <h2>
-      7. 신축 여부
+      5. 신축 여부
      </h2>
      <div class="option-buttons">
       <button class="survey-option-btn" data-value="신축(5년 이내)" type="button">
@@ -259,42 +209,26 @@
      </div>
      <input id="new_build-input" name="new_build" required="" type="hidden"/>
     </div>
-    <!-- STEP 8: 중요 항목 순위 -->
-    <div class="question-slide" data-question-id="priority">
-        <h2>8. 중요 항목 순위</h2>
+    <!-- STEP 6: 역세권(지하철역 도보 시간) -->
+    <div class="question-slide" data-question-id="station_walk">
+        <h2>6. 역세권(도보 거리)</h2>
         <p class="srvy-muted">
-            왼쪽 네모를 클릭한 순서대로 1~5순위를 부여합니다. 다시 클릭하면 해제되고,
-            아래 ‘초기화’ 버튼으로 전부 리셋할 수 있습니다.
+            지하철역까지 도보로 몇 분 이내를 선호하는지 숫자로 입력해주세요.
         </p>
-
-        <ul id="rankList" class="rank-list">
-            <li class="priority-item" data-key="price">
-                <button type="button" class="priority-box"></button>
-                <span>예산(가격)</span>
-            </li>
-            <li class="priority-item" data-key="region">
-                <button type="button" class="priority-box"></button>
-                <span>지역</span>
-            </li>
-            <li class="priority-item" data-key="station">
-                <button type="button" class="priority-box"></button>
-                <span>역세권(지하철 접근성)</span>
-            </li>
-            <li class="priority-item" data-key="size_floor">
-                <button type="button" class="priority-box"></button>
-                <span>평수/층</span>
-            </li>
-            <li class="priority-item" data-key="newer">
-                <button type="button" class="priority-box"></button>
-                <span>신축 여부</span>
-            </li>
-        </ul>
-
-        <div class="priority-actions">
-            <button type="button" id="priority-reset" class="priority-reset">초기화</button>
+        <div class="option-buttons budget-inputs">
+            <label>
+                도보 시간(분)
+                <input
+                    id="station-walk-minutes"
+                    type="number"
+                    min="0"
+                    step="1"
+                    placeholder="예: 10 (10분 이내)"
+                />
+            </label>
         </div>
-
-        <input type="hidden" name="priority" id="priority-input">
+        <!-- validate()에서 검사할 hidden 값 -->
+        <input id="station_walk-input" name="station_walk" type="hidden" required />
     </div>
     <div class="navigation">
      <button class="nav-button" id="prev-btn" type="button">
