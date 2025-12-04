@@ -183,6 +183,22 @@ function showLocationOnMap(lat, lng, propertyName) {
   map.setLevel(4);
 }
 
+/**
+ * 상세보기 버튼 클릭 시 호출
+ * @param {string|number} id - 선택한 매물의 id
+ */
+function showPropertyDetails(id) {
+  if (!id) {
+    console.warn("매물 ID가 없습니다. 기본 아파트로 이동합니다.");
+    window.location.href = "apartment_dashboard.html";
+    return;
+  }
+
+  // 선택한 매물 id를 쿼리스트링으로 넘겨서 상세페이지에 전달
+  const url = `apartment_dashboard.html?id=${encodeURIComponent(id)}`;
+  window.location.href = url;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const userPersonalizedTitle = document.getElementById('user-personalized-title');
   const userSummary = document.getElementById('user-summary');
