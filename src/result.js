@@ -357,8 +357,6 @@ if (filteredProperties.length > 0) {
   : '도보시간 정보없음';
 
   card.innerHTML = `
-  <img src="https://via.placeholder.com/300x200?text=${encodeURIComponent(property['아파트명'] || '매물')}"
-  alt="${property['아파트명']} 이미지" class="property-image">
   <div class="card-details">
   <h3>${safeGet(property, '아파트명', '정보없음')}</h3>
   <p class="location">${safeGet(property, '시군구명', '')} ${safeGet(property, '법정동', '')}</p>
