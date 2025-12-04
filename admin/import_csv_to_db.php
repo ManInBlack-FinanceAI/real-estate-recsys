@@ -216,20 +216,26 @@ try {
     // 3. 데이터 임포트
     echo "<h2>⚙️ Step 3: 데이터 임포트</h2>";
     
-    // INSERT 준비
+    // INSERT 준비 (새로운 CSV 구조)
     $stmt = $pdo->prepare("
         INSERT INTO apt_transactions (
-            조회연월, 거래년, 거래월, 거래일, 시군구코드, 시군구명, 법정동, 도로명, 아파트명,
-            거래금액_만원, 전용면적_㎡, 층_원본, 층_숫자, 건축년도, 거래일자,
-            기준금리, 주담대금리, CPI, 주택매매가격지수, 주택전세가격지수, 아파트매매가격지수,
-            현금통화, 경제활동인구, 경도, 위도,
-            최단지하철역, 역거리, 역도보시간, 버스정류장수, 병원거리, 마트수, 편의점수, 공원개수, 고속도로거리
+            조회연월, 시군구코드, 시군구명, 법정동, 아파트명,
+            거래금액_만원, 전용면적_㎡, 층_원본, 층_숫자, 거래일자, 건축년도, 도로명,
+            기준금리, 주담대금리, 최단지하철역, 역거리, 역도보시간,
+            CPI, 주택매매가격지수, 주택전세가격지수, 아파트매매가격지수, 현금통화, 경제활동인구,
+            위도, 경도, 버스정류장수, 병원거리, 마트수, 편의점수, 공원개수, 고속도로거리,
+            거래년, 거래월, 거래일, 도로명주소, 지번주소, 아파트코드, 시도, 도로상세주소,
+            전화번호, 관리방식, 도로형태, 난방방식, 동수, 세대수, 건설사, 시행사,
+            사용승인일, 관리비부과면적, 경비관리형태, 청소관리형태, 주차대수, 단지승인일, road_key
         ) VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?
         )
     ");
     
@@ -244,60 +250,80 @@ try {
     
     while (($row = fgetcsv($file)) !== false) {
         try {
-            // 거래일자 생성
-            $transactionDate = null;
-            if (!empty($row[1]) && !empty($row[2]) && !empty($row[3])) {
-                try {
-                    $year = (int)$row[1];
-                    $month = (int)$row[2];
-                    $day = (int)$row[3];
-                    if ($year >= 1900 && $month >= 1 && $month <= 12 && $day >= 1 && $day <= 31) {
-                        $transactionDate = sprintf('%04d-%02d-%02d', $year, $month, $day);
-                    }
-                } catch (Exception $e) {
-                    // 날짜 파싱 실패 시 NULL
-                }
+            // 층 데이터 처리
+            list($floorOriginal, $floorNumber) = parseFloor($row[7]);
+            
+            // 거래일자 (row[8]에 이미 날짜 형식으로 있음)
+            $transactionDate = safeValue($row[8]);
+            
+            // 사용승인일 파싱
+            $approvalDate = safeValue($row[46]);
+            if ($approvalDate && strlen($approvalDate) >= 10) {
+                $approvalDate = substr($approvalDate, 0, 10); // YYYY-MM-DD 추출
             }
             
-            // 층 데이터 처리 (이제 함수 호출만)
-            list($floorOriginal, $floorNumber) = parseFloor($row[11]);
+            // 단지승인일 파싱
+            $complexApprovalDate = safeValue($row[50]);
+            if ($complexApprovalDate && strlen($complexApprovalDate) >= 19) {
+                // 이미 DATETIME 형식
+            }
             
-            // 데이터 삽입
+            // 데이터 삽입 (새로운 컬럼 순서)
             $stmt->execute([
                 safeValue($row[0]),   // 조회연월
-                safeValue($row[1]),   // 거래년
-                safeValue($row[2]),   // 거래월
-                safeValue($row[3]),   // 거래일
-                safeValue($row[4]),   // 시군구코드
-                safeValue($row[5]),   // 시군구명
-                safeValue($row[6]),   // 법정동
-                safeValue($row[7]),   // 도로명
-                safeValue($row[8]),   // 아파트명
-                safeValue($row[9]),   // 거래금액(만원)
-                safeValue($row[10]),  // 전용면적(㎡)
+                safeValue($row[1]),   // 시군구코드
+                safeValue($row[2]),   // 시군구명
+                safeValue($row[3]),   // 법정동
+                safeValue($row[4]),   // 아파트명
+                safeValue($row[5]),   // 거래금액(만원)
+                safeValue($row[6]),   // 전용면적(㎡)
                 $floorOriginal,       // 층_원본
                 $floorNumber,         // 층_숫자
-                safeValue($row[12]),  // 건축년도
                 $transactionDate,     // 거래일자
-                safeValue($row[14]),  // 기준금리
-                safeValue($row[15]),  // 주담대금리
+                safeValue($row[9]),   // 건축년도
+                safeValue($row[10]),  // 도로명
+                safeValue($row[11]),  // 기준금리
+                safeValue($row[12]),  // 주담대금리
+                safeValue($row[13]),  // 최단지하철역
+                safeValue($row[14]),  // 역거리
+                safeValue($row[15]),  // 역도보시간
                 safeValue($row[16]),  // CPI
                 safeValue($row[17]),  // 주택매매가격지수
                 safeValue($row[18]),  // 주택전세가격지수
                 safeValue($row[19]),  // 아파트매매가격지수
                 safeValue($row[20]),  // 현금통화
                 safeValue($row[21]),  // 경제활동인구
-                safeValue($row[22]),  // 경도
-                safeValue($row[23]),  // 위도
-                safeValue($row[24]),  // 최단지하철역
-                safeValue($row[25]),  // 역거리
-                safeValue($row[26]),  // 역도보시간
-                safeValue($row[27]),  // 버스정류장수
-                safeValue($row[28]),  // 병원거리
-                safeValue($row[29]),  // 마트수
-                safeValue($row[30]),  // 편의점수
-                safeValue($row[31]),  // 공원개수
-                safeValue($row[32])   // 고속도로거리
+                safeValue($row[22]),  // 위도
+                safeValue($row[23]),  // 경도
+                safeValue($row[24]),  // 버스정류장수
+                safeValue($row[25]),  // 병원거리
+                safeValue($row[26]),  // 마트수
+                safeValue($row[27]),  // 편의점수
+                safeValue($row[28]),  // 공원개수
+                safeValue($row[29]),  // 고속도로거리
+                safeValue($row[30]),  // 거래년
+                safeValue($row[31]),  // 거래월
+                safeValue($row[32]),  // 거래일
+                safeValue($row[33]),  // 도로명주소
+                safeValue($row[34]),  // 지번주소
+                safeValue($row[35]),  // 아파트코드
+                safeValue($row[36]),  // 시도
+                safeValue($row[37]),  // 도로상세주소
+                safeValue($row[38]),  // 전화번호
+                safeValue($row[39]),  // 관리방식
+                safeValue($row[40]),  // 도로형태
+                safeValue($row[41]),  // 난방방식
+                safeValue($row[42]),  // 동수
+                safeValue($row[43]),  // 세대수
+                safeValue($row[44]),  // 건설사
+                safeValue($row[45]),  // 시행사
+                $approvalDate,        // 사용승인일
+                safeValue($row[47]),  // 관리비부과면적
+                safeValue($row[48]),  // 경비관리형태
+                safeValue($row[49]),  // 청소관리형태
+                safeValue($row[50]),  // 주차대수
+                $complexApprovalDate, // 단지승인일
+                safeValue($row[51])   // road_key
             ]);
             
             $count++;

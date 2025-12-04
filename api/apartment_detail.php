@@ -91,9 +91,12 @@ try {
         'apartment' => [
             'id' => $apartment['id'],
             'name' => $apartment['아파트명'],
+            'code' => $apartment['아파트코드'],
             'district' => $apartment['시군구명'],
             'dong' => $apartment['법정동'],
             'road' => $apartment['도로명'],
+            'road_address' => $apartment['도로명주소'],
+            'jibun_address' => $apartment['지번주소'],
             'location' => $apartment['시군구명'] . ' ' . $apartment['법정동'],
             'build_year' => $apartment['건축년도'],
             'age' => date('Y') - (int)$apartment['건축년도'] . '년차',
@@ -127,7 +130,23 @@ try {
             // 층 정보
             'floor_original' => $apartment['층_원본'],
             'floor_number' => $apartment['층_숫자'],
-            'floor_category' => $apartment['층_카테고리']
+            'floor_category' => $apartment['층_카테고리'],
+            
+            // 아파트 상세 정보 (새로 추가!)
+            'phone' => $apartment['전화번호'],
+            'management_type' => $apartment['관리방식'],
+            'road_type' => $apartment['도로형태'],
+            'heating_type' => $apartment['난방방식'],
+            'building_count' => $apartment['동수'],
+            'household_count' => $apartment['세대수'],
+            'constructor' => $apartment['건설사'],
+            'developer' => $apartment['시행사'],
+            'approval_date' => $apartment['사용승인일'],
+            'management_area' => $apartment['관리비부과면적'],
+            'security_management' => $apartment['경비관리형태'],
+            'cleaning_management' => $apartment['청소관리형태'],
+            'parking_count' => $apartment['주차대수'],
+            'complex_approval' => $apartment['단지승인일']
         ],
         'price_history' => $priceHistory,
         'statistics' => [

@@ -68,14 +68,18 @@ async function initDashboard() {
     document.getElementById('aptLocation').textContent = apt.location || '주소 정보';
     
     // 준공일/연차
-    const approvedText = apt.build_year 
+    const approvedText = apt.approval_date 
+      ? `${apt.approval_date} (${apt.age})`
+      : apt.build_year 
       ? `${apt.build_year}년 준공 (${apt.age})`
       : '정보 없음';
     document.getElementById('aptApproved').textContent = approvedText;
     
-    // 세대수 (DB에 없으므로 거래 건수로 대체 또는 "-"로 표시)
-    document.getElementById('aptHouseholds').textContent = 
-      `거래 ${formatNumber(stats.total_transactions)}건`;
+    // 세대수
+    const householdsText = apt.household_count 
+      ? `${formatNumber(apt.household_count)}세대`
+      : `거래 ${formatNumber(stats.total_transactions)}건`;
+    document.getElementById('aptHouseholds').textContent = householdsText;
     
     // ========== 요약 카드 ==========
     // 예상 가격 (평균 가격 사용)
@@ -133,30 +137,47 @@ async function initDashboard() {
     }
     
     // ========== 오른쪽 기본 정보 ==========
-    document.getElementById('detailLocation').textContent = apt.location || '-';
+    document.getElementById('detailLocation').textContent = 
+      apt.road_address || apt.location || '-';
     document.getElementById('detailApproved').textContent = approvedText;
     
-    // 세대수 (DB에 없으므로 거래 통계로 대체)
-    document.getElementById('detailHouseholds').textContent = 
-      `거래 ${formatNumber(stats.total_transactions)}건 (평균 ${apt.area_pyung}평)`;
+    // 세대수
+    const detailHouseholdsText = apt.household_count 
+      ? `${formatNumber(apt.household_count)}세대 (${apt.building_count || '?'}개동)`
+      : `거래 ${formatNumber(stats.total_transactions)}건`;
+    document.getElementById('detailHouseholds').textContent = detailHouseholdsText;
     
-    // 현관구조 (DB에 없음)
-    document.getElementById('detailStructure').textContent = '정보 없음';
+    // 현관구조 (도로형태로 대체)
+    document.getElementById('detailStructure').textContent = 
+      apt.road_type || '정보 없음';
     
-    // 난방 (DB에 없음)
-    document.getElementById('detailHeating').textContent = '정보 없음';
+    // 난방
+    document.getElementById('detailHeating').textContent = 
+      apt.heating_type || '정보 없음';
     
-    // 주차 (DB에 없음)
-    document.getElementById('detailParking').textContent = '정보 없음';
+    // 주차
+    const parkingText = apt.parking_count && apt.household_count
+      ? `${formatNumber(apt.parking_count)}대 (세대당 ${(apt.parking_count / apt.household_count).toFixed(2)}대)`
+      : apt.parking_count 
+      ? `${formatNumber(apt.parking_count)}대`
+      : '정보 없음';
+    document.getElementById('detailParking').textContent = parkingText;
     
-    // 용적률/건폐율 (DB에 없음)
-    document.getElementById('detailFarCoverage').textContent = '정보 없음';
+    // 용적률/건폐율 (관리방식/관리형태로 대체)
+    const managementText = apt.management_type 
+      ? `${apt.management_type}`
+      : '정보 없음';
+    document.getElementById('detailFarCoverage').textContent = managementText;
     
-    // 관리사무소 (DB에 없음)
-    document.getElementById('detailOfficePhone').textContent = '정보 없음';
+    // 관리사무소
+    document.getElementById('detailOfficePhone').textContent = 
+      apt.phone || '정보 없음';
     
-    // 건설사 (DB에 없음)
-    document.getElementById('detailConstructor').textContent = '정보 없음';
+    // 건설사
+    const constructorText = apt.constructor && apt.developer
+      ? `${apt.constructor} (시행: ${apt.developer})`
+      : apt.constructor || '정보 없음';
+    document.getElementById('detailConstructor').textContent = constructorText;
     
     // ========== 가격 그래프 ==========
     if (priceHistory && priceHistory.length > 0) {
