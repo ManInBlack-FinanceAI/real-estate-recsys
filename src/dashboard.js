@@ -176,8 +176,16 @@ async function initDashboard() {
       
       const prices = sortedHistory.map(item => item.거래금액_만원);
       
-      const ctx = document.getElementById('priceChart').getContext('2d');
-      new Chart(ctx, {
+      const canvas = document.getElementById('priceChart');
+      const ctx = canvas.getContext('2d');
+      
+      // 기존 차트가 있다면 파괴
+      if (canvas.chart) {
+        canvas.chart.destroy();
+      }
+      
+      // 새 차트 생성
+      canvas.chart = new Chart(ctx, {
         type: 'line',
         data: {
           labels,
