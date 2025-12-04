@@ -54,9 +54,14 @@ async function fetchPropertiesFromAPI(surveyData) {
     }
   }
 
-  // 역세권 필터
-  if (surveyData.rank_top5 && surveyData.rank_top5[0] === 'station') {
-    params.append('max_station_dist', 500);  // 500m 이내
+  // 역세권 필터 (설문의 station_walk 값 사용)
+  if (surveyData.station_walk && surveyData.station_walk > 0) {
+    // station_walk는 '분' 단위이므로, 역도보시간으로 필터링
+    // 프론트엔드에서 API로 전달
+    params.append('max_walk_time', surveyData.station_walk);
+  } else if (surveyData.rank_top5 && surveyData.rank_top5[0] === 'station') {
+    // 역세권이 최우선순위인 경우 기본 10분 이내로 설정
+    params.append('max_walk_time', 10);
   }
 
   // 정렬 (우선순위 기반)
@@ -127,6 +132,12 @@ function parseBudgetRange(budgetStr) {
 */
 function parsePyungRange(pyungStr) {
   const patterns = {
+    '~10평': [0, 10],
+    '11~20평': [11, 20],
+    '21~30평': [21, 30],
+    '31~40평': [31, 40],
+    '41평~': [41, 999],
+    // 기존 형식도 호환성 유지
     '10평대': [10, 20],
     '20평대': [20, 30],
     '30평대': [30, 40],
@@ -346,8 +357,6 @@ if (filteredProperties.length > 0) {
   : '도보시간 정보없음';
 
   card.innerHTML = `
-  <img src="https://via.placeholder.com/300x200?text=${encodeURIComponent(property['아파트명'] || '매물')}"
-  alt="${property['아파트명']} 이미지" class="property-image">
   <div class="card-details">
   <h3>${safeGet(property, '아파트명', '정보없음')}</h3>
   <p class="location">${safeGet(property, '시군구명', '')} ${safeGet(property, '법정동', '')}</p>

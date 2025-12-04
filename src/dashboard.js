@@ -1,190 +1,292 @@
-// 이 페이지에서 보여줄 아파트 ID (나중에 쿼리스트링으로 바꿔도 됨)
-const TARGET_APT_ID = "1";
-
-async function loadCSV(url) {
-  const res = await fetch(url);
-  const text = await res.text();
-
-  const lines = text.trim().split("\n");
-  const headers = lines[0].split(",").map((h) => h.trim());
-
-  return lines.slice(1).map((line) => {
-    const cols = line.split(",");
-    const obj = {};
-    headers.forEach((h, idx) => {
-      obj[h] = (cols[idx] || "").trim();
-    });
-    return obj;
-  });
+// URL에서 아파트 ID 추출
+function getApartmentIdFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('id');
 }
 
 // 숫자 포맷 도우미
-function formatNumber(numStr) {
-  if (!numStr) return "-";
-  const n = Number(numStr);
-  if (Number.isNaN(n)) return numStr;
-  return n.toLocaleString("ko-KR");
+function formatNumber(num) {
+  if (num === null || num === undefined || num === '') return '-';
+  const n = Number(num);
+  if (Number.isNaN(n)) return num;
+  return n.toLocaleString('ko-KR');
+}
+
+// 가격 포맷 (만원 → 억 원)
+function formatPrice(priceInManwon) {
+  if (!priceInManwon || priceInManwon === 0) return '-';
+  const eok = priceInManwon / 10000;
+  if (eok >= 1) {
+    return `${eok.toFixed(1)}억 원`;
+  }
+  return `${formatNumber(priceInManwon)} 만원`;
+}
+
+// API에서 아파트 데이터 가져오기
+async function fetchApartmentData(id) {
+  try {
+    const response = await fetch(`/cau19/api/apartment_detail.php?id=${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (!data.success) {
+      throw new Error(data.error || 'API 호출 실패');
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('아파트 데이터 로드 오류:', error);
+    throw error;
+  }
 }
 
 async function initDashboard() {
-  // 1) 기본 정보 CSV 불러오기
-  const detailRows = await loadCSV("apartment_detail.csv");
-  const apt = detailRows.find((row) => row.id === TARGET_APT_ID);
-  if (!apt) {
-    console.error("해당 ID의 아파트 데이터를 찾을 수 없습니다.");
+  const aptId = getApartmentIdFromURL();
+  
+  if (!aptId) {
+    alert('아파트 ID가 지정되지 않았습니다.');
+    // 기본값으로 임시 표시 (개발용)
+    console.warn('아파트 ID가 없어 기본 데이터를 사용합니다.');
     return;
   }
-
-  // 헤더
-  document.getElementById("aptName").textContent = apt.name;
-  document.getElementById("aptLocation").textContent = apt.location;
-
-  document.getElementById(
-    "aptApproved"
-  ).textContent = `${apt.approved_date} (${apt.age})`;
-
-  document.getElementById(
-    "aptHouseholds"
-  ).textContent = `${formatNumber(apt.households)}세대`;
-
-  // 요약 카드
-  const expectedPriceText =
-    apt.expected_price && !Number.isNaN(Number(apt.expected_price))
-      ? `${formatNumber(apt.expected_price)} 만원`
-      : apt.expected_price || "-";
-
-  document.getElementById("expectedPrice").textContent = expectedPriceText;
-
-  document.getElementById(
-    "recommendScore"
-  ).textContent = `${apt.recommend_score} 점`;
-
-  // 점수 막대 (0~100 기준)
-  const score = Math.min(100, Math.max(0, Number(apt.recommend_score) || 0));
-  const fill = document.getElementById("scoreBarFill");
-  fill.style.width = `${score}%`;
-
-  // 학군/교통 요약
-  const schoolSummary = `${apt.school_elem} · ${apt.school_mid} · ${apt.school_high}`;
-  document.getElementById("schoolSummary").textContent = schoolSummary;
-
-  document.getElementById("transportSummary").textContent =
-    apt.transport_summary;
-
-  // 학군 카드
-  document.getElementById("schoolElem").textContent = apt.school_elem;
-  document.getElementById("schoolMid").textContent = apt.school_mid;
-  document.getElementById("schoolHigh").textContent = apt.school_high;
-
-  // 교통 카드 (예: "지하철:봉천역 도보 7분;버스:OO정류장 도보 3분")
-  const transportTbody = document.getElementById("transportTbody");
-  transportTbody.innerHTML = "";
-  if (apt.transport_list) {
-    const items = apt.transport_list.split(";");
-    items.forEach((item) => {
-      if (!item.trim()) return;
-      const [mode, time] = item.split("|");
-      const tr = document.createElement("tr");
-      const tdMode = document.createElement("td");
-      const tdTime = document.createElement("td");
-      tdMode.textContent = mode || "";
-      tdTime.textContent = time || "";
+  
+  try {
+    // API에서 데이터 가져오기
+    const data = await fetchApartmentData(aptId);
+    const apt = data.apartment;
+    const priceHistory = data.price_history;
+    const stats = data.statistics;
+    
+    console.log('아파트 데이터 로드 완료:', apt);
+    
+    // ========== 헤더 정보 ==========
+    document.getElementById('aptName').textContent = apt.name || '아파트 이름';
+    document.getElementById('aptLocation').textContent = apt.location || '주소 정보';
+    
+    // 준공일/연차
+    const approvedText = apt.approval_date 
+      ? `${apt.approval_date} (${apt.age})`
+      : apt.build_year 
+      ? `${apt.build_year}년 준공 (${apt.age})`
+      : '정보 없음';
+    document.getElementById('aptApproved').textContent = approvedText;
+    
+    // 세대수
+    const householdsText = apt.household_count 
+      ? `${formatNumber(apt.household_count)}세대`
+      : `거래 ${formatNumber(stats.total_transactions)}건`;
+    document.getElementById('aptHouseholds').textContent = householdsText;
+    
+    // ========== 요약 카드 ==========
+    // 예상 가격 (평균 가격 사용)
+    const expectedPriceText = formatPrice(stats.avg_price);
+    document.getElementById('expectedPrice').textContent = expectedPriceText;
+    
+    // 추천 점수 (임시로 거래 건수 기반 계산)
+    const recommendScore = Math.min(100, Math.max(50, 50 + stats.total_transactions));
+    document.getElementById('recommendScore').textContent = `${recommendScore} 점`;
+    
+    // 점수 막대
+    const fill = document.getElementById('scoreBarFill');
+    fill.style.width = `${recommendScore}%`;
+    
+    // 학군/교통 요약 (DB에 없으므로 교통 정보로 대체)
+    const schoolSummary = '학군 정보 준비 중';
+    document.getElementById('schoolSummary').textContent = schoolSummary;
+    
+    const transportSummary = apt.nearest_station 
+      ? `${apt.nearest_station} 도보 ${Math.round(apt.station_walk_time || 0)}분`
+      : '교통 정보 없음';
+    document.getElementById('transportSummary').textContent = transportSummary;
+    
+    // ========== 학군 카드 (DB에 없으므로 준비 중) ==========
+    document.getElementById('schoolElem').textContent = '정보 준비 중';
+    document.getElementById('schoolMid').textContent = '정보 준비 중';
+    document.getElementById('schoolHigh').textContent = '정보 준비 중';
+    
+    // ========== 교통 카드 ==========
+    const transportTbody = document.getElementById('transportTbody');
+    transportTbody.innerHTML = '';
+    
+    // 지하철 정보
+    if (apt.nearest_station) {
+      const tr = document.createElement('tr');
+      const tdMode = document.createElement('td');
+      const tdTime = document.createElement('td');
+      tdMode.textContent = `지하철 (${apt.nearest_station})`;
+      tdTime.textContent = `도보 약 ${Math.round(apt.station_walk_time || 0)}분`;
       tr.appendChild(tdMode);
       tr.appendChild(tdTime);
       transportTbody.appendChild(tr);
-    });
-  }
-
-  // 오른쪽 기타 정보
-  document.getElementById("detailLocation").textContent = apt.location;
-  document.getElementById(
-    "detailApproved"
-  ).textContent = `${apt.approved_date} (${apt.age})`;
-
-  document.getElementById(
-    "detailHouseholds"
-  ).textContent = `${formatNumber(
-    apt.households
-  )}세대 (해당 면적 ${formatNumber(apt.households_area)}세대)`;
-
-  document.getElementById("detailStructure").textContent = apt.structure;
-  document.getElementById("detailHeating").textContent = apt.heating;
-  document.getElementById("detailParking").textContent = apt.parking;
-  document.getElementById(
-    "detailFarCoverage"
-  ).textContent = `${apt.far} / ${apt.coverage}`;
-  document.getElementById("detailOfficePhone").textContent =
-    apt.office_phone || "-";
-  document.getElementById("detailConstructor").textContent = apt.constructor;
-
-  // 2) 가격 CSV 불러와서 그래프 그리기
-  const priceRows = await loadCSV("apartment_price.csv");
-  const aptPrices = priceRows
-    .filter((row) => row.id === TARGET_APT_ID)
-    .sort((a, b) => (a.date > b.date ? 1 : -1));
-
-  const labels = aptPrices.map((r) => r.date);
-  const prices = aptPrices.map((r) => Number(r.price));
-
-  const ctx = document.getElementById("priceChart").getContext("2d");
-  new Chart(ctx, {
-    type: "line",
-    data: {
-      labels,
-      datasets: [
-        {
-          label: "실거래가",
-          data: prices,
-          borderWidth: 2,
-          tension: 0.2,
-          pointRadius: 2,
-          borderColor: "#2563eb",
-          backgroundColor: "rgba(37, 99, 235, 0.08)",
+    }
+    
+    // 버스 정보
+    if (apt.bus_stops > 0) {
+      const tr = document.createElement('tr');
+      const tdMode = document.createElement('td');
+      const tdTime = document.createElement('td');
+      tdMode.textContent = '버스';
+      tdTime.textContent = `주변 ${apt.bus_stops}개 정류장`;
+      tr.appendChild(tdMode);
+      tr.appendChild(tdTime);
+      transportTbody.appendChild(tr);
+    }
+    
+    // ========== 오른쪽 기본 정보 ==========
+    document.getElementById('detailLocation').textContent = 
+      apt.road_address || apt.location || '-';
+    document.getElementById('detailApproved').textContent = approvedText;
+    
+    // 세대수
+    const detailHouseholdsText = apt.household_count 
+      ? `${formatNumber(apt.household_count)}세대 (${apt.building_count || '?'}개동)`
+      : `거래 ${formatNumber(stats.total_transactions)}건`;
+    document.getElementById('detailHouseholds').textContent = detailHouseholdsText;
+    
+    // 현관구조 (도로형태로 대체)
+    document.getElementById('detailStructure').textContent = 
+      apt.road_type || '정보 없음';
+    
+    // 난방
+    document.getElementById('detailHeating').textContent = 
+      apt.heating_type || '정보 없음';
+    
+    // 주차
+    const parkingText = apt.parking_count && apt.household_count
+      ? `${formatNumber(apt.parking_count)}대 (세대당 ${(apt.parking_count / apt.household_count).toFixed(2)}대)`
+      : apt.parking_count 
+      ? `${formatNumber(apt.parking_count)}대`
+      : '정보 없음';
+    document.getElementById('detailParking').textContent = parkingText;
+    
+    // 용적률/건폐율 (관리방식/관리형태로 대체)
+    const managementText = apt.management_type 
+      ? `${apt.management_type}`
+      : '정보 없음';
+    document.getElementById('detailFarCoverage').textContent = managementText;
+    
+    // 관리사무소
+    document.getElementById('detailOfficePhone').textContent = 
+      apt.phone || '정보 없음';
+    
+    // 건설사
+    const constructorText = apt.constructor && apt.developer
+      ? `${apt.constructor} (시행: ${apt.developer})`
+      : apt.constructor || '정보 없음';
+    document.getElementById('detailConstructor').textContent = constructorText;
+    
+    // ========== 가격 그래프 ==========
+    if (priceHistory && priceHistory.length > 0) {
+      // 날짜별로 정렬 (이미 정렬되어 있지만 확인)
+      const sortedHistory = priceHistory
+        .filter(item => item.거래금액_만원 > 0) // 가격이 0인 항목 제외
+        .sort((a, b) => {
+          const dateA = new Date(a.거래일자);
+          const dateB = new Date(b.거래일자);
+          return dateA - dateB;
+        });
+      
+      const labels = sortedHistory.map(item => {
+        const date = new Date(item.거래일자);
+        return `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+      });
+      
+      const prices = sortedHistory.map(item => item.거래금액_만원);
+      
+      const canvas = document.getElementById('priceChart');
+      const ctx = canvas.getContext('2d');
+      
+      // 기존 차트가 있다면 파괴
+      if (canvas.chart) {
+        canvas.chart.destroy();
+      }
+      
+      // 새 차트 생성
+      canvas.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: '실거래가 (만원)',
+            data: prices,
+            borderWidth: 2,
+            tension: 0.2,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            fill: true
+          }]
         },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      scales: {
-        x: {
-          ticks: {
-            maxTicksLimit: 6,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `거래가: ${formatNumber(context.parsed.y)} 만원`;
+                }
+              }
+            }
           },
-        },
-        y: {
-          beginAtZero: false,
-        },
-      },
-    },
-  });
+          scales: {
+            x: {
+              ticks: {
+                maxTicksLimit: 10
+              }
+            },
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(value) {
+                  return formatNumber(value);
+                }
+              }
+            }
+          }
+        }
+      });
+    } else {
+      // 거래 내역이 없을 경우
+      const chartContainer = document.getElementById('priceChart').parentElement;
+      chartContainer.innerHTML = '<p style="text-align: center; padding: 40px; color: #999;">거래 내역이 없습니다.</p>';
+    }
+    
+  } catch (error) {
+    console.error('대시보드 초기화 오류:', error);
+    alert('아파트 정보를 불러오는 중 오류가 발생했습니다.');
+  }
 }
 
 // 🔹 상단 배너 버튼 동작
 function initBanner() {
-  const banner = document.querySelector(".navbar");
-  const closeBtn = document.querySelector(".navbar-right .fa-times");
-  const startBtn = document.querySelector(".start-now");
-
+  const banner = document.querySelector('.navbar');
+  const closeBtn = document.querySelector('.navbar-right .fa-times');
+  const startBtn = document.querySelector('.start-now');
+  
   if (closeBtn && banner) {
-    closeBtn.addEventListener("click", () => {
-      banner.style.display = "none";
+    closeBtn.addEventListener('click', () => {
+      banner.style.display = 'none';
     });
   }
-
+  
   if (startBtn) {
-    startBtn.addEventListener("click", () => {
-      // 기존 zip 기준으로 설문 페이지로 이동하도록 처리
-      window.location.href = "survey.html";
+    startBtn.addEventListener('click', () => {
+      window.location.href = 'survey.html';
     });
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   initDashboard();
   initBanner();
 });

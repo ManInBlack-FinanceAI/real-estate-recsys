@@ -134,6 +134,7 @@ body {
 }
 
 .hero-inner {
+  width: -webkit-fill-available;
   position: relative;
   z-index: 1;
 }
@@ -672,6 +673,13 @@ body {
   margin-bottom: 18px;
   border: 1px solid #e0e7ff;
   position: relative;
+}
+
+/* 차트 컨테이너 고정 높이 */
+#priceChart {
+  max-height: 320px;
+  width: 100% !important;
+  height: 320px !important;
 }
 
 /* 주요 카드(실거래가, 단지 정보)는 살짝 더 강조 */
