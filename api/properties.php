@@ -59,10 +59,12 @@ try {
         }
     }
     
-    // 가격 필터
-    $sql .= " AND 거래금액_만원 BETWEEN ? AND ?";
-    $params[] = $minPrice;
-    $params[] = $maxPrice;
+    // 가격 필터 (NULL이나 0인 경우도 고려)
+    if ($minPrice > 0 || $maxPrice < 999999) {
+        $sql .= " AND (거래금액_만원 BETWEEN ? AND ? OR 거래금액_만원 IS NULL)";
+        $params[] = $minPrice;
+        $params[] = $maxPrice;
+    }
     
     // 면적 필터
     $sql .= " AND 전용면적_㎡ BETWEEN ? AND ?";
@@ -139,9 +141,11 @@ try {
             $countParams = array_merge($countParams, $regions);
         }
     }
-    $countSQL .= " AND 거래금액_만원 BETWEEN ? AND ?";
-    $countParams[] = $minPrice;
-    $countParams[] = $maxPrice;
+    if ($minPrice > 0 || $maxPrice < 999999) {
+        $countSQL .= " AND (거래금액_만원 BETWEEN ? AND ? OR 거래금액_만원 IS NULL)";
+        $countParams[] = $minPrice;
+        $countParams[] = $maxPrice;
+    }
     $countSQL .= " AND 전용면적_㎡ BETWEEN ? AND ?";
     $countParams[] = $minArea;
     $countParams[] = $maxArea;
