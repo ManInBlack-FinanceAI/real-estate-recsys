@@ -134,6 +134,7 @@ body {
 }
 
 .hero-inner {
+  width: -webkit-fill-available;
   position: relative;
   z-index: 1;
 }
