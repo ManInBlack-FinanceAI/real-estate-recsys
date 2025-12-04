@@ -1,0 +1,892 @@
+/* =========================
+   글로벌 스타일
+   ========================= */
+* {
+  box-sizing: border-box;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f5f7;
+  color: #020617;
+}
+
+/* =========================
+   상단 배너 (FIND MY HOME)
+   ========================= */
+.navbar {
+  width: 100%;
+  background: #333333;
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  font-size: 13px;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-left .logo {
+  font-family: "Montserrat", "Pretendard", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.edit-mode i {
+  margin-right: 6px;
+  font-size: 13px;
+  color: #d1d5db;
+}
+
+.navbar-center {
+  text-align: center;
+  flex: 1;
+  max-width: 600px;
+}
+
+.navbar-center p {
+  margin: 0;
+  font-size: 13px;
+  color: #e5e7eb;
+}
+
+.navbar-center .learn-more {
+  margin-left: 8px;
+  font-size: 13px;
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.start-now {
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.start-now:hover {
+  background: #1d4ed8;
+}
+
+.navbar-right .fa-times {
+  font-size: 14px;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+/* =========================
+   아파트 대시보드 페이지 컨테이너
+   ========================= */
+.page {
+  max-width: 1200px;
+  margin: 28px auto 48px;
+  padding: 0 24px;
+}
+
+/* =========================
+   히어로 섹션 (상단 헤더 + 요약 카드)
+   ========================= */
+.hero-section {
+  border-radius: 32px;
+  background: linear-gradient(135deg, #020617 0%, #0b1120 40%, #1d293b 100%);
+  padding: 28px 32px 26px;
+  color: #f9fafb;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 배경 광택 느낌 */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(
+      circle at 10% 0%,
+      rgba(59, 130, 246, 0.25),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 90% 100%,
+      rgba(59, 130, 246, 0.18),
+      transparent 55%
+    );
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   아파트 헤더
+   ========================= */
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.header h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0;
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+.header-meta {
+  display: flex;
+  gap: 8px;
+}
+
+.meta-pill {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+/* =========================
+   상단 요약 카드
+   ========================= */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr;
+  gap: 16px;
+}
+
+/* 히어로 안에 있는 요약 카드 */
+.hero-summary .summary-card {
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.4);
+}
+
+.summary-card h2 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.summary-main {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.summary-sub {
+  margin: 0;
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
+/* 점수 게이지 */
+.score-bar {
+  margin-top: 8px;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(30, 64, 175, 0.4);
+  overflow: hidden;
+}
+
+.score-bar-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #3b82f6, #22c55e);
+  transition: width 0.4s ease-out;
+}
+
+/* =========================
+   메인 grid
+   ========================= */
+.main-grid {
+  display: grid;
+  grid-template-columns: 2.2fr 1.3fr;
+  gap: 18px;
+}
+
+/* 패널 공통 */
+.panel {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 14px 18px 16px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  margin-bottom: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.panel-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #020617;
+}
+
+.panel-caption {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* 표 스타일 */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.info-table thead {
+  background: #f3f4f6;
+}
+
+.info-table th,
+.info-table td {
+  padding: 8px 6px;
+  text-align: left;
+}
+
+.info-table th {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.info-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* detail 리스트 */
+.detail-list {
+  margin: 0;
+  padding: 2px 0 0;
+}
+
+.detail-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+}
+
+.detail-row dt {
+  flex: 0 0 40%;
+  color: #6b7280;
+}
+
+.detail-row dd {
+  flex: 1;
+  margin: 0;
+  text-align: right;
+  color: #020617;
+}
+
+/* =========================
+   하단 푸터
+   ========================= */
+.site-footer {
+  background: #020617;
+  color: #e5e7eb;
+  padding: 22px 0 26px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+  font-size: 12px;
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-address {
+  margin: 0 0 6px;
+  line-height: 1.5;
+  color: #d1d5db;
+}
+
+.footer-copy {
+  margin: 0;
+  color: #9ca3af;
+}
+
+.footer-right {
+  text-align: right;
+  min-width: 140px;
+}
+
+.footer-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+.footer-partner-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #000000;
+}
+
+/* =========================
+   반응형
+   ========================= */
+@media (max-width: 900px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .navbar-center {
+    order: 3;
+    margin-top: 4px;
+  }
+
+  .page {
+    padding: 0 16px;
+  }
+
+  .hero-section {
+    padding: 22px 20px 20px;
+    border-radius: 24px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;/* =========================
+   글로벌 스타일
+   ========================= */
+* {
+  box-sizing: border-box;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f5f7;
+  color: #020617;
+}
+
+/* =========================
+   상단 배너 (FIND MY HOME)
+   ========================= */
+.navbar {
+  width: 100%;
+  background: #333333;
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  font-size: 13px;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-left .logo {
+  font-family: "Montserrat", "Pretendard", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.edit-mode i {
+  margin-right: 6px;
+  font-size: 13px;
+  color: #d1d5db;
+}
+
+.navbar-center {
+  text-align: center;
+  flex: 1;
+  max-width: 600px;
+}
+
+.navbar-center p {
+  margin: 0;
+  font-size: 13px;
+  color: #e5e7eb;
+}
+
+.navbar-center .learn-more {
+  margin-left: 8px;
+  font-size: 13px;
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.start-now {
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.start-now:hover {
+  background: #1d4ed8;
+}
+
+.navbar-right .fa-times {
+  font-size: 14px;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+/* =========================
+   아파트 대시보드 페이지 컨테이너
+   ========================= */
+.page {
+  max-width: 1200px;
+  margin: 28px auto 48px;
+  padding: 0 24px;
+}
+
+/* =========================
+   히어로 섹션 (상단 헤더 + 요약 카드)
+   ========================= */
+.hero-section {
+  border-radius: 32px;
+  background: linear-gradient(135deg, #020617 0%, #0b1120 40%, #1d293b 100%);
+  padding: 28px 32px 26px;
+  color: #f9fafb;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 배경 광택 느낌 */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(
+      circle at 10% 0%,
+      rgba(59, 130, 246, 0.25),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 90% 100%,
+      rgba(59, 130, 246, 0.18),
+      transparent 55%
+    );
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   아파트 헤더
+   ========================= */
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.header h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0;
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+.header-meta {
+  display: flex;
+  gap: 8px;
+}
+
+.meta-pill {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+/* =========================
+   상단 요약 카드
+   ========================= */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr;
+  gap: 16px;
+}
+
+/* 히어로 안에 있는 요약 카드 */
+.hero-summary .summary-card {
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.4);
+}
+
+.summary-card h2 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.summary-main {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.summary-sub {
+  margin: 0;
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
+/* 점수 게이지 */
+.score-bar {
+  margin-top: 8px;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(30, 64, 175, 0.4);
+  overflow: hidden;
+}
+
+.score-bar-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #3b82f6, #22c55e);
+  transition: width 0.4s ease-out;
+}
+
+/* =========================
+   메인 grid
+   ========================= */
+.main-grid {
+  display: grid;
+  grid-template-columns: 2.1fr 1.2fr;
+  gap: 22px;
+}
+
+/* 패널 공통 – 레이어를 더 강조 */
+.panel {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 18px 20px 20px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  margin-bottom: 18px;
+  border: 1px solid #e0e7ff;
+  position: relative;
+}
+
+/* 주요 카드(실거래가, 단지 정보)는 살짝 더 강조 */
+.panel-main {
+  border-color: #c7d2fe;
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.12);
+}
+
+/* 각 패널 상단에 구분선 */
+.panel-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #eef2ff;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.panel-caption {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* 표 스타일 */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.info-table thead {
+  background: #f3f4f6;
+}
+
+.info-table th,
+.info-table td {
+  padding: 8px 6px;
+  text-align: left;
+}
+
+.info-table th {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.info-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* detail 리스트 */
+.detail-list {
+  margin: 0;
+  padding: 2px 0 0;
+}
+
+.detail-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+}
+
+.detail-row dt {
+  flex: 0 0 40%;
+  color: #6b7280;
+}
+
+.detail-row dd {
+  flex: 1;
+  margin: 0;
+  text-align: right;
+  color: #020617;
+}
+
+/* =========================
+   하단 푸터
+   ========================= */
+.site-footer {
+  background: #020617;
+  color: #e5e7eb;
+  padding: 22px 0 26px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+  font-size: 12px;
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-address {
+  margin: 0 0 6px;
+  line-height: 1.5;
+  color: #d1d5db;
+}
+
+.footer-copy {
+  margin: 0;
+  color: #9ca3af;
+}
+
+.footer-right {
+  text-align: right;
+  min-width: 140px;
+}
+
+.footer-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+.footer-partner-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #000000;
+}
+
+/* =========================
+   반응형
+   ========================= */
+@media (max-width: 900px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .navbar-center {
+    order: 3;
+    margin-top: 4px;
+  }
+
+  .page {
+    padding: 0 16px;
+  }
+
+  .hero-section {
+    padding: 22px 20px 20px;
+    border-radius: 24px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .header-meta {
+    margin-top: 4px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-right {
+    text-align: left;
+  }
+}
+
+  }
+
+  .header-meta {
+    margin-top: 4px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-right {
+    text-align: left;
+  }
+}
