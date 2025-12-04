@@ -12,6 +12,7 @@ try {
     $maxArea = isset($_GET['max_area']) ? (float)$_GET['max_area'] : 999;
     $minYear = isset($_GET['min_year']) ? (int)$_GET['min_year'] : 1970;
     $maxStation = isset($_GET['max_station_dist']) ? (float)$_GET['max_station_dist'] : 9999;
+    $maxWalkTime = isset($_GET['max_walk_time']) ? (float)$_GET['max_walk_time'] : 9999; // 도보 시간 (분)
     $floorCategory = isset($_GET['floor_category']) ? $_GET['floor_category'] : null; // 저층, 중층, 고층
     $limit = isset($_GET['limit']) ? min((int)$_GET['limit'], 100) : 20;
     $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
@@ -75,6 +76,12 @@ try {
     // 역 거리 필터
     $sql .= " AND 역거리 <= ?";
     $params[] = $maxStation;
+    
+    // 역 도보 시간 필터 (새로 추가!)
+    if ($maxWalkTime < 9999) {
+        $sql .= " AND 역도보시간 <= ?";
+        $params[] = $maxWalkTime;
+    }
     
     // 층 카테고리 필터 (새로 추가!)
     if ($floorCategory && in_array($floorCategory, ['저층', '중층', '고층'])) {
@@ -143,6 +150,11 @@ try {
     $countSQL .= " AND 역거리 <= ?";
     $countParams[] = $maxStation;
     
+    if ($maxWalkTime < 9999) {
+        $countSQL .= " AND 역도보시간 <= ?";
+        $countParams[] = $maxWalkTime;
+    }
+    
     if ($floorCategory && in_array($floorCategory, ['저층', '중층', '고층'])) {
         $countSQL .= " AND 층_카테고리 = ?";
         $countParams[] = $floorCategory;
@@ -169,6 +181,7 @@ try {
             'area_range' => [$minArea, $maxArea],
             'min_year' => $minYear,
             'max_station_dist' => $maxStation,
+            'max_walk_time' => $maxWalkTime,
             'floor_category' => $floorCategory,
             'sort_by' => $sortBy
         ]
