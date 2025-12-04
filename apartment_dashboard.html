@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>아파트 분석 대시보드 - FIND MY HOME</title>
+
+  <!-- 기존 메인 스타일 (index에서 쓰던 css 파일 이름에 맞게 수정해서 사용) -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- 대시보드 전용 스타일 -->
+  <link rel="stylesheet" href="dashboard.css" />
+
+  <!-- 아이콘 & 폰트 -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+        rel="stylesheet" />
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+
+  <!-- 가격 그래프용 Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- 🔹 상단 배너 -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <div class="logo">FIND MY HOME</div>
+      <div class="edit-mode">
+        <i class="fas fa-desktop"></i>
+        <i class="fas fa-tablet-alt"></i>
+        <i class="fas fa-mobile-alt"></i>
+      </div>
+    </div>
+    <div class="navbar-center">
+      <p>당신에게 완벽한 집을 찾아보세요.</p>
+      <a href="service.html" class="learn-more">서비스 자세히 보기</a>
+    </div>
+    <div class="navbar-right">
+      <button class="start-now" type="button">시작하기</button>
+      <i class="fas fa-times" aria-label="배너 닫기"></i>
+    </div>
+  </header>
+  <!-- 🔹 상단 배너 끝 -->
+
+  <!-- 🔹 아파트 분석 대시보드 본문 -->
+  <div class="page">
+    
+    <!-- 히어로 섹션 (상단 헤더 + 요약 카드) -->
+    <section class="hero-section">
+      <div class="hero-inner">
+        <!-- 아파트 헤더 -->
+        <header class="header">
+          <div>
+            <h1 id="aptName">아파트 이름</h1>
+            <p id="aptLocation" class="subtitle">주소 정보</p>
+          </div>
+          <div class="header-meta">
+            <span id="aptApproved" class="meta-pill">준공일 / 연차</span>
+            <span id="aptHouseholds" class="meta-pill">세대수</span>
+          </div>
+        </header>
+
+        <!-- 상단 요약 카드 -->
+        <section class="summary-grid hero-summary">
+          <div class="summary-card">
+            <h2>예상 가격</h2>
+            <p class="summary-main" id="expectedPrice">-</p>
+            <p class="summary-sub">실거래가, 유사 매물 등을 기반으로 산출 예정</p>
+          </div>
+          <div class="summary-card">
+            <h2>매물 추천 점수</h2>
+            <p class="summary-main" id="recommendScore">- 점</p>
+            <p class="summary-sub">향후 모델 학습 후 CSV에서 자동 연동</p>
+            <div class="score-bar">
+              <div class="score-bar-fill" id="scoreBarFill"></div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <h2>학군 & 교통 요약</h2>
+            <p class="summary-sub">
+              <span id="schoolSummary">-</span><br />
+              <span id="transportSummary">-</span>
+            </p>
+          </div>
+        </section>
+      </div>
+    </section>
+    <!-- 히어로 섹션 끝 -->
+
+    <!-- 메인 2단 레이아웃 -->
+    <main class="main-grid">
+      <!-- 왼쪽: 그래프 + 학군/교통 -->
+      <section class="left-column">
+        <!-- 가격 그래프 -->
+        <div class="panel panel-main">
+          <div class="panel-header">
+            <h3>실거래가 추이</h3>
+            <span class="panel-caption">단위: 만원</span>
+          </div>
+          <canvas id="priceChart" height="160"></canvas>
+        </div>
+
+        <!-- 학군 정보 -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>학군 정보</h3>
+          </div>
+          <table class="info-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>학교명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>초등학교</td>
+                <td id="schoolElem">-</td>
+              </tr>
+              <tr>
+                <td>중학교</td>
+                <td id="schoolMid">-</td>
+              </tr>
+              <tr>
+                <td>고등학교</td>
+                <td id="schoolHigh">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 교통 정보 -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>교통 정보</h3>
+          </div>
+          <table class="info-table">
+            <thead>
+              <tr>
+                <th>수단</th>
+                <th>도보 소요 시간</th>
+              </tr>
+            </thead>
+            <tbody id="transportTbody">
+              <!-- JS에서 채워짐 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 오른쪽: 기타 단지 정보 -->
+      <aside class="right-column">
+        <div class="panel panel-main">
+          <div class="panel-header">
+            <h3>단지 기본 정보</h3>
+          </div>
+          <dl class="detail-list">
+            <div class="detail-row">
+              <dt>위치</dt>
+              <dd id="detailLocation"></dd>
+            </div>
+            <div class="detail-row">
+              <dt>사용승인일</dt>
+              <dd id="detailApproved"></dd>
+            </div>
+            <div class="detail-row">
+              <dt>세대수</dt>
+              <dd id="detailHouseholds"></dd>
+            </div>
+            <div class="detail-row">
+              <dt>현관구조</dt>
+              <dd id="detailStructure"></dd>
+            </div>
+            <div class="detail-row">
+              <dt>난방</dt>
+              <dd id="detailHeating"></dd>
+            </div>
+            <div class="detail-row">
+              <dt>주차</dt>
+              <dd id="detailParking"></dd>
+            </div>
+            <div class="detail-row">
+              <dt>용적률 / 건폐율</dt>
+              <dd id="detailFarCoverage"></dd>
+            </div>
+            <div class="detail-row">
+              <dt>관리사무소</dt>
+              <dd id="detailOfficePhone"></dd>
+            </div>
+            <div class="detail-row">
+              <dt>건설사</dt>
+              <dd id="detailConstructor"></dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+    </main>
+  </div>
+  <!-- 아파트 분석 대시보드 끝 -->
+
+  <!-- 🔹 사이트 푸터 -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <!-- 왼쪽: 링크 + 주소 + 카피라이트 -->
+      <div class="footer-left">
+        <nav class="footer-links">
+          <a href="#">개인정보처리방침</a>
+          <a href="#">사이버감사실</a>
+          <a href="#">이메일수집거부</a>
+          <a href="#">채용문의</a>
+        </nav>
+
+        <p class="footer-address">
+          서울캠퍼스&nbsp;&nbsp;06974 서울특별시 동작구 흑석로 84<br>
+          TEL. 010-6886-8724&nbsp;&nbsp;E-mail. eueseok@naver.com
+        </p>
+
+        <p class="footer-copy">
+          Copyright © 2025 Men in Black Real Estate. All Rights Reserved.
+        </p>
+      </div>
+
+      <!-- 오른쪽: 협찬/파트너 로고 (cau_logo.jpg 사용) -->
+      <div class="footer-right">
+        <p class="footer-label">협찬 · 파트너</p>
+        <img src="cau_logo.jpg" alt="CAU 로고" class="footer-partner-logo">
+      </div>
+    </div>
+  </footer>
+  <!-- 푸터 끝 -->
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
