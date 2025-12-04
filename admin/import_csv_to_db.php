@@ -263,7 +263,7 @@ try {
             }
             
             // 단지승인일 파싱
-            $complexApprovalDate = safeValue($row[50]);
+            $complexApprovalDate = safeValue($row[51]);
             if ($complexApprovalDate && strlen($complexApprovalDate) >= 19) {
                 // 이미 DATETIME 형식
             }
@@ -323,7 +323,7 @@ try {
                 safeValue($row[49]),  // 청소관리형태
                 safeValue($row[50]),  // 주차대수
                 $complexApprovalDate, // 단지승인일
-                safeValue($row[51])   // road_key
+                safeValue($row[52])   // road_key
             ]);
             
             $count++;
