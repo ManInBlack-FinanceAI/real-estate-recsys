@@ -275,7 +275,7 @@ try {
                 safeValue($row[2]),   // 시군구명
                 safeValue($row[3]),   // 법정동
                 safeValue($row[4]),   // 아파트명
-                safeValue($row[53]),  // 거래금액(만원) - CSV 마지막 컬럼!
+                safeValue($row[52]),  // 거래금액(만원) - CSV 마지막 컬럼 (53개 컬럼 = 인덱스 0~52)
                 safeValue($row[5]),   // 전용면적(㎡)
                 $floorOriginal,       // 층_원본
                 $floorNumber,         // 층_숫자
