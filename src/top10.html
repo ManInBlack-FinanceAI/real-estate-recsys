@@ -348,59 +348,8 @@
   <!-- 메인 스크립트 -->
   <script src="script.js"></script>
   <script>
-    // CSV에서 읽어온 데이터를 저장할 객체
-    // 구조: { "강남구": [ { name, volume, price }, ... ], ... }
-    let TOP10_DATA = {};
-
-    // Top10.csv 불러와서 TOP10_DATA 채우기
-    async function loadTop10Data() {
-      try {
-        const res = await fetch("Top10.csv"); // top10.html과 같은 폴더에 있어야 함
-        if (!res.ok) {
-          console.error("Top10.csv 불러오기 실패:", res.status);
-          return;
-        }
-
-        const text = await res.text();
-        const lines = text.trim().split(/\r?\n/);
-        if (lines.length <= 1) return;
-
-        // 헤더 파싱
-        const header = lines[0].split(",");
-        const guIdx    = header.indexOf("gu_name");
-        const aptIdx   = header.indexOf("아파트");
-        const volIdx   = header.indexOf("거래량");
-        const priceIdx = header.indexOf("평균시세");
-
-        const data = {};
-
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].trim();
-          if (!line) continue;
-
-          const cols = line.split(",");
-          const gu    = (cols[guIdx]    || "").trim();
-          const apt   = (cols[aptIdx]   || "").trim();
-          const vol   = (cols[volIdx]   || "").trim();
-          const price = (cols[priceIdx] || "").trim();
-
-          if (!gu || !apt) continue;
-
-          if (!data[gu]) data[gu] = [];
-
-          data[gu].push({
-            name: apt,
-            volume: vol ? Number(vol) : null,       // "거래량"은 숫자로 변환
-            price: price                            // "평균시세"는 문자열 그대로 (예: "12.4억")
-          });
-        }
-
-        TOP10_DATA = data;
-        console.log("TOP10_DATA 로드 완료:", TOP10_DATA);
-      } catch (err) {
-        console.error("Top10.csv 파싱 중 오류:", err);
-      }
-    }
+    // API 엔드포인트 설정
+    const API_BASE_URL = '../api';
 
     // 구 버튼 클릭 이벤트 설정
     function initTop10() {
@@ -409,7 +358,7 @@
       if (!regionBtns.length || !resultEl) return;
 
       regionBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
           const region = btn.dataset.region;
 
           // 버튼 선택 상태 표시
@@ -417,7 +366,8 @@
             b.classList.toggle("is-active", b === btn)
           );
 
-          renderTop10(region, resultEl);
+          // API에서 데이터 가져와서 렌더링
+          await fetchAndRenderTop10(region, resultEl);
         });
       });
 
@@ -426,11 +376,47 @@
       if (firstBtn) firstBtn.click();
     }
 
-    // 실제 테이블 렌더링
-    function renderTop10(region, resultEl) {
-      const list = TOP10_DATA[region];
+    // API에서 TOP 10 데이터 가져오기
+    async function fetchAndRenderTop10(region, resultEl) {
+      try {
+        // 로딩 표시
+        resultEl.innerHTML = `
+          <p class="placeholder">
+            <i class="fas fa-spinner fa-spin"></i> ${region} 지역의 거래 TOP 10을 불러오는 중...
+          </p>
+        `;
 
-      if (!list || !list.length) {
+        // API 호출
+        const response = await fetch(`${API_BASE_URL}/top10.php?region=${encodeURIComponent(region)}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || '데이터를 불러오는데 실패했습니다.');
+        }
+
+        // 데이터 렌더링
+        renderTop10(region, result.data, resultEl);
+
+      } catch (error) {
+        console.error('TOP 10 데이터 로드 중 오류:', error);
+        resultEl.innerHTML = `
+          <p class="placeholder" style="color: #e74c3c;">
+            <i class="fas fa-exclamation-triangle"></i> 
+            ${region} 지역의 데이터를 불러오는데 실패했습니다.<br>
+            <small>오류: ${error.message}</small>
+          </p>
+        `;
+      }
+    }
+
+    // 실제 테이블 렌더링
+    function renderTop10(region, data, resultEl) {
+      if (!data || !data.length) {
         resultEl.innerHTML = `
           <p class="placeholder">
             ${region} 지역의 거래 TOP 10 데이터가 아직 준비되지 않았습니다.
@@ -439,16 +425,30 @@
         return;
       }
 
-      const rows = list
-        .slice(0, 10)  // 혹시 10개 넘게 들어 있어도 상위 10개만
-        .map((item, idx) => `
-          <tr>
-            <td>${idx + 1}</td>
-            <td>${item.name}</td>
-            <td>${item.volume != null ? item.volume + "건" : ""}</td>
-            <td>${item.price || ""}</td>
-          </tr>
-        `)
+      const rows = data
+        .map((item, idx) => {
+          // 평균 가격 표시 (억 단위)
+          const priceDisplay = item.avg_price_억 
+            ? `${item.avg_price_억}억 원` 
+            : '-';
+          
+          // 가격 범위 표시 (툴팁용)
+          const priceRange = item.min_price_억 && item.max_price_억
+            ? `${item.min_price_억}억 ~ ${item.max_price_억}억`
+            : '';
+
+          return `
+            <tr>
+              <td>${idx + 1}</td>
+              <td>
+                <strong>${item.name}</strong>
+                ${item.dong ? `<br><small style="color: #7f8c8d;">${item.dong}</small>` : ''}
+              </td>
+              <td>${item.volume}건</td>
+              <td title="거래가 범위: ${priceRange}">${priceDisplay}</td>
+            </tr>
+          `;
+        })
         .join("");
 
       resultEl.innerHTML = `
@@ -459,17 +459,21 @@
               <th>순위</th>
               <th>아파트명</th>
               <th>거래량</th>
-              <th>참고 시세</th>
+              <th>평균 시세</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
+        <p style="margin-top: 20px; font-size: 0.9em; color: #7f8c8d; text-align: center;">
+          <i class="fas fa-info-circle"></i> 
+          실제 거래 데이터를 기반으로 한 거래량 순위입니다. 
+          시세에 마우스를 올리면 가격 범위를 확인할 수 있습니다.
+        </p>
       `;
     }
 
-    // DOM 준비 후 CSV 로드 + 버튼 초기화
-    document.addEventListener("DOMContentLoaded", async () => {
-      await loadTop10Data();
+    // DOM 준비 후 버튼 초기화
+    document.addEventListener("DOMContentLoaded", () => {
       initTop10();
     });
   </script>
