@@ -192,7 +192,7 @@ try {
     
     // 2. CSV 파일 찾기
     echo "<h2>📂 Step 2: CSV 파일 로드</h2>";
-    $csvFile = __DIR__ . '/../aptlist_tmp.csv';
+    $csvFile = __DIR__ . '/../aptlist.csv';
     
     if (!file_exists($csvFile)) {
         throw new Exception("CSV 파일을 찾을 수 없습니다: $csvFile");
