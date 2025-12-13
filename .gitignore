@@ -24,8 +24,4 @@ dist-ssr
 *.sw?
 
 # Data Files
-SRE.csv
-SRE_final.csv
-aptlist.csv
-aptlist_final.csv
-aptlist_tmp.csv
+*.csv
