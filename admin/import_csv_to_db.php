@@ -241,15 +241,39 @@ try {
     foreach ($rawColumnMap as $colName => $idx) {
         $columnMap[$colName] = $idx;
         
+<<<<<<< HEAD
         // 별칭 매핑
         foreach ($columnAliases as $standard => $aliases) {
             if (in_array($colName, $aliases)) {
+=======
+        // 별칭 매핑: 실제 CSV 컬럼명이 별칭 리스트에 있으면 모든 별칭을 등록
+        foreach ($columnAliases as $standard => $aliases) {
+            if (in_array($colName, $aliases)) {
+                // 모든 별칭에 대해 동일한 인덱스 매핑
+                foreach ($aliases as $alias) {
+                    $columnMap[$alias] = $idx;
+                }
+>>>>>>> 379fa678e26d8cee5e7f1671a74d66e05faeeba1
                 $columnMap[$standard] = $idx;
                 break;
             }
         }
     }
     
+<<<<<<< HEAD
+=======
+    // 컬럼 매핑 디버깅 정보 출력
+    echo "<div class='status info'>🔍 주요 컬럼 매핑 상태:<br><pre style='max-height: 200px; overflow: auto;'>";
+    $debugColumns = ['거래금액(만원)', '전용면적(㎡)', '역거리', '현금통화', '병원거리'];
+    foreach ($debugColumns as $col) {
+        $status = isset($columnMap[$col]) ? 
+            sprintf("✅ [%2d] %s", $columnMap[$col], $col) : 
+            "❌ NOT FOUND: $col";
+        echo "$status\n";
+    }
+    echo "</pre></div>";
+    
+>>>>>>> 379fa678e26d8cee5e7f1671a74d66e05faeeba1
     // 필수 컬럼 존재 확인
     $requiredColumns = [
         '조회연월', '시군구명', '법정동', '아파트명',
@@ -337,11 +361,22 @@ try {
             
             // 첫 10개 행에 대해 거래금액 디버깅 정보 출력
             if ($count < 10) {
+<<<<<<< HEAD
                 $priceDebug = sprintf(
                     "[DEBUG] 행 %d: 거래금액 = %s (컬럼 인덱스: %s)",
                     $count + 1,
                     $transactionPrice ?? 'NULL',
                     isset($columnMap['거래금액(만원)']) ? $columnMap['거래금액(만원)'] : 'NOT FOUND'
+=======
+                $colIdx = isset($columnMap['거래금액(만원)']) ? $columnMap['거래금액(만원)'] : 'NOT_FOUND';
+                $rawValue = is_numeric($colIdx) && isset($row[$colIdx]) ? $row[$colIdx] : 'N/A';
+                $priceDebug = sprintf(
+                    "[DEBUG] 행 %d: 컬럼인덱스=%s, Raw값='%s', 처리후값='%s'",
+                    $count + 1,
+                    $colIdx,
+                    $rawValue,
+                    $transactionPrice ?? 'NULL'
+>>>>>>> 379fa678e26d8cee5e7f1671a74d66e05faeeba1
                 );
                 echo "<div style='color: blue; font-size: 11px;'>$priceDebug</div>";
                 flush();
