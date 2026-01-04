@@ -361,13 +361,6 @@ try {
             
             // 첫 10개 행에 대해 거래금액 디버깅 정보 출력
             if ($count < 10) {
-<<<<<<< HEAD
-                $priceDebug = sprintf(
-                    "[DEBUG] 행 %d: 거래금액 = %s (컬럼 인덱스: %s)",
-                    $count + 1,
-                    $transactionPrice ?? 'NULL',
-                    isset($columnMap['거래금액(만원)']) ? $columnMap['거래금액(만원)'] : 'NOT FOUND'
-=======
                 $colIdx = isset($columnMap['거래금액(만원)']) ? $columnMap['거래금액(만원)'] : 'NOT_FOUND';
                 $rawValue = is_numeric($colIdx) && isset($row[$colIdx]) ? $row[$colIdx] : 'N/A';
                 $priceDebug = sprintf(
@@ -376,7 +369,6 @@ try {
                     $colIdx,
                     $rawValue,
                     $transactionPrice ?? 'NULL'
->>>>>>> 379fa678e26d8cee5e7f1671a74d66e05faeeba1
                 );
                 echo "<div style='color: blue; font-size: 11px;'>$priceDebug</div>";
                 flush();
