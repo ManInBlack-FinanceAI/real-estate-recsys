@@ -216,12 +216,22 @@ try {
     // 헤더 출력 (디버깅용)
     echo "<div class='status info'>📋 CSV 헤더:<br><pre style='max-height: 200px; overflow: auto;'>";
     foreach ($header as $idx => $col) {
-        echo sprintf("[%2d] %s\n", $idx, htmlspecialchars($col));
+        $trimmed = trim($col);
+        $highlight = ($trimmed === '거래금액(만원)') ? ' <-- 🎯 TARGET' : '';
+        echo sprintf("[%2d] '%s' (길이:%d)%s\n", $idx, htmlspecialchars($trimmed), strlen($trimmed), $highlight);
     }
     echo "</pre></div>";
     
     // 헤더 매핑 (실제 CSV 컬럼명 → 인덱스)
     $rawColumnMap = array_flip(array_map('trim', $header));
+    
+    // 디버깅: 거래금액(만원) 컬럼이 rawColumnMap에 있는지 확인
+    echo "<div class='status info'>🔍 rawColumnMap에서 '거래금액(만원)' 검색: ";
+    if (isset($rawColumnMap['거래금액(만원)'])) {
+        echo "✅ 발견됨 (인덱스: {$rawColumnMap['거래금액(만원)']})</div>";
+    } else {
+        echo "❌ 발견 안됨<br>사용 가능한 키 일부: <pre style='max-height:150px; overflow:auto;'>" . htmlspecialchars(implode(', ', array_slice(array_keys($rawColumnMap), 0, 20))) . "...</pre></div>";
+    }
     
     // 컬럼명 별칭 매핑 (다양한 표기 방식 지원)
     $columnAliases = [
@@ -353,15 +363,39 @@ try {
             // 첫 10개 행에 대해 거래금액 디버깅 정보 출력
             if ($count < 10) {
                 $colIdx = isset($columnMap['거래금액(만원)']) ? $columnMap['거래금액(만원)'] : 'NOT_FOUND';
-                $rawValue = is_numeric($colIdx) && isset($row[$colIdx]) ? $row[$colIdx] : 'N/A';
+                $rawValue = 'N/A';
+                $rowLength = count($row);
+                
+                if (is_numeric($colIdx)) {
+                    if (isset($row[$colIdx])) {
+                        $rawValue = $row[$colIdx];
+                    } else {
+                        $rawValue = sprintf("INDEX_OUT_OF_RANGE (row길이:%d)", $rowLength);
+                    }
+                }
+                
+                $safeVal = is_string($rawValue) && $rawValue !== 'N/A' ? safeValue($rawValue) : 'N/A';
+                
                 $priceDebug = sprintf(
-                    "[DEBUG] 행 %d: 컬럼인덱스=%s, Raw값='%s', 처리후값='%s'",
+                    "[DEBUG #%d] Row길이:%d, 컬럼인덱스:%s, Raw='%s', Safe='%s', Final='%s'",
                     $count + 1,
+                    $rowLength,
                     $colIdx,
-                    $rawValue,
-                    $transactionPrice ?? 'NULL'
+                    htmlspecialchars(substr(strval($rawValue), 0, 30)),
+                    htmlspecialchars(substr(strval($safeVal), 0, 30)),
+                    htmlspecialchars(substr(strval($transactionPrice), 0, 30) ?: 'NULL')
                 );
                 echo "<div style='color: blue; font-size: 11px;'>$priceDebug</div>";
+                
+                // 첫 번째 행은 전체 배열도 출력
+                if ($count == 0) {
+                    echo "<div style='color: gray; font-size: 10px;'>[첫번째 행 마지막 5개 값: ";
+                    for ($i = max(0, $rowLength - 5); $i < $rowLength; $i++) {
+                        echo sprintf("[%d]='%s' ", $i, htmlspecialchars(substr(strval($row[$i]), 0, 15)));
+                    }
+                    echo "]</div>";
+                }
+                
                 flush();
             }
             
