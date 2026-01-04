@@ -213,6 +213,72 @@ try {
     $header = fgetcsv($file);
     echo "<div class='status info'>📊 컬럼 수: " . count($header) . "개</div>";
     
+    // 헤더 출력 (디버깅용)
+    echo "<div class='status info'>📋 CSV 헤더:<br><pre style='max-height: 200px; overflow: auto;'>";
+    foreach ($header as $idx => $col) {
+        echo sprintf("[%2d] %s\n", $idx, htmlspecialchars($col));
+    }
+    echo "</pre></div>";
+    
+    // 헤더 매핑 (실제 CSV 컬럼명 → 인덱스)
+    $rawColumnMap = array_flip(array_map('trim', $header));
+    
+    // 컬럼명 별칭 매핑 (다양한 표기 방식 지원)
+    $columnAliases = [
+        '전용면적(㎡)' => ['전용면적(㎡)', '전용면적', '전용면적_㎡'],
+        '거래금액(만원)' => ['거래금액(만원)', '거래금액', '거래금액_만원'],
+        '역거리' => ['역거리(m)', '역거리', '역거리_m'],
+        '역도보시간' => ['역도보시간(분)', '역도보시간', '역도보시간_분'],
+        '현금통화' => ['현금통화(M1)', '현금통화', '현금통화_M1'],
+        '병원거리' => ['병원거리(m)', '병원거리', '병원거리_m'],
+        '고속도로거리' => ['고속도로거리(m)', '고속도로거리', '고속도로거리_m'],
+        '도로명주소상세' => ['도로명주소상세', '도로상세주소'],
+        '관리비부과면적' => ['관리비부과면적(㎡)', '관리비부과면적', '관리비부과면적_㎡']
+    ];
+    
+    // 통합 컬럼 맵 생성 (별칭 지원)
+    $columnMap = [];
+    foreach ($rawColumnMap as $colName => $idx) {
+        $columnMap[$colName] = $idx;
+        
+        // 별칭 매핑
+        foreach ($columnAliases as $standard => $aliases) {
+            if (in_array($colName, $aliases)) {
+                $columnMap[$standard] = $idx;
+                break;
+            }
+        }
+    }
+    
+    // 필수 컬럼 존재 확인
+    $requiredColumns = [
+        '조회연월', '시군구명', '법정동', '아파트명',
+        '전용면적(㎡)', '층', '거래일자'
+    ];
+    
+    $missingColumns = [];
+    foreach ($requiredColumns as $col) {
+        $found = false;
+        if (isset($columnMap[$col])) {
+            $found = true;
+        } else if (isset($columnAliases[$col])) {
+            foreach ($columnAliases[$col] as $alias) {
+                if (isset($columnMap[$alias])) {
+                    $columnMap[$col] = $columnMap[$alias];
+                    $found = true;
+                    break;
+                }
+            }
+        }
+        if (!$found) {
+            $missingColumns[] = $col;
+        }
+    }
+    
+    if (!empty($missingColumns)) {
+        throw new Exception("필수 컬럼이 CSV에 없습니다: " . implode(', ', $missingColumns));
+    }
+    
     // 3. 데이터 임포트
     echo "<h2>⚙️ Step 3: 데이터 임포트</h2>";
     
@@ -239,6 +305,15 @@ try {
         )
     ");
     
+    // 헬퍼 함수: CSV 컬럼 값 가져오기
+    function getColumnValue($row, $columnMap, $columnName) {
+        if (!isset($columnMap[$columnName])) {
+            return null;
+        }
+        $idx = $columnMap[$columnName];
+        return isset($row[$idx]) ? safeValue($row[$idx]) : null;
+    }
+    
     $count = 0;
     $errorCount = 0;
     $errorDetails = [];
@@ -250,80 +325,96 @@ try {
     
     while (($row = fgetcsv($file)) !== false) {
         try {
-            // 층 데이터 처리
-            list($floorOriginal, $floorNumber) = parseFloor($row[6]);
+            // 동적 컬럼 매핑을 사용하여 데이터 추출
+            $floorRaw = getColumnValue($row, $columnMap, '층');
+            list($floorOriginal, $floorNumber) = parseFloor($floorRaw);
             
-            // 거래일자 (row[7]에 이미 날짜 형식으로 있음)
-            $transactionDate = safeValue($row[7]);
+            // 거래일자
+            $transactionDate = getColumnValue($row, $columnMap, '거래일자');
+            
+            // 거래금액 (디버깅)
+            $transactionPrice = getColumnValue($row, $columnMap, '거래금액(만원)');
+            
+            // 첫 10개 행에 대해 거래금액 디버깅 정보 출력
+            if ($count < 10) {
+                $priceDebug = sprintf(
+                    "[DEBUG] 행 %d: 거래금액 = %s (컬럼 인덱스: %s)",
+                    $count + 1,
+                    $transactionPrice ?? 'NULL',
+                    isset($columnMap['거래금액(만원)']) ? $columnMap['거래금액(만원)'] : 'NOT FOUND'
+                );
+                echo "<div style='color: blue; font-size: 11px;'>$priceDebug</div>";
+                flush();
+            }
             
             // 사용승인일 파싱
-            $approvalDate = safeValue($row[45]);
+            $approvalDate = getColumnValue($row, $columnMap, '사용승인일');
             if ($approvalDate && strlen($approvalDate) >= 10) {
                 $approvalDate = substr($approvalDate, 0, 10); // YYYY-MM-DD 추출
             }
             
             // 단지승인일 파싱
-            $complexApprovalDate = safeValue($row[50]);
+            $complexApprovalDate = getColumnValue($row, $columnMap, '단지승인일');
             if ($complexApprovalDate && strlen($complexApprovalDate) >= 19) {
                 // 이미 DATETIME 형식
             }
             
-            // 데이터 삽입 (CSV 컬럼 순서에 맞게 수정)
+            // 데이터 삽입 (동적 매핑 사용)
             $stmt->execute([
-                safeValue($row[0]),   // 조회연월
-                safeValue($row[1]),   // 시군구코드
-                safeValue($row[2]),   // 시군구명
-                safeValue($row[3]),   // 법정동
-                safeValue($row[4]),   // 아파트명
-                safeValue($row[52]),  // 거래금액(만원) - CSV 마지막 컬럼 (53개 컬럼 = 인덱스 0~52)
-                safeValue($row[5]),   // 전용면적(㎡)
+                getColumnValue($row, $columnMap, '조회연월'),
+                getColumnValue($row, $columnMap, '시군구코드'),
+                getColumnValue($row, $columnMap, '시군구명'),
+                getColumnValue($row, $columnMap, '법정동'),
+                getColumnValue($row, $columnMap, '아파트명'),
+                $transactionPrice,    // 거래금액_만원 (디버깅용 변수 사용)
+                getColumnValue($row, $columnMap, '전용면적(㎡)'),
                 $floorOriginal,       // 층_원본
                 $floorNumber,         // 층_숫자
                 $transactionDate,     // 거래일자
-                safeValue($row[8]),   // 건축년도
-                safeValue($row[9]),   // 도로명
-                safeValue($row[10]),  // 기준금리
-                safeValue($row[11]),  // 주담대금리
-                safeValue($row[12]),  // 최단지하철역
-                safeValue($row[13]),  // 역거리
-                safeValue($row[14]),  // 역도보시간
-                safeValue($row[15]),  // CPI
-                safeValue($row[16]),  // 주택매매가격지수
-                safeValue($row[17]),  // 주택전세가격지수
-                safeValue($row[18]),  // 아파트매매가격지수
-                safeValue($row[19]),  // 현금통화
-                safeValue($row[20]),  // 경제활동인구
-                safeValue($row[21]),  // 위도
-                safeValue($row[22]),  // 경도
-                safeValue($row[23]),  // 버스정류장수
-                safeValue($row[24]),  // 병원거리
-                safeValue($row[25]),  // 마트수
-                safeValue($row[26]),  // 편의점수
-                safeValue($row[27]),  // 공원개수
-                safeValue($row[28]),  // 고속도로거리
-                safeValue($row[29]),  // 거래년
-                safeValue($row[30]),  // 거래월
-                safeValue($row[31]),  // 거래일
-                safeValue($row[32]),  // 도로명주소
-                safeValue($row[33]),  // 지번주소
-                safeValue($row[34]),  // 아파트코드
-                safeValue($row[35]),  // 시도
-                safeValue($row[36]),  // 도로상세주소
-                safeValue($row[37]),  // 전화번호
-                safeValue($row[38]),  // 관리방식
-                safeValue($row[39]),  // 도로형태
-                safeValue($row[40]),  // 난방방식
-                safeValue($row[41]),  // 동수
-                safeValue($row[42]),  // 세대수
-                safeValue($row[43]),  // 건설사
-                safeValue($row[44]),  // 시행사
+                getColumnValue($row, $columnMap, '건축년도'),
+                getColumnValue($row, $columnMap, '도로명'),
+                getColumnValue($row, $columnMap, '기준금리'),
+                getColumnValue($row, $columnMap, '주담대금리'),
+                getColumnValue($row, $columnMap, '최단지하철역'),
+                getColumnValue($row, $columnMap, '역거리'),
+                getColumnValue($row, $columnMap, '역도보시간'),
+                getColumnValue($row, $columnMap, 'CPI'),
+                getColumnValue($row, $columnMap, '주택매매가격지수'),
+                getColumnValue($row, $columnMap, '주택전세가격지수'),
+                getColumnValue($row, $columnMap, '아파트매매가격지수'),
+                getColumnValue($row, $columnMap, '현금통화'),
+                getColumnValue($row, $columnMap, '경제활동인구'),
+                getColumnValue($row, $columnMap, '위도'),
+                getColumnValue($row, $columnMap, '경도'),
+                getColumnValue($row, $columnMap, '버스정류장수'),
+                getColumnValue($row, $columnMap, '병원거리'),
+                getColumnValue($row, $columnMap, '마트수'),
+                getColumnValue($row, $columnMap, '편의점수'),
+                getColumnValue($row, $columnMap, '공원개수'),
+                getColumnValue($row, $columnMap, '고속도로거리'),
+                getColumnValue($row, $columnMap, '거래년'),
+                getColumnValue($row, $columnMap, '거래월'),
+                getColumnValue($row, $columnMap, '거래일'),
+                getColumnValue($row, $columnMap, '도로명주소'),
+                getColumnValue($row, $columnMap, '지번주소'),
+                getColumnValue($row, $columnMap, '아파트코드'),
+                getColumnValue($row, $columnMap, '시도'),
+                getColumnValue($row, $columnMap, '도로명주소상세'),
+                getColumnValue($row, $columnMap, '전화번호'),
+                getColumnValue($row, $columnMap, '관리방식'),
+                getColumnValue($row, $columnMap, '도로형태'),
+                getColumnValue($row, $columnMap, '난방방식'),
+                getColumnValue($row, $columnMap, '동수'),
+                getColumnValue($row, $columnMap, '세대수'),
+                getColumnValue($row, $columnMap, '건설사'),
+                getColumnValue($row, $columnMap, '시행사'),
                 $approvalDate,        // 사용승인일
-                safeValue($row[46]),  // 관리비부과면적
-                safeValue($row[47]),  // 경비관리형태
-                safeValue($row[48]),  // 청소관리형태
-                safeValue($row[49]),  // 주차대수
+                getColumnValue($row, $columnMap, '관리비부과면적'),
+                getColumnValue($row, $columnMap, '경비관리형태'),
+                getColumnValue($row, $columnMap, '청소관리형태'),
+                getColumnValue($row, $columnMap, '주차대수'),
                 $complexApprovalDate, // 단지승인일
-                safeValue($row[51])   // road_key
+                getColumnValue($row, $columnMap, 'road_key')
             ]);
             
             $count++;
